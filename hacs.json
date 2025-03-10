@@ -1,0 +1,8 @@
+{
+  "name": "Wavin Sentio Connect",
+  "homeassistant": "2025.03.0",
+  "hacs": "2.0.0",
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "ha_wavin_sentio_connect.zip"
+}

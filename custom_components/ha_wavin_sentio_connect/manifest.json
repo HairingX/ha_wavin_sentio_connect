@@ -1,0 +1,16 @@
+{
+    "domain": "ha_wavin_sentio_connect",
+    "name": "Wavin Sentio Connect",
+    "codeowners": [
+        "@HairingX"
+    ],
+    "config_flow": true,
+    "dependencies": [],
+    "documentation": "https://github.com/HairingX/ha_wavin_sentio_connect",
+    "iot_class": "local_push",
+    "issue_tracker": "https://github.com/HairingX/modbus_/issues",
+    "requirements": [
+        "wavin_sentio_connect@git+https://github.com/HairingX/wavin_sentio_connect.git@master"
+    ],
+    "version": "0.1.0"
+}

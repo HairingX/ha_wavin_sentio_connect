@@ -2,17 +2,17 @@ from typing import TypedDict
 
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
-from wavin_sentio_connect import WavinSentioConnect # type: ignore
+from wavin_sentio_connect import WavinSentioTCPConnect
 
-from custom_components.ha_wavin_sentio_connect.const import DOMAIN # type: ignore
+from custom_components.ha_wavin_sentio_connect.const import DOMAIN
 
 class WavinSentioConnectHassData(TypedDict):
-    device: WavinSentioConnect
+    device: WavinSentioTCPConnect
 
 def get_hass_data(hass: HomeAssistant, entry: ConfigEntry) -> WavinSentioConnectHassData:
     return hass.data[DOMAIN][entry.entry_id]
 
-def get_device(hass: HomeAssistant, entry: ConfigEntry) -> WavinSentioConnect:
+def get_device(hass: HomeAssistant, entry: ConfigEntry) -> WavinSentioTCPConnect:
     data:WavinSentioConnectHassData = hass.data[DOMAIN][entry.entry_id]
     return data["device"]
 

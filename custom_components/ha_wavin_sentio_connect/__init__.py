@@ -1,4 +1,4 @@
-"""The Nilan Connect integration."""
+"""The Wavin Sentio Connect integration."""
 
 from __future__ import annotations
 import logging
@@ -6,11 +6,11 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
+from homeassistant.exceptions import ConfigEntryNotReady
 
 from custom_components.ha_wavin_sentio_connect.data import WavinSentioConnectHassData, get_hass_data, remove_hass_data, set_hass_data # type: ignore
 from .const import DOMAIN, CONF_DEVICE_ID, CONF_DEVICE_IP, CONF_DEVICE_PORT
-from wavin_sentio_connect import WavinSentioConnect, ModbusTCPErrorCode, ModbusExceptCode
+from wavin_sentio_connect import WavinSentioTCPConnect, ModbusTCPErrorCode
 
 _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [
@@ -25,10 +25,10 @@ PLATFORMS: list[Platform] = [
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Nilan Connect from a config entry."""
+    """Set up device from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
-    device = WavinSentioConnect()
+    device = WavinSentioTCPConnect()
     device_id = str(entry.data.get(CONF_DEVICE_ID))
     device_ip = str(entry.data.get(CONF_DEVICE_IP))
     device_port = int(entry.data.get(CONF_DEVICE_PORT, 0))
@@ -36,17 +36,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if not is_connected:
         raise ConfigEntryNotReady(f"Timed out while trying to connect to {device.device_id} as {device.host}:{device.port}")
 
-    _LOGGER.info(f"Controller model: {device.model_name}")
+    _LOGGER.info(f"Device model: {device.model_name}")
     if device.last_error != ModbusTCPErrorCode.NONE:
+        _LOGGER.error(f"Error thrown while connecting to {device_id}: {device.last_error_txt}")
         if device.last_error is ModbusTCPErrorCode.TIMEOUT:
             raise ConfigEntryNotReady(f"Timed out while trying to connect to {device_id}")
-        if device.last_error is ModbusTCPErrorCode.UNSUPPORTED_MODEL:
-            raise ConfigEntryNotReady(
-                f"Timed out while trying to get data from {device_id} did not correctly load a model for Model no: {device.model_name}, software version: {device.device_info.version.software_major}.{device.device_info.version.software_minor}.{device.device_info.version.software_patch}, hardware version: {device.device_info.version.hardware_major}.{device.device_info.version.hardware_minor}.{device.device_info.version}, register version: {device.device_info.version.datapoint_major}.{device.device_info.version.datapoint_minor}.{device.device_info.version.datapoint_patch}"
-            )
+        elif device.last_error is ModbusTCPErrorCode.UNSUPPORTED_MODEL:
+            raise ConfigEntryNotReady(f"Model could not be initialized for {device_id}. Software version: {device.device_info.version.software_major}.{device.device_info.version.software_minor}.{device.device_info.version.software_patch}, hardware version: {device.device_info.version.hardware_major}.{device.device_info.version.hardware_minor}.{device.device_info.version}, register version: {device.device_info.version.datapoint_major}.{device.device_info.version.datapoint_minor}.{device.device_info.version.datapoint_patch}")
+        else:
+            raise ConfigEntryNotReady(f"Error thrown while trying to connect to {device_id}: {device.last_error_txt}")
+
 
     # dataResult = await device.request_datapoint_read()
-    # if dataResult is False:  # Waits for NilanProxy to get fresh data
+    # if dataResult is False:  # Waits for WavinSentioProxy to get fresh data
     #     if device.get_loaded_model_name() is None:
     #         raise ConfigEntryNotReady(
     #             f"Timed out while trying to get data from {device_id} did not correctly load a model for Model no: {device.get_device_model()}, device number: {device.get_device_number()} and slavedevice number: {device.get_slave_device_number()}"
@@ -68,8 +70,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    data = get_hass_data(hass, entry)
-    data["proxy"].stop_listening()
+    # data = get_hass_data(hass, entry)
+    # data["proxy"].stop_listening()
     remove_hass_data(hass, entry)
     return True
 

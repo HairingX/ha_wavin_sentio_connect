@@ -1,5 +1,5 @@
 {
-    "domain": "ha_wavin_sentio_connect",
+    "domain": "wavin_sentio_connect",
     "name": "Wavin Sentio Connect",
     "codeowners": [
         "@HairingX"

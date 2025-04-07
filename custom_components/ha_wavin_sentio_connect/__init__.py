@@ -8,8 +8,9 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
-from custom_components.ha_wavin_sentio_connect.data import WavinSentioConnectHassData, get_hass_data, remove_hass_data, set_hass_data # type: ignore
-from .const import DOMAIN, CONF_DEVICE_ID, CONF_DEVICE_IP, CONF_DEVICE_PORT
+from .coordinator import Coordinator
+from .data import WavinSentioConnectHassData, get_hass_data, remove_hass_data, set_hass_data # type: ignore
+from .const import DOMAIN, CONF_DEVICE_ID, CONF_DEVICE_IP, CONF_DEVICE_PORT, CONF_UNIT_ID
 from wavin_sentio_connect import WavinSentioTCPConnect, ModbusTCPErrorCode
 
 _LOGGER = logging.getLogger(__name__)
@@ -23,7 +24,6 @@ PLATFORMS: list[Platform] = [
     Platform.SELECT,
 ]
 
-
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up device from a config entry."""
     hass.data.setdefault(DOMAIN, {})
@@ -32,7 +32,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     device_id = str(entry.data.get(CONF_DEVICE_ID))
     device_ip = str(entry.data.get(CONF_DEVICE_IP))
     device_port = int(entry.data.get(CONF_DEVICE_PORT, 0))
-    is_connected = await device.connect(device_id, device_ip, device_port)
+    unit_id = int(entry.data.get(CONF_UNIT_ID, 0))
+    is_connected = await device.connect(device_id, device_ip, device_port, unit_id)
     if not is_connected:
         raise ConfigEntryNotReady(f"Timed out while trying to connect to {device.device_id} as {device.host}:{device.port}")
 
@@ -46,24 +47,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         else:
             raise ConfigEntryNotReady(f"Error thrown while trying to connect to {device_id}: {device.last_error_txt}")
 
-
-    # dataResult = await device.request_datapoint_read()
-    # if dataResult is False:  # Waits for WavinSentioProxy to get fresh data
-    #     if device.get_loaded_model_name() is None:
-    #         raise ConfigEntryNotReady(
-    #             f"Timed out while trying to get data from {device_id} did not correctly load a model for Model no: {device.get_device_model()}, device number: {device.get_device_number()} and slavedevice number: {device.get_slave_device_number()}"
-    #         )
-    #     _LOGGER.error(f"Could not get data from {device_id} has loaded model for {device.get_loaded_model_name()}")
-    #     raise ConfigEntryNotReady(
-    #         f"Timed out while trying to get data from {device_id} has loaded model for {device.get_loaded_model_name()}"
-    #     )
-
     data = WavinSentioConnectHassData(device=device)
     set_hass_data(hass, entry, data)
 
+    coordinator = Coordinator(hass, entry)
+    await coordinator.async_config_entry_first_refresh()
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    await device.request_datapoint_read()
-    await device.request_setpoint_read()
+
+    await coordinator.async_refresh()
+
+    # await device.request_datapoint_read()
+    # await device.request_setpoint_read()
     return True
 
 

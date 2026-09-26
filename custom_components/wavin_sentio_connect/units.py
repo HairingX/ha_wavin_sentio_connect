@@ -7,7 +7,7 @@ from types import MappingProxyType
 from typing import Any
 
 from homeassistant.const import PERCENTAGE, UnitOfTemperature, UnitOfTime
-from modbus_event_connect import Client, Key, Unit
+from wavin_sentio_connect import Client, Key, Unit
 
 HA_UNITS: Mapping[Unit, str] = MappingProxyType(
     {

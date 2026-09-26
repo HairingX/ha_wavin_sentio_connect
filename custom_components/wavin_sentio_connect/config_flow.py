@@ -11,9 +11,13 @@ import voluptuous as vol
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
-from modbus_event_connect import CannotConnectError, UnsupportedDeviceError
 
-from wavin_sentio_connect import DEFAULT_PORT, DEFAULT_UNIT_ID
+from wavin_sentio_connect import (
+    DEFAULT_PORT,
+    DEFAULT_UNIT_ID,
+    CannotConnectError,
+    UnsupportedDeviceError,
+)
 
 from .const import CONF_UNIT_ID, DOMAIN
 from .data import entry_title, new_client, serial_number

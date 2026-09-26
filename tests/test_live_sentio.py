@@ -27,8 +27,7 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
-from modbus_event_connect import Client, Status
-from wavin_sentio_connect import create_client
+from wavin_sentio_connect import Client, Status, create_client
 
 from custom_components.wavin_sentio_connect.const import CONF_UNIT_ID, DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData

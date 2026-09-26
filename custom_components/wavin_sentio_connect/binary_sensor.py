@@ -13,9 +13,9 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from modbus_event_connect import Key
 
 from wavin_sentio_connect import (
+    Key,
     LocationPointKey,
     PeripheralPointKey,
     PointKey,

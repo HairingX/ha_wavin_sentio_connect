@@ -11,12 +11,16 @@ from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.device_registry import ChildDeviceInfo, DeviceInfo
 from homeassistant.helpers.entity import Entity, EntityDescription
-from modbus_event_connect import DataValue, InvalidValueError, Key, Quality, Status
 
 from wavin_sentio_connect import (
+    DataValue,
+    InvalidValueError,
+    Key,
     LocationPointKey,
     ModbusMode,
     PointKey,
+    Quality,
+    Status,
     peripheral_key,
     room_key,
 )

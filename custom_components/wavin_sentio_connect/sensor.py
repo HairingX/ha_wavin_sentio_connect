@@ -17,11 +17,11 @@ from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.event import async_track_device_registry_updated_event
-from modbus_event_connect import Key
 
 from wavin_sentio_connect import (
     BlockingSource,
     HeatingCoolingMode,
+    Key,
     LocationPointKey,
     ModbusMode,
     PeripheralPointKey,

@@ -20,9 +20,8 @@ from homeassistant.components.climate.const import (
 from homeassistant.const import ATTR_ENTITY_ID, ATTR_TEMPERATURE
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
-from modbus_event_connect.modbus import FunctionCode
-from modbus_event_connect.testing import FakeClock, SimulatedModbusDevice
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+from wavin_sentio_connect.testing import FakeClock, FunctionCode, SimulatedModbusDevice
 
 from custom_components.wavin_sentio_connect.data import SentioData
 

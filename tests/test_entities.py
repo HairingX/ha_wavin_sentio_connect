@@ -17,13 +17,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
-from modbus_event_connect import InvalidValueError
-from modbus_event_connect.testing import (
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+from wavin_sentio_connect import InvalidValueError
+from wavin_sentio_connect.testing import (
     FakeClock,
     SimulatedModbusDevice,
     SimulatedModbusGateway,
 )
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.wavin_sentio_connect.const import DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData
@@ -225,7 +225,7 @@ async def test_a_write_is_refused_when_the_controllers_modbus_mode_forbids_it(
 async def test_a_write_the_controller_refuses_is_reported(
     hass: HomeAssistant, loaded: SentioData, controller: SimulatedModbusDevice
 ) -> None:
-    from modbus_event_connect.modbus import FunctionCode
+    from wavin_sentio_connect.testing import FunctionCode
 
     controller.faults[(FunctionCode.WRITE_SINGLE_REGISTER, 27)] = 0x04
     controller.faults[(FunctionCode.WRITE_MULTIPLE_REGISTERS, 27)] = 0x04

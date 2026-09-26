@@ -7,7 +7,7 @@ from typing import Any
 
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
-from modbus_event_connect import Status
+from wavin_sentio_connect import Status
 
 from .data import SentioConfigEntry
 

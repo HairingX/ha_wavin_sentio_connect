@@ -3,6 +3,7 @@ translations, the manifest and the Home Assistant it is tested with."""
 
 from __future__ import annotations
 
+import ast
 import fnmatch
 import importlib.metadata
 import json
@@ -269,3 +270,19 @@ def test_everything_the_thermostat_shows_is_also_an_entity_of_its_own(
 ) -> None:
     """Each has a history of its own, and a plain action for scripts."""
     assert point in _described()[scope]
+
+
+def test_nothing_imports_modbus_event_connect_itself() -> None:
+    """wavin_sentio_connect gives the integration and its tests everything they use."""
+    found: list[str] = []
+    for path in [*INTEGRATION.rglob("*.py"), *Path(__file__).parent.rglob("*.py")]:
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            modules = (
+                [node.module or ""]
+                if isinstance(node, ast.ImportFrom)
+                else [alias.name for alias in node.names]
+                if isinstance(node, ast.Import)
+                else []
+            )
+            found += [f"{path.name}: {m}" for m in modules if m.startswith("modbus_event_connect")]
+    assert found == []

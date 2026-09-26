@@ -16,10 +16,10 @@ from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from modbus_event_connect import Key
 
 from wavin_sentio_connect import (
     HeatingCoolingMode,
+    Key,
     LocationPointKey,
     RoomMode,
     RoomPointKey,

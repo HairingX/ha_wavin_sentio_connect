@@ -24,6 +24,11 @@ the room it belongs to.
 - Through it, every peripheral paired with it: thermostats (RT-201, RT-250, RT-250IR), room
   sensors (RS-211, RS-251), displays (LCD-200), extension modules (EU-208-A, EU-206-VFR), outdoor
   sensors (ET-250, ET-210) and radiator thermostats (VH-250), as the controller reports them.
+- The controller's other objects, where it has them: the outdoor zone, heating/cooling circuits,
+  the heating/cooling source, the boiler or heat pump and the thermistor inputs have been run
+  against a CCU-208. **The hot water tank, inlet temperature controllers, buffer tank,
+  ventilation units and dehumidifiers are built from the manual alone and have not been run
+  against a controller that has them.**
 - Not supported: the DHW-201 (Calefa) hot water controller, which the manual lists as another
   device type.
 
@@ -114,8 +119,9 @@ controller's location name when it has one:
 - Sensors for floor temperature and dew point, the room's state and what blocks it.
 - The thermostat lock, and the standby and vacation temperatures.
 - Warning, error, low battery and peripheral-lost alarms.
-- Disabled by default: the state and blocking source of each heating function, and the
-  installer's thresholds and hysteresis settings.
+- Disabled by default: the state and blocking source of each function - radiators, underfloor
+  heating, drying, thermal integration and ventilation - and the installer's thresholds and
+  hysteresis settings.
 
 Only what the controller reports is created: a room with no thermostat or sensor (a *dummy*
 room) has no measurements, and a room not using radiators, underfloor heating or another
@@ -125,6 +131,21 @@ function has no entities for it.
 through the controller and named after its room, such as *Bathroom 1 RT-250IR*: its signal
 strength and its alarms, and, as a diagnostic with its history, the room it belongs to (or the
 controller itself).
+
+**The controller's other objects** - each one the controller has, named as on the controller or
+else by its kind:
+
+- Parts of the controller's device: the **outdoor** zone (air temperature), each
+  **heating/cooling circuit** and **inlet temperature controller** (inlet and return
+  temperatures, state, pump), the **heating/cooling source**, the **boiler / heat pump**, the
+  **buffer tank**, the **hot water tank** (temperature, state and circulation; its mode,
+  setpoint, and vacation and standby temperatures) and the **thermistor inputs**.
+- Devices of their own, reached through the controller, with the model they report: each
+  **ventilation unit** (state, fan speeds, air temperatures) and **dehumidifier** (drying and
+  thermal integration state).
+- Each object's alarms.
+- Disabled by default: the heat curves and the installer's settings, the thermistor inputs, and
+  codes and values mostly of use when setting up.
 
 ## How data is updated
 
@@ -221,10 +242,11 @@ automation:
 
 ## Known limits
 
-- Rooms, peripherals and the location are supported. The controller's other objects - outdoor
-  sensor, hot water, heating circuits, heat sources - are not yet.
-- The drying and ventilation state of a room is not shown: the manual gives them other states
-  than the heating states.
+- The hot water tank, inlet temperature controllers, buffer tank, ventilation units and
+  dehumidifiers are built from the manual alone: no controller that has them has been read. If
+  you have one, please report what it shows.
+- Not shown: when a ventilation unit's or dehumidifier's air filter was last changed (the manual
+  does not give how the time is encoded), and a ventilation unit's feature bits.
 - The Modbus register map has no floor temperature setpoint.
 - The controller's names for its rooms and peripherals only name a device when it is first
   added; after that, the name in Home Assistant is the one used, and renaming on the controller

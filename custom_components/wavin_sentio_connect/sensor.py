@@ -20,15 +20,32 @@ from homeassistant.helpers.event import async_track_device_registry_updated_even
 
 from wavin_sentio_connect import (
     BlockingSource,
+    BoilerHeatPumpPointKey,
+    BufferTankPointKey,
+    CirculationState,
+    DehumidifierPointKey,
+    DhwTankPointKey,
+    DhwTankState,
+    DryingState,
+    HccPointKey,
+    HeatSourceState,
     HeatingCoolingMode,
+    HeatingCoolingSourcePointKey,
+    ItcPointKey,
     Key,
     LocationPointKey,
     ModbusMode,
+    OutdoorPointKey,
     PeripheralPointKey,
     PointKey,
+    PumpState,
     RoomModeOverride,
     RoomPointKey,
     RoomState,
+    ThermistorPointKey,
+    VentilationPointKey,
+    VentilationState,
+    VentilationUnitState,
 )
 
 from .data import SentioConfigEntry, SentioData
@@ -38,7 +55,7 @@ from .entity import (
     SentioEntityDescription,
     Target,
     all_targets,
-    point_name,
+    entity_key,
 )
 from .units import ha_unit
 
@@ -59,12 +76,34 @@ def _enum(
     enabled: bool = True,
 ) -> SentioSensorDescription:
     return SentioSensorDescription(
-        key=point_name(point),
-        translation_key=point_name(point),
+        key=entity_key(scope, point),
+        translation_key=entity_key(scope, point),
         scope=scope,
         point=point,
         device_class=SensorDeviceClass.ENUM,
         options=[state.name.lower() for state in states],
+        entity_category=EntityCategory.DIAGNOSTIC if diagnostic else None,
+        entity_registry_enabled_default=enabled,
+    )
+
+
+def _reading(
+    scope: Scope,
+    point: Key[Any] | PointKey[Any],
+    device_class: SensorDeviceClass | None,
+    *,
+    enabled: bool = True,
+    diagnostic: bool = False,
+    measurement: bool = True,
+) -> SentioSensorDescription:
+    return SentioSensorDescription(
+        key=entity_key(scope, point),
+        translation_key=entity_key(scope, point),
+        scope=scope,
+        point=point,
+        device_class=device_class,
+        # A code is a number without an order, which has no statistics.
+        state_class=SensorStateClass.MEASUREMENT if measurement else None,
         entity_category=EntityCategory.DIAGNOSTIC if diagnostic else None,
         entity_registry_enabled_default=enabled,
     )
@@ -138,6 +177,224 @@ SENSORS: tuple[SentioSensorDescription, ...] = (
         point=PeripheralPointKey.SIGNAL_STRENGTH,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    _enum(Scope.ROOM, RoomPointKey.DRYING_STATE, DryingState, enabled=False),
+    _enum(Scope.ROOM, RoomPointKey.VENTILATION_STATE, VentilationState, enabled=False),
+    _reading(Scope.OUTDOOR, OutdoorPointKey.AIR_TEMP, SensorDeviceClass.TEMPERATURE),
+    _reading(
+        Scope.OUTDOOR,
+        OutdoorPointKey.AIR_TEMP_FILTERED,
+        SensorDeviceClass.TEMPERATURE,
+        diagnostic=True,
+        enabled=False,
+    ),
+    _reading(
+        Scope.OUTDOOR,
+        OutdoorPointKey.AIR_TEMP_GEOMETRICAL,
+        SensorDeviceClass.TEMPERATURE,
+        diagnostic=True,
+        enabled=False,
+    ),
+    _enum(Scope.HCC, HccPointKey.STATE, RoomState),
+    _enum(Scope.HCC, HccPointKey.BLOCKING_SOURCE, BlockingSource),
+    _enum(Scope.HCC, HccPointKey.PUMP_DEMAND, PumpState, enabled=False),
+    _enum(Scope.HCC, HccPointKey.PUMP_STATE, PumpState),
+    _reading(Scope.HCC, HccPointKey.TEMP_INLET_CURRENT, SensorDeviceClass.TEMPERATURE),
+    _reading(Scope.HCC, HccPointKey.TEMP_INLET_TARGET, SensorDeviceClass.TEMPERATURE),
+    _reading(
+        Scope.HCC,
+        HccPointKey.TEMP_ROOM_TARGET,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _enum(Scope.ITC, ItcPointKey.STATE, RoomState),
+    _enum(Scope.ITC, ItcPointKey.BLOCKING_SOURCE, BlockingSource),
+    _enum(Scope.ITC, ItcPointKey.PUMP_DEMAND, PumpState, enabled=False),
+    _enum(Scope.ITC, ItcPointKey.PUMP_STATE, PumpState),
+    _reading(Scope.ITC, ItcPointKey.TEMP_INLET_CURRENT, SensorDeviceClass.TEMPERATURE),
+    _reading(Scope.ITC, ItcPointKey.TEMP_INLET_TARGET, SensorDeviceClass.TEMPERATURE),
+    _reading(
+        Scope.ITC,
+        ItcPointKey.TEMP_ROOM_TARGET,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(Scope.ITC, ItcPointKey.TEMP_RETURN_CURRENT, SensorDeviceClass.TEMPERATURE),
+    _reading(
+        Scope.ITC,
+        ItcPointKey.TEMP_MAIN_SUPPLIER,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(Scope.ITC, ItcPointKey.SERVO_POSITION_REQUEST, None, enabled=False),
+    _enum(Scope.HC_SOURCE, HeatingCoolingSourcePointKey.STATE, RoomState),
+    _enum(Scope.BOILER_HEAT_PUMP, BoilerHeatPumpPointKey.STATE, HeatSourceState),
+    _enum(
+        Scope.BOILER_HEAT_PUMP, BoilerHeatPumpPointKey.BLOCKING_SOURCE, BlockingSource
+    ),
+    _reading(
+        Scope.BOILER_HEAT_PUMP,
+        BoilerHeatPumpPointKey.TEMP_INLET_CURRENT,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _reading(
+        Scope.BOILER_HEAT_PUMP,
+        BoilerHeatPumpPointKey.TEMP_REQUESTED,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _enum(Scope.BUFFER_TANK, BufferTankPointKey.STATE, HeatSourceState),
+    _enum(Scope.BUFFER_TANK, BufferTankPointKey.BLOCKING_SOURCE, BlockingSource),
+    _reading(
+        Scope.BUFFER_TANK,
+        BufferTankPointKey.TEMP_SOURCE_INLET,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _reading(
+        Scope.BUFFER_TANK, BufferTankPointKey.TEMP_UPPER, SensorDeviceClass.TEMPERATURE
+    ),
+    _reading(
+        Scope.BUFFER_TANK, BufferTankPointKey.TEMP_LOWER, SensorDeviceClass.TEMPERATURE
+    ),
+    _reading(
+        Scope.THERMISTOR_INPUTS,
+        ThermistorPointKey.TEMP_T1,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.THERMISTOR_INPUTS,
+        ThermistorPointKey.TEMP_T2,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.THERMISTOR_INPUTS,
+        ThermistorPointKey.TEMP_T3,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.THERMISTOR_INPUTS,
+        ThermistorPointKey.TEMP_T4,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.THERMISTOR_INPUTS,
+        ThermistorPointKey.TEMP_T5,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.DHW_TANK, DhwTankPointKey.TEMP_CURRENT, SensorDeviceClass.TEMPERATURE
+    ),
+    _reading(
+        Scope.DHW_TANK, DhwTankPointKey.TEMP_TARGET, SensorDeviceClass.TEMPERATURE
+    ),
+    _enum(Scope.DHW_TANK, DhwTankPointKey.STATE, DhwTankState),
+    _enum(Scope.DHW_TANK, DhwTankPointKey.BLOCKING_SOURCE, BlockingSource),
+    _enum(Scope.DHW_TANK, DhwTankPointKey.CIRCULATION_STATE, CirculationState),
+    _reading(
+        Scope.DHW_TANK,
+        DhwTankPointKey.TEMP_CIRCULATION_RETURN,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.DHW_TANK,
+        DhwTankPointKey.TEMP_SOURCE_INLET,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.DHW_TANK,
+        DhwTankPointKey.TEMP_SOURCE_RETURN,
+        SensorDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _enum(Scope.VENTILATION, VentilationPointKey.STATE, VentilationUnitState),
+    _enum(Scope.VENTILATION, VentilationPointKey.BLOCKING_SOURCE, BlockingSource),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.WARNING_CODE,
+        None,
+        diagnostic=True,
+        enabled=False,
+        measurement=False,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.ERROR_CODE,
+        None,
+        diagnostic=True,
+        enabled=False,
+        measurement=False,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.FREE_COOLING,
+        None,
+        diagnostic=True,
+        enabled=False,
+        measurement=False,
+    ),
+    _reading(Scope.VENTILATION, VentilationPointKey.SUPPLY_FAN_SPEED, None),
+    _reading(Scope.VENTILATION, VentilationPointKey.EXHAUST_FAN_SPEED, None),
+    _reading(
+        Scope.VENTILATION, VentilationPointKey.SUPPLY_FAN_SETPOINT, None, enabled=False
+    ),
+    _reading(
+        Scope.VENTILATION, VentilationPointKey.EXHAUST_FAN_SETPOINT, None, enabled=False
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.SUPPLY_FLOW_SETPOINT,
+        SensorDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_FLOW_SETPOINT,
+        SensorDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.TEMP_INTAKE,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.TEMP_SUPPLY,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.TEMP_EXTRACT,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.TEMP_EXHAUST,
+        SensorDeviceClass.TEMPERATURE,
+    ),
+    _reading(
+        Scope.VENTILATION,
+        VentilationPointKey.BYPASS_DAMPER_POSITION,
+        None,
+        enabled=False,
+    ),
+    _enum(Scope.DEHUMIDIFIER, DehumidifierPointKey.DRYING_STATE, DryingState),
+    _enum(
+        Scope.DEHUMIDIFIER, DehumidifierPointKey.DRYING_BLOCKING_SOURCE, BlockingSource
+    ),
+    _enum(
+        Scope.DEHUMIDIFIER, DehumidifierPointKey.THERMAL_INTEGRATION_STATE, RoomState
+    ),
+    _enum(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.THERMAL_INTEGRATION_BLOCKING_SOURCE,
+        BlockingSource,
     ),
 )
 

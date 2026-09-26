@@ -18,9 +18,19 @@ import yaml
 from homeassistant.const import __version__ as HA_VERSION
 from wavin_sentio_connect import (
     UNITS,
+    BoilerHeatPumpPointKey,
+    BufferTankPointKey,
+    DehumidifierPointKey,
+    DhwTankPointKey,
+    HccPointKey,
+    HeatingCoolingSourcePointKey,
+    ItcPointKey,
     LocationPointKey,
+    OutdoorPointKey,
     PeripheralPointKey,
     RoomPointKey,
+    ThermistorPointKey,
+    VentilationPointKey,
 )
 
 from custom_components.wavin_sentio_connect.binary_sensor import BINARY_SENSORS
@@ -74,15 +84,32 @@ NOT_AN_ENTITY: dict[Scope, dict[str, str]] = {
         "entities",
         "associated_ventilation": "decides whether the room has that function's entities",
         "associated_heating_source": "the address of another Modbus object",
-        "drying_state": "the manual gives it other states than RoomState, which the "
-        "library reads it as",
-        "ventilation_state": "the manual gives it other states than RoomState, which the "
-        "library reads it as",
     },
     Scope.PERIPHERAL: {
         "type": "the peripheral device's model",
         "serial_number": "the peripheral device's identity",
         "name": "the peripheral device's name",
+    },
+    Scope.OUTDOOR: {"outdoor_name": "the object device's name"},
+    Scope.HC_SOURCE: {},
+    Scope.BOILER_HEAT_PUMP: {"boiler_heat_pump_name": "the object device's name"},
+    Scope.THERMISTOR_INPUTS: {},
+    Scope.DHW_TANK: {"dhw_tank_name": "the object device's name"},
+    Scope.BUFFER_TANK: {"buffer_tank_name": "the object device's name"},
+    Scope.HCC: {"name": "the object device's name"},
+    Scope.ITC: {"name": "the object device's name"},
+    Scope.VENTILATION: {
+        "name": "the unit device's name",
+        "device_model": "the unit device's model",
+        "features": "what the unit offers, as bits",
+        "air_filter_last_change": "a time whose encoding the manual does not give",
+    },
+    Scope.DEHUMIDIFIER: {
+        "name": "the unit device's name",
+        "type": "the unit device's model",
+        "air_filter_last_change": "a time whose encoding the manual does not give",
+        "hcw_supplier": "the address of another Modbus object",
+        "thermal_integration_demand_condition": "the address of another Modbus object",
     },
 }
 
@@ -92,6 +119,16 @@ def _library_points() -> dict[Scope, set[str]]:
         Scope.LOCATION: {str(key) for key in LocationPointKey.all()},
         Scope.ROOM: {point.name for point in RoomPointKey.all()},
         Scope.PERIPHERAL: {point.name for point in PeripheralPointKey.all()},
+        Scope.OUTDOOR: {str(key) for key in OutdoorPointKey.all()},
+        Scope.HC_SOURCE: {str(key) for key in HeatingCoolingSourcePointKey.all()},
+        Scope.BOILER_HEAT_PUMP: {str(key) for key in BoilerHeatPumpPointKey.all()},
+        Scope.THERMISTOR_INPUTS: {str(key) for key in ThermistorPointKey.all()},
+        Scope.DHW_TANK: {str(key) for key in DhwTankPointKey.all()},
+        Scope.BUFFER_TANK: {str(key) for key in BufferTankPointKey.all()},
+        Scope.HCC: {point.name for point in HccPointKey.all()},
+        Scope.ITC: {point.name for point in ItcPointKey.all()},
+        Scope.VENTILATION: {point.name for point in VentilationPointKey.all()},
+        Scope.DEHUMIDIFIER: {point.name for point in DehumidifierPointKey.all()},
     }
 
 

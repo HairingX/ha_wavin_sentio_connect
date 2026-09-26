@@ -15,7 +15,21 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from wavin_sentio_connect import Key, LocationPointKey, Point, PointKey, RoomPointKey
+from wavin_sentio_connect import (
+    BoilerHeatPumpPointKey,
+    BufferTankPointKey,
+    DehumidifierPointKey,
+    DhwTankPointKey,
+    HccPointKey,
+    ItcPointKey,
+    Key,
+    LocationPointKey,
+    OutdoorPointKey,
+    Point,
+    PointKey,
+    RoomPointKey,
+    VentilationPointKey,
+)
 
 from .data import SentioConfigEntry, SentioData
 from .entity import (
@@ -24,7 +38,7 @@ from .entity import (
     SentioEntityDescription,
     Target,
     all_targets,
-    point_name,
+    entity_key,
 )
 from .units import ha_unit
 
@@ -47,8 +61,8 @@ def _number(
     config: bool = True,
 ) -> SentioNumberDescription:
     return SentioNumberDescription(
-        key=point_name(point),
-        translation_key=point_name(point),
+        key=entity_key(scope, point),
+        translation_key=entity_key(scope, point),
         scope=scope,
         point=point,
         # Offsets and hysteresis are differences, which a temperature class would convert as
@@ -97,6 +111,280 @@ NUMBERS: tuple[SentioNumberDescription, ...] = (
         _ROOM, RoomPointKey.DEW_POINT_COOLING_THRESHOLD_HYSTERESIS, None, enabled=False
     ),
     _number(_ROOM, RoomPointKey.HUMIDITY_HIGH_ALARM_LIMIT, _HUMIDITY, enabled=False),
+    _number(
+        Scope.OUTDOOR,
+        OutdoorPointKey.AIR_TEMP_BMS_OVERRIDE,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(Scope.HCC, HccPointKey.HEAT_CURVE_SLOPE, None, enabled=False),
+    _number(Scope.HCC, HccPointKey.HEAT_CURVE_SHIFT, None, enabled=False),
+    _number(
+        Scope.HCC,
+        HccPointKey.HEAT_CURVE_INLET_MIN,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.HCC,
+        HccPointKey.HEAT_CURVE_INLET_MAX,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(Scope.HCC, HccPointKey.HEAT_CURVE_GAIN, None, enabled=False),
+    _number(
+        Scope.HCC,
+        HccPointKey.HIGH_TEMP_CUTOFF_TEMP,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(Scope.ITC, ItcPointKey.HEAT_CURVE_SLOPE, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.HEAT_CURVE_SHIFT, None, enabled=False),
+    _number(
+        Scope.ITC,
+        ItcPointKey.HEAT_CURVE_INLET_MIN,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.ITC,
+        ItcPointKey.HEAT_CURVE_INLET_MAX,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(Scope.ITC, ItcPointKey.HEAT_CURVE_GAIN, None, enabled=False),
+    _number(
+        Scope.ITC,
+        ItcPointKey.HIGH_TEMP_CUTOFF_TEMP,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(Scope.ITC, ItcPointKey.REGULATOR_P, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.REGULATOR_I, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.REGULATOR_HYSTERESIS, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.RETURN_MAX_GAIN, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.RETURN_MIN_GAIN, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.BOOST_FLOW, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.RAMPING_TIME, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.FROST_PROTECTION_MODE, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.COOLING_REGULATOR_P, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.COOLING_REGULATOR_I, None, enabled=False),
+    _number(Scope.ITC, ItcPointKey.COOLING_REGULATOR_HYSTERESIS, None, enabled=False),
+    _number(
+        Scope.ITC,
+        ItcPointKey.RETURN_MAX_LIMIT,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.ITC,
+        ItcPointKey.RETURN_MIN_LIMIT,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.ITC,
+        ItcPointKey.FROST_PROTECTION_TEMP,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.ITC,
+        ItcPointKey.COOLING_INLET_MIN,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.ITC,
+        ItcPointKey.COOLING_INLET_MAX,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.BOILER_HEAT_PUMP,
+        BoilerHeatPumpPointKey.MIN_RUNTIME,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.BOILER_HEAT_PUMP,
+        BoilerHeatPumpPointKey.MIN_CYCLE_DELAY,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.BOILER_HEAT_PUMP,
+        BoilerHeatPumpPointKey.DEMAND_START_DELAY,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.BOILER_HEAT_PUMP,
+        BoilerHeatPumpPointKey.DEMAND_STOP_DELAY,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.BUFFER_TANK, BufferTankPointKey.START_DIFFERENCE, None, enabled=False
+    ),
+    _number(Scope.BUFFER_TANK, BufferTankPointKey.STOP_DIFFERENCE, None, enabled=False),
+    _number(
+        Scope.BUFFER_TANK,
+        BufferTankPointKey.CHARGE_EVALUATION_DELAY,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.DHW_TANK,
+        DhwTankPointKey.TEMP_SET,
+        NumberDeviceClass.TEMPERATURE,
+        config=False,
+    ),
+    _number(
+        Scope.DHW_TANK, DhwTankPointKey.TEMP_SET_VACATION, NumberDeviceClass.TEMPERATURE
+    ),
+    _number(
+        Scope.DHW_TANK, DhwTankPointKey.TEMP_SET_STANDBY, NumberDeviceClass.TEMPERATURE
+    ),
+    _number(
+        Scope.DHW_TANK,
+        DhwTankPointKey.TEMP_SET_CLEANING,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(Scope.DHW_TANK, DhwTankPointKey.CIRCULATION_COOLDOWN, None, enabled=False),
+    _number(
+        Scope.DHW_TANK, DhwTankPointKey.CIRCULATION_STOP_DIFFERENCE, None, enabled=False
+    ),
+    _number(
+        Scope.DHW_TANK,
+        DhwTankPointKey.SOURCE_RETURN_TEMP_LIMIT,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.AIR_FILTER_LIFETIME,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.AIR_FILTER_LIFETIME_USED,
+        None,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_LEVEL_UNOCCUPIED,
+        None,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_FLOW_UNOCCUPIED,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION, VentilationPointKey.EXHAUST_LEVEL_ECO, None, enabled=False
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_FLOW_ECO,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_LEVEL_COMFORT,
+        None,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_FLOW_COMFORT,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION, VentilationPointKey.EXHAUST_LEVEL_BOOST, None, enabled=False
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.EXHAUST_FLOW_BOOST,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.SUPPLY_LEVEL_UNOCCUPIED,
+        None,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.SUPPLY_FLOW_UNOCCUPIED,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION, VentilationPointKey.SUPPLY_LEVEL_ECO, None, enabled=False
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.SUPPLY_FLOW_ECO,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION, VentilationPointKey.SUPPLY_LEVEL_COMFORT, None, enabled=False
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.SUPPLY_FLOW_COMFORT,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.VENTILATION, VentilationPointKey.SUPPLY_LEVEL_BOOST, None, enabled=False
+    ),
+    _number(
+        Scope.VENTILATION,
+        VentilationPointKey.SUPPLY_FLOW_BOOST,
+        NumberDeviceClass.VOLUME_FLOW_RATE,
+        enabled=False,
+    ),
+    _number(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.AIR_FILTER_LIFETIME,
+        NumberDeviceClass.DURATION,
+        enabled=False,
+    ),
+    _number(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.AIR_FILTER_LIFETIME_USED,
+        None,
+        enabled=False,
+    ),
+    _number(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.DRYING_COOLING_WATER_TEMP,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.THERMAL_INTEGRATION_HEATING_WATER_TEMP,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
+    _number(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.THERMAL_INTEGRATION_COOLING_WATER_TEMP,
+        NumberDeviceClass.TEMPERATURE,
+        enabled=False,
+    ),
 )
 
 

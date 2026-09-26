@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
-from enum import StrEnum
 from typing import Any
 
 from homeassistant.core import callback
@@ -28,6 +27,7 @@ from wavin_sentio_connect import (
 from .const import DOMAIN
 from .data import SentioData, value
 from .devices import controller_identifier, peripheral_identifier, room_identifier
+from .objects import REPEATED_OBJECTS, SINGLE_OBJECTS, Scope, object_identifier
 
 _USABLE = frozenset({Quality.GOOD, Quality.NO_DATA, Quality.STALE})
 """Qualities an entity shows: a value, "unknown" for no reading, or the last good value.
@@ -43,14 +43,6 @@ _NOT_WRITABLE = frozenset(
 The manual: in WRITE_WITH_PASSWORD, writes are refused until a password has been written,
 which this integration does not do.
 """
-
-
-class Scope(StrEnum):
-    """Where a point lives: the location, every room, or every peripheral."""
-
-    LOCATION = "location"
-    ROOM = "room"
-    PERIPHERAL = "peripheral"
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -74,6 +66,16 @@ class Target:
     key: Key[Any]
     device: DeviceInfo | ChildDeviceInfo
     unique_id: str
+
+
+def entity_key(scope: Scope, point: Key[Any] | PointKey[Any]) -> str:
+    """The name of the entity of `point` in `scope`, which its translation is found by.
+
+    A point of the objects there are several of is named after its object too: a circuit's
+    `state` and a ventilation unit's are named alike but mean different things.
+    """
+    name = point_name(point)
+    return f"{scope.value}_{name}" if scope in REPEATED_OBJECTS else name
 
 
 def room_target(data: SentioData, room: int, key: Key[Any]) -> Target:
@@ -128,6 +130,33 @@ def targets(data: SentioData, description: SentioEntityDescription) -> list[Targ
                 for peripheral in data.peripherals
                 if peripheral.serial_number is not None
             )
+        case scope if scope in SINGLE_OBJECTS:
+            assert isinstance(point, Key)
+            found.append(
+                Target(
+                    point,
+                    ChildDeviceInfo(
+                        identifiers={object_identifier(data.serial_number, scope)},
+                        parent_device_id=data.controller_device_id,
+                    ),
+                    f"{data.serial_number}_{point}",
+                )
+            )
+        case scope:
+            assert isinstance(point, PointKey)
+            repeated = REPEATED_OBJECTS[scope]
+            for number in data.client.instances(repeated.label):
+                identifiers = {object_identifier(data.serial_number, scope, number)}
+                key = repeated.key(number, point)
+                device: DeviceInfo | ChildDeviceInfo = (
+                    ChildDeviceInfo(
+                        identifiers=identifiers,
+                        parent_device_id=data.controller_device_id,
+                    )
+                    if repeated.part
+                    else DeviceInfo(identifiers=identifiers)
+                )
+                found.append(Target(key, device, f"{data.serial_number}_{key}"))
     return [target for target in found if data.client.has(target.key)]
 
 

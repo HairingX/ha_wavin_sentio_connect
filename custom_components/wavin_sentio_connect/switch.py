@@ -10,7 +10,17 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from wavin_sentio_connect import Key, LocationPointKey, PointKey, RoomPointKey
+from wavin_sentio_connect import (
+    BufferTankPointKey,
+    DhwTankPointKey,
+    HccPointKey,
+    ItcPointKey,
+    Key,
+    LocationPointKey,
+    PointKey,
+    RoomPointKey,
+    VentilationPointKey,
+)
 
 from .data import SentioConfigEntry, SentioData
 from .entity import (
@@ -19,7 +29,7 @@ from .entity import (
     SentioEntityDescription,
     Target,
     all_targets,
-    point_name,
+    entity_key,
 )
 
 # The client sends writes in order and folds a queued setting into a newer one, so actions
@@ -45,8 +55,8 @@ def _switch(
     enabled: bool = True,
 ) -> SentioSwitchDescription:
     return SentioSwitchDescription(
-        key=point_name(point),
-        translation_key=point_name(point),
+        key=entity_key(scope, point),
+        translation_key=entity_key(scope, point),
         scope=scope,
         point=point,
         on=on,
@@ -70,6 +80,76 @@ SWITCHES: tuple[SentioSwitchDescription, ...] = (
     # The manual gives these two no values; the register map allows 0 and 1.
     _switch(Scope.ROOM, RoomPointKey.EXCLUDE_FROM_VACATION, on=1, off=0, config=True),
     _switch(Scope.ROOM, RoomPointKey.ADAPTIVE_ENABLE, on=1, off=0, config=True),
+    _switch(
+        Scope.HCC,
+        HccPointKey.HIGH_TEMP_CUTOFF_ENABLE,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.ITC,
+        ItcPointKey.HIGH_TEMP_CUTOFF_ENABLE,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.ITC,
+        ItcPointKey.RETURN_MAX_PRIORITY,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.ITC,
+        ItcPointKey.BOOST_ENABLE,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.ITC,
+        ItcPointKey.RAMPING_ENABLE,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.BUFFER_TANK,
+        BufferTankPointKey.FLOW_BALANCING_ENABLE,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.DHW_TANK, DhwTankPointKey.EXCLUDE_FROM_VACATION, on=1, off=0, config=True
+    ),
+    _switch(
+        Scope.DHW_TANK, DhwTankPointKey.EXCLUDE_FROM_STANDBY, on=1, off=0, config=True
+    ),
+    _switch(
+        Scope.VENTILATION,
+        VentilationPointKey.ALLOW_STOPPED,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
+    _switch(
+        Scope.VENTILATION,
+        VentilationPointKey.ALLOW_UNOCCUPIED,
+        on=True,
+        off=False,
+        config=True,
+        enabled=False,
+    ),
 )
 
 

@@ -13,15 +13,20 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
-from modbus_event_connect import Client, PollRate, Status, UnsupportedDeviceError
-from modbus_event_connect.testing import (
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.typing import WebSocketGenerator
+from wavin_sentio_connect import (
+    Client,
+    PeripheralType,
+    PollRate,
+    Status,
+    UnsupportedDeviceError,
+)
+from wavin_sentio_connect.testing import (
     FakeClock,
     SimulatedModbusDevice,
     SimulatedModbusGateway,
 )
-from pytest_homeassistant_custom_component.common import MockConfigEntry
-from pytest_homeassistant_custom_component.typing import WebSocketGenerator
-from wavin_sentio_connect import PeripheralType
 
 from custom_components.wavin_sentio_connect.const import DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData

@@ -9,9 +9,8 @@ from homeassistant.components.switch import SwitchEntity, SwitchEntityDescriptio
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from modbus_event_connect import Key
 
-from wavin_sentio_connect import LocationPointKey, PointKey, RoomPointKey
+from wavin_sentio_connect import Key, LocationPointKey, PointKey, RoomPointKey
 
 from .data import SentioConfigEntry, SentioData
 from .entity import (

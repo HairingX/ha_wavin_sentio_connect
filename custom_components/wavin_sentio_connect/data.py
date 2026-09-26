@@ -6,9 +6,10 @@ import asyncio
 from dataclasses import dataclass, field
 
 from homeassistant.config_entries import ConfigEntry
-from modbus_event_connect import Client, Key
 
 from wavin_sentio_connect import (
+    Client,
+    Key,
     LocationPointKey,
     SentioPeripheral,
     SentioRoom,

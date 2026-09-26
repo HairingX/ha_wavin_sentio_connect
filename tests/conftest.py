@@ -12,14 +12,13 @@ from typing import Any
 import pytest
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
-from modbus_event_connect import Client
-from modbus_event_connect.testing import (
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+from wavin_sentio_connect import Client, PeripheralType, create_client_on
+from wavin_sentio_connect.testing import (
     FakeClock,
     SimulatedModbusDevice,
     SimulatedModbusGateway,
 )
-from pytest_homeassistant_custom_component.common import MockConfigEntry
-from wavin_sentio_connect import PeripheralType, create_client_on
 
 from custom_components.wavin_sentio_connect.const import CONF_UNIT_ID, DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData

@@ -10,17 +10,15 @@ from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
-from modbus_event_connect import (
+
+from wavin_sentio_connect import (
     CannotConnectError,
     Client,
     DataValue,
     Key,
-    UnsupportedDeviceError,
-)
-
-from wavin_sentio_connect import (
     PeripheralPointKey,
     PointKey,
+    UnsupportedDeviceError,
     peripheral_key,
     peripherals,
     rooms,

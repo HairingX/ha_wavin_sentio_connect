@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from modbus_event_connect import DataType, Key, Limits, Point, Transform
-from modbus_event_connect.modbus import HoldingRegister
+from wavin_sentio_connect import DataType, Key, Limits, Point, Transform
+from wavin_sentio_connect.testing import HoldingRegister
 
 from custom_components.wavin_sentio_connect.number import value_range
 

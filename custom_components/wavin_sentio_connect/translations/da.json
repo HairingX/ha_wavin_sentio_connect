@@ -1,0 +1,503 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "discovery_confirm": {
+        "title": "Wavin Sentio fundet",
+        "description": "Tilføj Sentio-controlleren {name} på {host}?"
+      },
+      "user": {
+        "title": "Opsæt Wavin Sentio",
+        "description": "Modbus TCP skal være slået til på controlleren (menunavne som i manualen): System > Installer settings > Modbus configuration > Modbus TCP.",
+        "data": {
+          "host": "Vært",
+          "port": "Port",
+          "unit_id": "Enheds-ID"
+        },
+        "data_description": {
+          "host": "Sentio-controllerens IP-adresse eller værtsnavn.",
+          "port": "Controllerens Modbus TCP-port.",
+          "unit_id": "Det Modbus-enheds-ID, controlleren svarer på."
+        }
+      },
+      "reconfigure": {
+        "title": "Skift forbindelse",
+        "description": "Skift hvor controlleren nås. Det skal være den samme controller.",
+        "data": {
+          "host": "Vært",
+          "port": "Port",
+          "unit_id": "Enheds-ID"
+        },
+        "data_description": {
+          "host": "Sentio-controllerens IP-adresse eller værtsnavn.",
+          "port": "Controllerens Modbus TCP-port.",
+          "unit_id": "Det Modbus-enheds-ID, controlleren svarer på."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Intet svarede på denne adresse, port og enheds-ID.",
+      "unsupported_device": "Enheden der svarede er ikke en understøttet Sentio-controller.",
+      "no_serial_number": "Controlleren oplyste intet serienummer og kan derfor ikke skelnes fra andre.",
+      "invalid_host": "Angiv en vært.",
+      "unknown": "Uventet fejl; se loggen."
+    },
+    "abort": {
+      "already_configured": "Denne controller er allerede sat op.",
+      "reconfigure_successful": "Forbindelsen er ændret.",
+      "wrong_device": "En anden controller svarer på denne adresse. Tilføj den som en ny controller i stedet.",
+      "cannot_connect": "Intet svarede på den fundne adresse med standardport og -enheds-ID.",
+      "unsupported_device": "Enheden der svarede er ikke en understøttet Sentio-controller.",
+      "no_serial_number": "Controlleren oplyste intet serienummer og kan derfor ikke skelnes fra andre.",
+      "unknown": "Uventet fejl; se loggen.",
+      "already_in_progress": "Denne controller er allerede ved at blive sat op."
+    }
+  },
+  "device": {
+    "controller": {
+      "name": "Wavin Sentio Controller"
+    },
+    "room": {
+      "name": "Rum {number}"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "system_warning": {
+        "name": "Systemadvarsel"
+      },
+      "system_error": {
+        "name": "Systemfejl"
+      },
+      "warning": {
+        "name": "Advarsel"
+      },
+      "error": {
+        "name": "Fejl"
+      },
+      "low_battery": {
+        "name": "Batteri"
+      },
+      "peripheral_lost": {
+        "name": "Enhed svarer ikke"
+      },
+      "lost": {
+        "name": "Svarer ikke"
+      }
+    },
+    "climate": {
+      "room": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "eco": "Eco",
+              "comfort": "Komfort",
+              "extra_comfort": "Ekstra komfort"
+            }
+          }
+        }
+      }
+    },
+    "number": {
+      "temp_outdoor_cooling_min": {
+        "name": "Køling, mindste udetemperatur"
+      },
+      "temp_outdoor_heating_max": {
+        "name": "Opvarmning, højeste udetemperatur"
+      },
+      "temp_air_target": {
+        "name": "Indstillet temperatur"
+      },
+      "temp_standby": {
+        "name": "Standbytemperatur"
+      },
+      "temp_vacation": {
+        "name": "Ferietemperatur"
+      },
+      "thermal_integration_heating_offset": {
+        "name": "Termisk integration, varmeforskydning"
+      },
+      "thermal_integration_hysteresis": {
+        "name": "Termisk integration, hysterese"
+      },
+      "humidity_threshold_heating": {
+        "name": "Fugtgrænse ved opvarmning"
+      },
+      "humidity_threshold_cooling": {
+        "name": "Fugtgrænse ved køling"
+      },
+      "humidity_hysteresis": {
+        "name": "Fugthysterese"
+      },
+      "drying_cooling_water_offset": {
+        "name": "Affugtning, kølevandsforskydning"
+      },
+      "drying_cooling_water_offset_hysteresis": {
+        "name": "Affugtning, kølevandsforskydning, hysterese"
+      },
+      "dew_point_cooling_threshold": {
+        "name": "Dugpunktsgrænse ved køling"
+      },
+      "dew_point_cooling_threshold_hysteresis": {
+        "name": "Dugpunktsgrænse ved køling, hysterese"
+      },
+      "humidity_high_alarm_limit": {
+        "name": "Alarmgrænse for høj luftfugtighed"
+      }
+    },
+    "select": {
+      "update_mode": {
+        "name": "Opdateringstilstand",
+        "state": {
+          "dont_allow_from_mobile_app": "Ikke fra mobilappen",
+          "enabled": "Aktiveret",
+          "disabled_entirely": "Deaktiveret"
+        }
+      },
+      "heating_cooling_mode_bms_override": {
+        "name": "Tilsidesat varme-/kølefunktion",
+        "state": {
+          "disabled": "Deaktiveret",
+          "heating": "Opvarmning",
+          "cooling": "Køling",
+          "external_switch": "Ekstern kontakt"
+        }
+      },
+      "lock": {
+        "name": "Termostatlås",
+        "state": {
+          "locked": "Låst",
+          "hotel": "Hotel",
+          "unlocked": "Ulåst"
+        }
+      },
+      "mode": {
+        "name": "Styring",
+        "state": {
+          "schedule": "Program",
+          "manual": "Manuel"
+        }
+      },
+      "temp_preset": {
+        "name": "Forvalg",
+        "state": {
+          "eco": "Eco",
+          "comfort": "Komfort",
+          "extra_comfort": "Ekstra komfort"
+        }
+      }
+    },
+    "sensor": {
+      "heating_cooling_mode": {
+        "name": "Varme-/kølefunktion",
+        "state": {
+          "heating": "Opvarmning",
+          "cooling": "Køling"
+        }
+      },
+      "modbus_mode": {
+        "name": "Modbus-tilstand",
+        "state": {
+          "disabled": "Deaktiveret",
+          "read_only": "Kun læsning",
+          "read_write": "Læsning og skrivning",
+          "write_with_password": "Skrivning med adgangskode"
+        }
+      },
+      "temp_air_current": {
+        "name": "Lufttemperatur"
+      },
+      "temp_air_target_active": {
+        "name": "Måltemperatur"
+      },
+      "temp_floor_current": {
+        "name": "Gulvtemperatur"
+      },
+      "humidity_current": {
+        "name": "Luftfugtighed"
+      },
+      "dew_point_current": {
+        "name": "Dugpunkt"
+      },
+      "state": {
+        "name": "Tilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "radiators_state": {
+        "name": "Radiatortilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "ufhc_state": {
+        "name": "Gulvvarmetilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "thermal_integration_state": {
+        "name": "Termisk integration, tilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "blocking_source_radiators": {
+        "name": "Radiator, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "blocking_source_ufhc": {
+        "name": "Gulvvarme, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "blocking_source_drying": {
+        "name": "Affugtning, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "blocking_source_thermal_integration": {
+        "name": "Termisk integration, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "blocking_source_ventilation": {
+        "name": "Ventilation, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "mode_override": {
+        "name": "Tilsidesat funktion",
+        "state": {
+          "none": "Ingen",
+          "temporary": "Midlertidig",
+          "vacation_away": "Ferie / ude",
+          "adjust": "Justeret"
+        }
+      },
+      "signal_strength": {
+        "name": "Signalstyrke"
+      },
+      "owner": {
+        "name": "Rum"
+      }
+    },
+    "switch": {
+      "standby_enable": {
+        "name": "Standby"
+      },
+      "vacation_enable": {
+        "name": "Ferie"
+      },
+      "daylight_saving_enable": {
+        "name": "Sommertid"
+      },
+      "exclude_from_vacation": {
+        "name": "Undtag fra ferie"
+      },
+      "adaptive_enable": {
+        "name": "Adaptiv funktion"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Controlleren på {host} svarer ikke."
+    },
+    "unsupported_device": {
+      "message": "Enheden er ikke en understøttet Sentio-controller."
+    },
+    "wrong_device": {
+      "message": "En anden controller svarer på denne adresse: serienummer {found}, ikke {expected}. Omkonfigurer posten."
+    },
+    "modbus_not_writable": {
+      "message": "Controllerens Modbus-tilstand er {mode}; den tager ikke imod skrivning fra denne integration."
+    },
+    "invalid_value": {
+      "message": "Controlleren kan ikke tage værdien {value}."
+    },
+    "write_refused": {
+      "message": "Controlleren tog ikke imod ændringen."
+    },
+    "schedule_has_the_target": {
+      "message": "Rummet følger sit program. Skift til opvarmning eller køling for at sætte en temperatur."
+    }
+  }
+}

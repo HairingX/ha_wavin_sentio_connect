@@ -1,0 +1,15 @@
+{
+  "domain": "wavin_sentio_connect",
+  "name": "Wavin Sentio Connect",
+  "codeowners": ["@HairingX"],
+  "config_flow": true,
+  "dependencies": [],
+  "dhcp": [{ "hostname": "wavin sentio ccu#*" }],
+  "documentation": "https://github.com/HairingX/ha_wavin_sentio_connect",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/HairingX/ha_wavin_sentio_connect/issues",
+  "loggers": ["modbus_event_connect", "pymodbus", "wavin_sentio_connect"],
+  "requirements": ["wavin_sentio_connect==0.2.0rc2"],
+  "version": "0.0.0"
+}

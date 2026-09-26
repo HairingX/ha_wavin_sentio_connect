@@ -1,39 +1,196 @@
 name: Release
 
+# Run this from the Actions tab. Never publish the draft release by hand: that creates the tag
+# at whatever main points to, before the version in the manifest has been set, and HACS installs
+# a release from the files its tag points to.
+#
+# Everything runs in one direction, and nothing leaves the runner until it has been checked:
+# resolve the version -> test and validate the exact commit -> set the manifest's version and
+# check it -> push the version commit and the tag together -> GitHub release. If main moves while
+# this runs, the push is refused and nothing is published.
 on:
   workflow_dispatch:
-  release:
-    types: [published]
+    inputs:
+      release:
+        description: >-
+          What to release. The version is worked out from the tags and the draft release: the
+          next release candidate, or the final release that ends the series.
+        required: true
+        type: choice
+        options:
+          - release candidate
+          - final release
+        default: release candidate
+      version:
+        description: >-
+          Override, only for a new major version, which is never worked out, or when the version
+          worked out is wrong: canonical PEP 440 without a v, such as 2.0.0 or 2.0.0rc1, of the
+          kind chosen above. It must still be higher than every version tagged.
+        required: false
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 env:
-  COMPONENT_DIR: ha_wavin_sentio_connect
+  MANIFEST: custom_components/wavin_sentio_connect/manifest.json
 
 jobs:
-  release_zip_file:
-    name: Prepare release asset
+  prepare:
+    name: Resolve the version
     runs-on: ubuntu-latest
+    permissions:
+      # Draft releases are listed only to those who can push.
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+      previous_tag: ${{ steps.version.outputs.previous_tag }}
+      sha: ${{ steps.main.outputs.sha }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Update manifest.json version to ${{ github.event.release.tag_name }}
+      - name: Refuse to run from anything but main
+        if: github.ref != 'refs/heads/main'
         run: |
-          python3 ${{ github.workspace }}/.github/scripts/update_hacs_manifest.py --version ${{ github.event.release.tag_name }} --path /custom_components/ha_wavin_sentio_connect/
-      - name: Commit manifest update
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add ./custom_components/ha_wavin_sentio_connect/manifest.json
-          git commit -m "Updated manifest.json"
-          git push origin HEAD:main
-      - name: Create zip
-        run: |
-          cd custom_components/ha_wavin_sentio_connect
-          zip ha_wavin_sentio_connect.zip -r ./
-      - name: Upload zip to release
-        uses: svenstaro/upload-release-action@v2
+          # The tests and this workflow are taken from the branch it runs from.
+          echo "::error::Run the release from main, not $GITHUB_REF_NAME."
+          exit 1
+
+      - name: Check out main
+        uses: actions/checkout@v7
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./custom_components/ha_wavin_sentio_connect/ha_wavin_sentio_connect.zip
-          asset_name: ha_wavin_sentio_connect.zip
-          tag: ${{ github.ref }}
-          overwrite: true
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install packaging
+        run: python -m pip install packaging==26.3
+
+      - name: Work out the version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE: ${{ inputs.release }}
+          OVERRIDE: ${{ inputs.version }}
+        run: |
+          draft=$(gh api "repos/$GITHUB_REPOSITORY/releases" \
+            --jq '[.[] | select(.draft)] | sort_by(.created_at) | reverse | .[0].tag_name // empty')
+          git ls-remote --tags --refs "https://github.com/$GITHUB_REPOSITORY.git" \
+            | cut -f2 | sed 's#^refs/tags/##' > "$RUNNER_TEMP/tags"
+          python .github/scripts/release_version.py next "$RELEASE" "$draft" "$OVERRIDE" "$RUNNER_TEMP/tags" \
+            | tee -a "$GITHUB_OUTPUT"
+
+      - name: Record the commit to release
+        id: main
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  test:
+    name: Test
+    needs: prepare
+    permissions:
+      contents: read
+    uses: ./.github/workflows/tests.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+
+  validate:
+    name: Validate
+    needs: prepare
+    permissions:
+      contents: read
+    uses: ./.github/workflows/validate.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+
+  tag:
+    name: Set the version and push the tag
+    needs: [prepare, test, validate]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+    steps:
+      - name: Check out the tested commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install packaging
+        run: python -m pip install packaging==26.3
+
+      - name: Set the version, and commit it if it changed
+        run: |
+          python .github/scripts/release_version.py write "$VERSION" "$MANIFEST"
+          changed=$(git status --porcelain)
+          if [[ -n "$changed" && "$changed" != " M $MANIFEST" ]]; then
+            echo "::error::Setting the version changed more than $MANIFEST:"
+            echo "$changed"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$changed" ]]; then
+            git commit -q -am "Release $TAG"
+          else
+            echo "$MANIFEST already says $VERSION"
+          fi
+          git tag -a "$TAG" -m "Release $TAG"
+
+      - name: Check the manifest says this version
+        run: |
+          found=$(python -c "import json, os; print(json.load(open(os.environ['MANIFEST']))['version'])")
+          if [[ "$found" != "$VERSION" ]]; then
+            echo "::error::The manifest says $found, not $VERSION."
+            exit 1
+          fi
+
+      - name: Push the version commit and the tag together
+        run: |
+          # Atomic, and main only fast-forwards from the tested commit: if main moved, or either
+          # ref is refused, neither is pushed.
+          git push --atomic origin "HEAD:refs/heads/main" "refs/tags/$TAG"
+
+  github-release:
+    name: Publish the GitHub release
+    needs: [prepare, tag]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+      PREVIOUS_TAG: ${{ needs.prepare.outputs.previous_tag }}
+    steps:
+      - name: Publish, with notes of the pull requests merged since the previous release
+        run: |
+          # GitHub writes the notes from the pull requests, grouped by label.
+          flags=(--generate-notes)
+          if [[ -n "$PREVIOUS_TAG" ]]; then
+            flags+=(--notes-start-tag "$PREVIOUS_TAG")
+          fi
+          if [[ "$PRERELEASE" == "true" ]]; then
+            flags+=(--prerelease --latest=false)
+          fi
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
+            --title "$TAG" "${flags[@]}"
+          # The draft only proposed this version; Release Drafter drafts the next one.
+          draft_id=$(gh api "repos/$GITHUB_REPOSITORY/releases" \
+            --jq '[.[] | select(.draft)] | sort_by(.created_at) | reverse | .[0].id // empty')
+          if [[ -n "$draft_id" ]]; then
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$draft_id"
+          fi

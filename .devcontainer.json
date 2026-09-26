@@ -1,7 +1,7 @@
 {
     "name": "ha_wavin_sentio_connect/devcontainer",
-    "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
-    "postCreateCommand": "scripts/setup.sh",
+    "image": "mcr.microsoft.com/devcontainers/python:3.14-bookworm",
+    "postCreateCommand": "apt-get update && apt-get install -y libpcap0.8 && scripts/setup.sh",
     "appPort": [
         "1339:8123",
         "6791:6791"

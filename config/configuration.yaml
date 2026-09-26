@@ -2,6 +2,8 @@ config:
 history:
 logbook:
 sun:
+# Discovery of devices by the host name they send over DHCP.
+dhcp:
 
 # Enable VSCode debugging
 debugpy:
@@ -14,4 +16,6 @@ debugpy:
 logger:
   default: info
   logs:
-    custom_components.ha_wavin_sentio_connect: debug
+    custom_components.wavin_sentio_connect: debug
+    # Every DHCP packet Home Assistant sees, and which integration it matched.
+    homeassistant.components.dhcp: debug

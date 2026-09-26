@@ -1,0 +1,189 @@
+{
+  "entity": {
+    "sensor": {
+      "heating_cooling_mode": {
+        "default": "mdi:sun-snowflake-variant",
+        "state": {
+          "heating": "mdi:fire",
+          "cooling": "mdi:snowflake"
+        }
+      },
+      "modbus_mode": {
+        "default": "mdi:lan"
+      },
+      "temp_floor_current": {
+        "default": "mdi:heating-coil"
+      },
+      "dew_point_current": {
+        "default": "mdi:water-thermometer"
+      },
+      "state": {
+        "default": "mdi:radiator",
+        "state": {
+          "none": "mdi:minus-circle-outline",
+          "idle": "mdi:radiator-off",
+          "heating": "mdi:fire",
+          "cooling": "mdi:snowflake",
+          "blocked_heating": "mdi:fire-off",
+          "blocked_cooling": "mdi:snowflake-off"
+        }
+      },
+      "radiators_state": {
+        "default": "mdi:radiator",
+        "state": {
+          "none": "mdi:minus-circle-outline",
+          "idle": "mdi:radiator-off",
+          "heating": "mdi:fire",
+          "cooling": "mdi:snowflake",
+          "blocked_heating": "mdi:fire-off",
+          "blocked_cooling": "mdi:snowflake-off"
+        }
+      },
+      "ufhc_state": {
+        "default": "mdi:radiator",
+        "state": {
+          "none": "mdi:minus-circle-outline",
+          "idle": "mdi:radiator-off",
+          "heating": "mdi:fire",
+          "cooling": "mdi:snowflake",
+          "blocked_heating": "mdi:fire-off",
+          "blocked_cooling": "mdi:snowflake-off"
+        }
+      },
+      "thermal_integration_state": {
+        "default": "mdi:radiator",
+        "state": {
+          "none": "mdi:minus-circle-outline",
+          "idle": "mdi:radiator-off",
+          "heating": "mdi:fire",
+          "cooling": "mdi:snowflake",
+          "blocked_heating": "mdi:fire-off",
+          "blocked_cooling": "mdi:snowflake-off"
+        }
+      },
+      "blocking_source": {
+        "default": "mdi:cancel",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      },
+      "blocking_source_radiators": {
+        "default": "mdi:cancel",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      },
+      "blocking_source_ufhc": {
+        "default": "mdi:cancel",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      },
+      "blocking_source_drying": {
+        "default": "mdi:cancel",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      },
+      "blocking_source_thermal_integration": {
+        "default": "mdi:cancel",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      },
+      "blocking_source_ventilation": {
+        "default": "mdi:cancel",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      },
+      "mode_override": {
+        "default": "mdi:hand-back-right",
+        "state": {
+          "none": "mdi:hand-back-right-off"
+        }
+      },
+      "signal_strength": {
+        "default": "mdi:signal"
+      },
+      "owner": {
+        "default": "mdi:floor-plan"
+      }
+    },
+    "switch": {
+      "standby_enable": {
+        "default": "mdi:power-sleep"
+      },
+      "vacation_enable": {
+        "default": "mdi:airplane",
+        "state": {
+          "off": "mdi:airplane-off"
+        }
+      },
+      "daylight_saving_enable": {
+        "default": "mdi:clock-outline"
+      },
+      "exclude_from_vacation": {
+        "default": "mdi:airplane-off"
+      },
+      "adaptive_enable": {
+        "default": "mdi:brain"
+      }
+    },
+    "select": {
+      "update_mode": {
+        "default": "mdi:update"
+      },
+      "heating_cooling_mode_bms_override": {
+        "default": "mdi:sun-snowflake-variant"
+      },
+      "lock": {
+        "default": "mdi:lock",
+        "state": {
+          "hotel": "mdi:lock-outline",
+          "unlocked": "mdi:lock-open-variant"
+        }
+      },
+      "mode": {
+        "default": "mdi:calendar-clock",
+        "state": {
+          "manual": "mdi:hand-back-right"
+        }
+      },
+      "temp_preset": {
+        "default": "mdi:sofa",
+        "state": {
+          "eco": "mdi:leaf",
+          "extra_comfort": "mdi:sofa-outline"
+        }
+      }
+    },
+    "number": {
+      "temp_standby": {
+        "default": "mdi:power-sleep"
+      },
+      "temp_vacation": {
+        "default": "mdi:airplane"
+      },
+      "temp_outdoor_cooling_min": {
+        "default": "mdi:snowflake-thermometer"
+      },
+      "temp_outdoor_heating_max": {
+        "default": "mdi:sun-thermometer"
+      }
+    },
+    "climate": {
+      "room": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "eco": "mdi:leaf",
+              "comfort": "mdi:sofa",
+              "extra_comfort": "mdi:sofa-outline"
+            }
+          }
+        }
+      }
+    }
+  }
+}

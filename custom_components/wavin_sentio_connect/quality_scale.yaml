@@ -1,0 +1,100 @@
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: The integration registers no service actions.
+  appropriate-polling:
+    status: done
+    comment: >-
+      Each point is read at its own rate, and only what an enabled entity shows. Disabled polling
+      stops reading on a schedule; homeassistant.update_entity reads an entity at once.
+  brands:
+    status: done
+    comment: Shipped in brand/, which Home Assistant serves for custom integrations.
+  common-modules: done
+  config-flow-test-coverage: done
+  config-flow: done
+  dependency-transparency: done
+  docs-actions:
+    status: exempt
+    comment: The integration registers no service actions.
+  docs-conditions:
+    status: exempt
+    comment: The integration provides no conditions.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  docs-triggers:
+    status: exempt
+    comment: The integration provides no triggers.
+  entity-event-setup: done
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure: done
+  test-before-setup: done
+  unique-config-entry: done
+
+  # Silver
+  action-exceptions: done
+  config-entry-unloading: done
+  docs-configuration-parameters:
+    status: exempt
+    comment: The integration has no options.
+  docs-installation-parameters: done
+  entity-unavailable: done
+  integration-owner: done
+  log-when-unavailable:
+    status: done
+    comment: The library logs once when the controller stops answering and once when it answers again.
+  parallel-updates: done
+  reauthentication-flow:
+    status: exempt
+    comment: Modbus TCP on the controller has no credentials.
+  test-coverage: done
+
+  # Gold
+  devices:
+    status: done
+    comment: The controller, each room as a child device of it, and each peripheral through it.
+  diagnostics: done
+  discovery-update-info:
+    status: done
+    comment: A configured controller discovered at a new address has its entry moved there.
+  discovery:
+    status: done
+    comment: >-
+      By the DHCP host name the manual gives, "Wavin Sentio CCU#" and the serial number's last
+      four digits, seen on a CCU-208. A CCU-208 was measured to announce no mDNS service.
+  docs-data-update: done
+  docs-examples: done
+  docs-known-limitations: done
+  docs-supported-devices: done
+  docs-supported-functions: done
+  docs-troubleshooting: done
+  docs-use-cases: done
+  dynamic-devices:
+    status: done
+    comment: A room or peripheral set up on the controller is found while polling, and the entry reloads to add it.
+  entity-category: done
+  entity-device-class: done
+  entity-disabled-by-default: done
+  entity-translations: done
+  exception-translations: done
+  icon-translations: done
+  reconfiguration-flow: done
+  repair-issues:
+    status: todo
+    comment: Candidates are a Modbus mode that refuses writes, and another controller at the address.
+  stale-devices:
+    status: done
+    comment: A device the installation no longer has is removed when the entry sets up, which it does when the installation changes.
+
+  # Platinum
+  async-dependency: done
+  inject-websession:
+    status: exempt
+    comment: The library speaks Modbus TCP, not HTTP.
+  strict-typing:
+    status: done
+    comment: pyright strict reports no errors; the libraries ship py.typed.

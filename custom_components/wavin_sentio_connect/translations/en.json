@@ -1,0 +1,503 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "discovery_confirm": {
+        "title": "Wavin Sentio found",
+        "description": "Add the Sentio controller {name} at {host}?"
+      },
+      "user": {
+        "title": "Set up Wavin Sentio",
+        "description": "Modbus TCP must be enabled on the controller: System > Installer settings > Modbus configuration > Modbus TCP.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "unit_id": "Unit ID"
+        },
+        "data_description": {
+          "host": "The IP address or host name of the Sentio controller.",
+          "port": "The Modbus TCP port of the controller.",
+          "unit_id": "The Modbus unit ID the controller answers to."
+        }
+      },
+      "reconfigure": {
+        "title": "Change connection",
+        "description": "Change where the controller is reached. It must be the same controller.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "unit_id": "Unit ID"
+        },
+        "data_description": {
+          "host": "The IP address or host name of the Sentio controller.",
+          "port": "The Modbus TCP port of the controller.",
+          "unit_id": "The Modbus unit ID the controller answers to."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nothing answered at this address, port and unit ID.",
+      "unsupported_device": "The device that answered is not a supported Sentio controller.",
+      "no_serial_number": "The controller gave no serial number, so it cannot be told apart from others.",
+      "invalid_host": "Enter a host.",
+      "unknown": "Unexpected error; see the log."
+    },
+    "abort": {
+      "already_configured": "This controller is already configured.",
+      "reconfigure_successful": "The connection was changed.",
+      "wrong_device": "Another controller answers at this address. Add it as a new controller instead.",
+      "cannot_connect": "Nothing answered at the discovered address on the default port and unit ID.",
+      "unsupported_device": "The device that answered is not a supported Sentio controller.",
+      "no_serial_number": "The controller gave no serial number, so it cannot be told apart from others.",
+      "unknown": "Unexpected error; see the log.",
+      "already_in_progress": "This controller is already being set up."
+    }
+  },
+  "device": {
+    "controller": {
+      "name": "Wavin Sentio Controller"
+    },
+    "room": {
+      "name": "Room {number}"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "system_warning": {
+        "name": "System warning"
+      },
+      "system_error": {
+        "name": "System error"
+      },
+      "warning": {
+        "name": "Warning"
+      },
+      "error": {
+        "name": "Error"
+      },
+      "low_battery": {
+        "name": "Battery"
+      },
+      "peripheral_lost": {
+        "name": "Peripheral not responding"
+      },
+      "lost": {
+        "name": "Not responding"
+      }
+    },
+    "climate": {
+      "room": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "eco": "Eco",
+              "comfort": "Comfort",
+              "extra_comfort": "Extra comfort"
+            }
+          }
+        }
+      }
+    },
+    "number": {
+      "temp_outdoor_cooling_min": {
+        "name": "Cooling minimum outdoor temperature"
+      },
+      "temp_outdoor_heating_max": {
+        "name": "Heating maximum outdoor temperature"
+      },
+      "temp_air_target": {
+        "name": "Setpoint"
+      },
+      "temp_standby": {
+        "name": "Standby temperature"
+      },
+      "temp_vacation": {
+        "name": "Vacation temperature"
+      },
+      "thermal_integration_heating_offset": {
+        "name": "Thermal integration heating offset"
+      },
+      "thermal_integration_hysteresis": {
+        "name": "Thermal integration hysteresis"
+      },
+      "humidity_threshold_heating": {
+        "name": "Humidity threshold heating"
+      },
+      "humidity_threshold_cooling": {
+        "name": "Humidity threshold cooling"
+      },
+      "humidity_hysteresis": {
+        "name": "Humidity hysteresis"
+      },
+      "drying_cooling_water_offset": {
+        "name": "Drying cooling water offset"
+      },
+      "drying_cooling_water_offset_hysteresis": {
+        "name": "Drying cooling water offset hysteresis"
+      },
+      "dew_point_cooling_threshold": {
+        "name": "Dew point cooling threshold"
+      },
+      "dew_point_cooling_threshold_hysteresis": {
+        "name": "Dew point cooling threshold hysteresis"
+      },
+      "humidity_high_alarm_limit": {
+        "name": "Humidity high alarm limit"
+      }
+    },
+    "select": {
+      "update_mode": {
+        "name": "Update mode",
+        "state": {
+          "dont_allow_from_mobile_app": "Not from the mobile app",
+          "enabled": "Enabled",
+          "disabled_entirely": "Disabled"
+        }
+      },
+      "heating_cooling_mode_bms_override": {
+        "name": "Heating/cooling mode override",
+        "state": {
+          "disabled": "Disabled",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "external_switch": "External switch"
+        }
+      },
+      "lock": {
+        "name": "Thermostat lock",
+        "state": {
+          "locked": "Locked",
+          "hotel": "Hotel",
+          "unlocked": "Unlocked"
+        }
+      },
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "schedule": "Schedule",
+          "manual": "Manual"
+        }
+      },
+      "temp_preset": {
+        "name": "Preset",
+        "state": {
+          "eco": "Eco",
+          "comfort": "Comfort",
+          "extra_comfort": "Extra comfort"
+        }
+      }
+    },
+    "sensor": {
+      "heating_cooling_mode": {
+        "name": "Heating/cooling mode",
+        "state": {
+          "heating": "Heating",
+          "cooling": "Cooling"
+        }
+      },
+      "modbus_mode": {
+        "name": "Modbus mode",
+        "state": {
+          "disabled": "Disabled",
+          "read_only": "Read only",
+          "read_write": "Read and write",
+          "write_with_password": "Write with password"
+        }
+      },
+      "temp_air_current": {
+        "name": "Air temperature"
+      },
+      "temp_air_target_active": {
+        "name": "Target temperature"
+      },
+      "temp_floor_current": {
+        "name": "Floor temperature"
+      },
+      "humidity_current": {
+        "name": "Humidity"
+      },
+      "dew_point_current": {
+        "name": "Dew point"
+      },
+      "state": {
+        "name": "State",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "radiators_state": {
+        "name": "Radiators state",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "ufhc_state": {
+        "name": "Underfloor state",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "thermal_integration_state": {
+        "name": "Thermal integration state",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "blocking_source_radiators": {
+        "name": "Radiators blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "blocking_source_ufhc": {
+        "name": "Underfloor blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "blocking_source_drying": {
+        "name": "Drying blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "blocking_source_thermal_integration": {
+        "name": "Thermal integration blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "blocking_source_ventilation": {
+        "name": "Ventilation blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "mode_override": {
+        "name": "Mode override",
+        "state": {
+          "none": "None",
+          "temporary": "Temporary",
+          "vacation_away": "Vacation / away",
+          "adjust": "Adjusted"
+        }
+      },
+      "signal_strength": {
+        "name": "Signal strength"
+      },
+      "owner": {
+        "name": "Room"
+      }
+    },
+    "switch": {
+      "standby_enable": {
+        "name": "Standby"
+      },
+      "vacation_enable": {
+        "name": "Vacation"
+      },
+      "daylight_saving_enable": {
+        "name": "Daylight saving time"
+      },
+      "exclude_from_vacation": {
+        "name": "Exclude from vacation"
+      },
+      "adaptive_enable": {
+        "name": "Adaptive mode"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "The controller at {host} does not answer."
+    },
+    "unsupported_device": {
+      "message": "The device is not a supported Sentio controller."
+    },
+    "wrong_device": {
+      "message": "Another controller answers at this address: serial number {found}, not {expected}. Reconfigure the entry."
+    },
+    "modbus_not_writable": {
+      "message": "The controller's Modbus mode is {mode}; it does not accept writes from this integration."
+    },
+    "invalid_value": {
+      "message": "The controller cannot take the value {value}."
+    },
+    "write_refused": {
+      "message": "The controller did not accept the change."
+    },
+    "schedule_has_the_target": {
+      "message": "The room follows its schedule. Switch it to heat or cool to set a temperature."
+    }
+  }
+}

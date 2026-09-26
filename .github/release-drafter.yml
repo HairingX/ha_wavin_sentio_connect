@@ -2,42 +2,17 @@ name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 change-template: '- #$NUMBER $TITLE @$AUTHOR'
 sort-direction: ascending
-exclude-labels:
-  - 'skip-changelog'
 categories:
-  - title: '🛠 Breaking Changes'
-    labels:
-      - breaking-change
-
-  - title: '🚀 Features'
-    labels:
-      - 'feature request'
-      - 'enhancement'
-
-  - title: '🐛 Bug Fixes'
-    labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
-
-  - title: '🧰 Maintenance'
-    label: 'chore'
-
-  - title: ":package: Dependencies"
-    labels:
-      - 'dependencies'
-
-version-resolver:
-  major:
-    labels:
-      - 'major'
-  minor:
-    labels:
-      - 'minor'
-  patch:
-    labels:
-      - 'patch'
-  default: patch
+  # The next version: a minor bump for a breaking change or by label, a patch otherwise. A major
+  # is never taken from a label, as one placed wrongly must not release a new major version.
+  - type: 'version-resolver'
+    semver-increment: 'minor'
+    when:
+      labels:
+        - 'breaking-change'
+        - 'minor'
+  - type: 'version-resolver'
+    semver-increment: 'patch'
 template: |
   ## Changes
   $CHANGES
@@ -48,3 +23,6 @@ autolabeler:
   - label: 'feature request'
     branch:
       - '/feature\/.+/'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'

@@ -93,9 +93,11 @@ it, and only then pushes the version commit and the tag together - a fast-forwar
 the tested commit, refused if `main` moved. Then the GitHub release, marked as a pre-release where it is one; HACS offers a
 pre-release only to those who ask for them.
 
-GitHub writes the release's notes from the pull requests merged since the previous release
-candidate or final release - for a final release, since the previous final release - grouped by
-label as `.github/release.yml` says. Test builds are not counted as releases.
+A release candidate's notes are written by GitHub from the pull requests merged since the
+previous release candidate or final release, grouped by label as `.github/release.yml` says. A
+final release's notes are the draft's: edit the draft - it lists what was merged since the last
+final release - and run Release before anything else is merged, as a merge rewrites the draft.
+Without a draft, GitHub writes them from the pull requests since the previous final release. Test builds are not counted as releases.
 
 The library comes from PyPI at the version the manifest pins. **Release the library first**, then
 pin its version here in the manifest and `requirements-test.txt`.

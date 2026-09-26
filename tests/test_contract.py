@@ -170,13 +170,9 @@ def _manifest() -> dict[str, Any]:
     return loaded
 
 
-def test_the_manifest_pins_the_library_versions_the_tests_run() -> None:
-    """The integration imports both libraries, so it pins both."""
-    installed = [
-        f"{library}=={importlib.metadata.version(library)}"
-        for library in ("modbus_event_connect", "wavin_sentio_connect")
-    ]
-    assert _manifest()["requirements"] == installed
+def test_the_manifest_pins_the_library_version_the_tests_run() -> None:
+    installed = importlib.metadata.version("wavin_sentio_connect")
+    assert _manifest()["requirements"] == [f"wavin_sentio_connect=={installed}"]
 
 
 def test_the_tests_run_the_pymodbus_home_assistant_installs() -> None:

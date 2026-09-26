@@ -38,11 +38,26 @@ the room it belongs to.
 
 ## Installation
 
-With [HACS](https://hacs.xyz): add this repository as a custom repository of type
-*Integration*, then install **Wavin Sentio Connect** and restart Home Assistant.
+### With HACS
 
-Manually: copy `custom_components/wavin_sentio_connect` into your configuration's
-`custom_components` folder and restart Home Assistant.
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=HairingX&repository=ha_wavin_sentio_connect&category=integration)
+
+1. Select the button to open this repository in [HACS](https://hacs.xyz). Or add it yourself: in
+   HACS, the three dots > **Custom repositories**, the repository
+   `https://github.com/HairingX/ha_wavin_sentio_connect` and the type **Integration**.
+2. Download **Wavin Sentio Connect**.
+3. Restart Home Assistant.
+
+HACS offers the releases; a pre-release only with **Show beta versions** switched on for the
+repository.
+
+### Manually
+
+1. Download the source code of the
+   [latest release](https://github.com/HairingX/ha_wavin_sentio_connect/releases/latest).
+2. Copy its `custom_components/wavin_sentio_connect` folder into the `custom_components` folder
+   of your Home Assistant configuration.
+3. Restart Home Assistant.
 
 ## Setup
 
@@ -52,7 +67,12 @@ discovery sees it when the controller asks for an address, and offers it under S
 Devices & services > Discovered; confirm it there. It is looked for on port `502` with unit ID
 `1`. A controller already added that turns up at a new address is moved there by itself.
 
-**By its address:** Settings > Devices & services > Add integration > **Wavin Sentio Connect**.
+**By its address:**
+
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=wavin_sentio_connect)
+
+Select the button, or go to Settings > Devices & services > Add integration >
+**Wavin Sentio Connect**.
 
 | Field | |
 |---|---|

@@ -1525,9 +1525,6 @@
     "wrong_device": {
       "message": "Another controller answers at this address: serial number {found}, not {expected}. Reconfigure the entry."
     },
-    "modbus_not_writable": {
-      "message": "The controller's Modbus mode is {mode}; it does not accept writes from this integration."
-    },
     "invalid_value": {
       "message": "The controller cannot take the value {value}."
     },

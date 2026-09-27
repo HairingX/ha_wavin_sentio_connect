@@ -38,8 +38,9 @@ the room it belongs to.
 - Modbus TCP enabled on the controller. It is **disabled by default**; enable it from a Sentio
   display: `System | Installer settings | Modbus configuration | Modbus TCP`. The controller
   restarts afterwards.
-- For changing anything from Home Assistant, the controller's Modbus mode must be *read and
-  write*. In *read only* it can be monitored; *write with password* is not supported.
+- For changing anything from Home Assistant, the controller's Modbus TCP mode must be *read and
+  write* (on the display: `Slave Read/Write`). In *read only* it can be monitored; *write with
+  password* is not supported.
 
 ## Installation
 
@@ -236,8 +237,8 @@ automation:
   `Processing updated address data`, a match with this integration as `Matched ...
   wavin_sentio_connect`, and a controller the integration then does not add as `Not adding the
   controller announced at ...`.
-- **"The controller's Modbus mode is READ_ONLY"** when changing something: set the Modbus mode to
-  read and write on the controller's display.
+- **"The controller did not accept the change"**: set Modbus TCP to read and write on the
+  controller's display (see Requirements).
 - **A room has no temperature entities.** The controller reports it as a room with no thermostat
   or sensor.
 - **A display's or module's signal strength is unknown.** The controller reports no signal
@@ -259,6 +260,9 @@ automation:
 - Not shown: when a ventilation unit's or dehumidifier's air filter was last changed (the manual
   does not give how the time is encoded), and a ventilation unit's feature bits.
 - The Modbus register map has no floor temperature setpoint.
+- The Modbus mode entity shows the controller's Modbus mode register. A CCU-208 whose display
+  shows Modbus TCP as read and write reported it as *disabled*, so it does not tell whether
+  Home Assistant can change anything.
 - The controller's names for its rooms and peripherals only name a device when it is first
   added; after that, the name in Home Assistant is the one used, and renaming on the controller
   changes nothing. A thermostat moved to another room keeps its name; its Room diagnostic shows

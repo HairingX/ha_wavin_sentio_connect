@@ -1525,9 +1525,6 @@
     "wrong_device": {
       "message": "En anden controller svarer på denne adresse: serienummer {found}, ikke {expected}. Omkonfigurer posten."
     },
-    "modbus_not_writable": {
-      "message": "Controllerens Modbus-tilstand er {mode}; den tager ikke imod skrivning fra denne integration."
-    },
     "invalid_value": {
       "message": "Controlleren kan ikke tage værdien {value}."
     },

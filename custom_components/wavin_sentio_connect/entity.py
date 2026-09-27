@@ -15,8 +15,6 @@ from wavin_sentio_connect import (
     DataValue,
     InvalidValueError,
     Key,
-    LocationPointKey,
-    ModbusMode,
     PointKey,
     Quality,
     Status,
@@ -33,15 +31,6 @@ _USABLE = frozenset({Quality.GOOD, Quality.NO_DATA, Quality.STALE})
 """Qualities an entity shows: a value, "unknown" for no reading, or the last good value.
 
 OFFLINE and MISSING leave the entity unavailable, as does a controller that stopped answering.
-"""
-
-_NOT_WRITABLE = frozenset(
-    {ModbusMode.DISABLED, ModbusMode.READ_ONLY, ModbusMode.WRITE_WITH_PASSWORD}
-)
-"""Modbus modes in which the controller refuses writes from this integration.
-
-The manual: in WRITE_WITH_PASSWORD, writes are refused until a password has been written,
-which this integration does not do.
 """
 
 
@@ -245,14 +234,6 @@ class SentioEntity(Entity):
 
     async def _write[T](self, key: Key[T], new: T) -> None:
         """Write `new` to `key`, raising an error the user can read when it is not taken."""
-        mode = self._current(LocationPointKey.MODBUS_MODE)
-        if mode in _NOT_WRITABLE:
-            assert mode is not None
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="modbus_not_writable",
-                translation_placeholders={"mode": mode.name},
-            )
         try:
             accepted = await self._client.write(key, new)
         except InvalidValueError as err:

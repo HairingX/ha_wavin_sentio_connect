@@ -201,25 +201,24 @@ async def test_a_number_writes_its_value_and_offers_the_encodings_range(
     assert controller.holding_registers[122] == 1450
 
 
-@pytest.mark.parametrize("mode", [0, 1, 3])
-async def test_a_write_is_refused_when_the_controllers_modbus_mode_forbids_it(
+@pytest.mark.parametrize("mode", [0, 1, 2, 3])
+async def test_a_write_reaches_the_controller_whatever_its_modbus_mode_register_says(
     hass: HomeAssistant,
     loaded: SentioData,
     controller: SimulatedModbusDevice,
     clock: FakeClock,
     mode: int,
 ) -> None:
+    """A CCU-208 in Modbus TCP read/write reported 0 (disabled) there, and took writes."""
     controller.holding_registers[5] = mode
     await _poll(hass, loaded, clock)
-    with pytest.raises(HomeAssistantError) as raised:
-        await hass.services.async_call(
-            "switch",
-            SERVICE_TURN_ON,
-            {ATTR_ENTITY_ID: "switch.wavin_sentio_controller_vacation"},
-            blocking=True,
-        )
-    assert raised.value.translation_key == "modbus_not_writable"
-    assert controller.holding_registers[27] == 0
+    await hass.services.async_call(
+        "switch",
+        SERVICE_TURN_ON,
+        {ATTR_ENTITY_ID: "switch.wavin_sentio_controller_vacation"},
+        blocking=True,
+    )
+    assert controller.holding_registers[27] == 1
 
 
 async def test_a_write_the_controller_refuses_is_reported(

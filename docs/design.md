@@ -137,10 +137,11 @@ every unit a Sentio point has is mapped (`UNITS`).
 ## Writes
 
 The client sends writes in order and folds a queued setting into a newer one, so every platform
-has `PARALLEL_UPDATES = 0` and passes actions straight on. A write is refused before it is sent
-while the controller's Modbus mode forbids it (disabled, read only, or write with password, which
-this integration does not handle), and a value the point cannot take, or a write the controller
-does not accept, is an error the user reads.
+has `PARALLEL_UPDATES = 0` and passes actions straight on. Every write is sent: the controller
+decides whether it takes it. Its Modbus mode register (HR 5) is not asked first, as a CCU-208
+whose display showed Modbus TCP as read and write reported it as 0 (disabled), and took writes
+over TCP. A value the point cannot take, or a write the controller does not accept, is an error
+the user reads.
 
 ## Dependencies
 

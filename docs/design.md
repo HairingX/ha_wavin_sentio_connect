@@ -56,12 +56,18 @@ room, so that a move is in its history.
   by its identifiers, and a room's entities also by the controller's device id.
 
 - Identifiers carry the controller's serial number: `<serial>`, `<serial>_room_<n>`,
-  `<serial>_peripheral_<peripheral serial>`. A peripheral is identified by its own serial number,
+  `<serial>_peripheral_<peripheral serial>`, `<serial>_<object>` for an object the controller
+  has one of and `<serial>_<object>_<n>` for one it has several of. A peripheral is identified by its own serial number,
   as the controller renumbers its slots on a relearn; one that reports none gets no device.
 - The controller is named by the `controller` device translation, *Wavin Sentio Controller*: it
   is the controller itself, which every device is part of or connected through. The entry is
   titled *Wavin Sentio*, followed by the controller's location name when it has one.
-- A room never named on the controller is named by the `room` device translation.
+- A room never named on the controller is named by the `room` device translation; an object
+  without a name of its own by its kind's device translation, with its number.
+- The controller's other objects - the outdoor zone, circuits, ITCs, heat sources, tanks and
+  thermistor inputs - are parts of it, and child devices like the rooms. Ventilation units and
+  dehumidifiers are devices of their own with the model they report, reached through the
+  controller: the manual has the controller's Modbus RTU master connect ventilation units.
 - The controller's names only name a room or peripheral when its device is created; after that
   the name in HA is the truth, and a name on the controller is never shown again. A device is
   registered again at every setup, so the name is passed only when the device does not exist.
@@ -84,8 +90,11 @@ room, so that a move is in its history.
 
 ## Entities
 
-Each platform describes its entities once per point - for the location, every room or every
-peripheral - and creates one wherever the installation has that point. The client's `points` are
+Each platform describes its entities once per point - for the location, every room, every
+peripheral or one of the controller's other objects - and creates one wherever the installation
+has that point. The point of an object the controller has several of is translated under its
+object's name too (`hcc_state`, `ventilation_unit_state`): the same point name means different
+states in different objects. The client's `points` are
 exactly what this installation has: a dummy room has no measurements, a room not associated with
 a function has no state for it, and a register the controller refuses is not there.
 

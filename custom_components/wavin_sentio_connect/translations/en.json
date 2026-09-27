@@ -59,6 +59,36 @@
     },
     "room": {
       "name": "Room {number}"
+    },
+    "outdoor": {
+      "name": "Outdoor"
+    },
+    "hc_source": {
+      "name": "Heating/cooling source"
+    },
+    "boiler_heat_pump": {
+      "name": "Boiler / heat pump"
+    },
+    "thermistor_inputs": {
+      "name": "Thermistor inputs"
+    },
+    "dhw_tank": {
+      "name": "Hot water tank"
+    },
+    "buffer_tank": {
+      "name": "Buffer tank"
+    },
+    "hcc": {
+      "name": "Heating/cooling circuit {number}"
+    },
+    "itc": {
+      "name": "Inlet temperature controller {number}"
+    },
+    "ventilation_unit": {
+      "name": "Ventilation unit {number}"
+    },
+    "dehumidifier": {
+      "name": "Dehumidifier {number}"
     }
   },
   "entity": {
@@ -83,6 +113,168 @@
       },
       "lost": {
         "name": "Not responding"
+      },
+      "outdoor_warning": {
+        "name": "Warning"
+      },
+      "outdoor_error": {
+        "name": "Error"
+      },
+      "outdoor_low_battery": {
+        "name": "Battery"
+      },
+      "outdoor_peripheral_lost": {
+        "name": "Peripheral not responding"
+      },
+      "hcc_warning": {
+        "name": "Warning"
+      },
+      "hcc_error": {
+        "name": "Error"
+      },
+      "hcc_inlet_sensor_failure": {
+        "name": "Inlet sensor failure"
+      },
+      "hcc_high_temp_cutoff_active": {
+        "name": "High temperature cut-off active"
+      },
+      "itc_warning": {
+        "name": "Warning"
+      },
+      "itc_error": {
+        "name": "Error"
+      },
+      "itc_inlet_sensor_failure": {
+        "name": "Inlet sensor failure"
+      },
+      "itc_high_temp_cutoff_active": {
+        "name": "High temperature cut-off active"
+      },
+      "itc_servo_failure": {
+        "name": "Servo failure"
+      },
+      "itc_return_sensor_failure": {
+        "name": "Return sensor failure"
+      },
+      "itc_outdoor_sensor_failure": {
+        "name": "Outdoor sensor failure"
+      },
+      "itc_frost_protection_active": {
+        "name": "Frost protection active"
+      },
+      "hc_source_warning": {
+        "name": "Warning"
+      },
+      "hc_source_error": {
+        "name": "Error"
+      },
+      "hc_source_failure": {
+        "name": "General failure"
+      },
+      "boiler_heat_pump_warning": {
+        "name": "Warning"
+      },
+      "boiler_heat_pump_error": {
+        "name": "Error"
+      },
+      "boiler_heat_pump_inlet_sensor_failure": {
+        "name": "Inlet sensor failure"
+      },
+      "boiler_heat_pump_failure": {
+        "name": "General failure"
+      },
+      "buffer_tank_warning": {
+        "name": "Warning"
+      },
+      "buffer_tank_error": {
+        "name": "Error"
+      },
+      "buffer_tank_inlet_sensor_failure": {
+        "name": "Inlet sensor failure"
+      },
+      "buffer_tank_priority_sensor_failure": {
+        "name": "Priority sensor failure"
+      },
+      "buffer_tank_upper_sensor_failure": {
+        "name": "Upper sensor failure"
+      },
+      "buffer_tank_lower_sensor_failure": {
+        "name": "Lower sensor failure"
+      },
+      "dhw_tank_warning": {
+        "name": "Warning"
+      },
+      "dhw_tank_error": {
+        "name": "Error"
+      },
+      "dhw_tank_cleaning_failed": {
+        "name": "Cleaning failed"
+      },
+      "dhw_tank_tank_sensor_failure": {
+        "name": "Tank sensor failure"
+      },
+      "dhw_tank_circulation_return_sensor_failure": {
+        "name": "Circulation return sensor failure"
+      },
+      "dhw_tank_source_return_sensor_failure": {
+        "name": "Source return sensor failure"
+      },
+      "dhw_tank_source_inlet_sensor_failure": {
+        "name": "Source inlet sensor failure"
+      },
+      "dhw_tank_source_inlet_temp_too_low": {
+        "name": "Source inlet too cold"
+      },
+      "dhw_tank_low_battery": {
+        "name": "Battery"
+      },
+      "dhw_tank_peripheral_lost": {
+        "name": "Peripheral not responding"
+      },
+      "ventilation_unit_warning": {
+        "name": "Warning"
+      },
+      "ventilation_unit_error": {
+        "name": "Error"
+      },
+      "ventilation_unit_air_filter_expired": {
+        "name": "Air filter expired"
+      },
+      "ventilation_unit_air_filter_year_passed": {
+        "name": "Air filter a year old"
+      },
+      "ventilation_unit_device_warning": {
+        "name": "Unit warning"
+      },
+      "ventilation_unit_device_fault": {
+        "name": "Unit fault"
+      },
+      "ventilation_unit_communication_error": {
+        "name": "Communication error"
+      },
+      "ventilation_unit_not_compatible": {
+        "name": "Not compatible"
+      },
+      "ventilation_unit_device_error": {
+        "name": "Unit error"
+      },
+      "dehumidifier_warning": {
+        "name": "Warning"
+      },
+      "dehumidifier_error": {
+        "name": "Error"
+      },
+      "dehumidifier_air_filter_expired": {
+        "name": "Air filter expired"
+      },
+      "dehumidifier_air_filter_year_passed": {
+        "name": "Air filter a year old"
+      },
+      "dehumidifier_hcw_supplier_not_set": {
+        "name": "No heating/cooling water supplier"
+      },
+      "dehumidifier_device_fault": {
+        "name": "Unit fault"
       }
     },
     "climate": {
@@ -143,6 +335,204 @@
       },
       "humidity_high_alarm_limit": {
         "name": "Humidity high alarm limit"
+      },
+      "outdoor_air_temp_bms_override": {
+        "name": "Air temperature BMS override"
+      },
+      "hcc_heat_curve_slope": {
+        "name": "Heat curve slope"
+      },
+      "hcc_heat_curve_shift": {
+        "name": "Heat curve shift"
+      },
+      "hcc_heat_curve_inlet_min": {
+        "name": "Minimum inlet temperature"
+      },
+      "hcc_heat_curve_inlet_max": {
+        "name": "Maximum inlet temperature"
+      },
+      "hcc_heat_curve_gain": {
+        "name": "Heat curve gain"
+      },
+      "hcc_high_temp_cutoff_temp": {
+        "name": "High temperature cut-off limit"
+      },
+      "itc_heat_curve_slope": {
+        "name": "Heat curve slope"
+      },
+      "itc_heat_curve_shift": {
+        "name": "Heat curve shift"
+      },
+      "itc_heat_curve_inlet_min": {
+        "name": "Minimum inlet temperature"
+      },
+      "itc_heat_curve_inlet_max": {
+        "name": "Maximum inlet temperature"
+      },
+      "itc_heat_curve_gain": {
+        "name": "Heat curve gain"
+      },
+      "itc_high_temp_cutoff_temp": {
+        "name": "High temperature cut-off limit"
+      },
+      "itc_regulator_p": {
+        "name": "Regulator P"
+      },
+      "itc_regulator_i": {
+        "name": "Regulator I"
+      },
+      "itc_regulator_hysteresis": {
+        "name": "Regulator hysteresis"
+      },
+      "itc_return_max_gain": {
+        "name": "Return maximum gain"
+      },
+      "itc_return_min_gain": {
+        "name": "Return minimum gain"
+      },
+      "itc_boost_flow": {
+        "name": "Boost flow"
+      },
+      "itc_ramping_time": {
+        "name": "Ramping time"
+      },
+      "itc_frost_protection_mode": {
+        "name": "Frost protection mode"
+      },
+      "itc_cooling_regulator_p": {
+        "name": "Cooling regulator P"
+      },
+      "itc_cooling_regulator_i": {
+        "name": "Cooling regulator I"
+      },
+      "itc_cooling_regulator_hysteresis": {
+        "name": "Cooling regulator hysteresis"
+      },
+      "itc_return_max_limit": {
+        "name": "Maximum return temperature"
+      },
+      "itc_return_min_limit": {
+        "name": "Minimum return temperature"
+      },
+      "itc_frost_protection_temp": {
+        "name": "Frost protection limit"
+      },
+      "itc_cooling_inlet_min": {
+        "name": "Minimum cooling inlet temperature"
+      },
+      "itc_cooling_inlet_max": {
+        "name": "Maximum cooling inlet temperature"
+      },
+      "boiler_heat_pump_min_runtime": {
+        "name": "Minimum runtime"
+      },
+      "boiler_heat_pump_min_cycle_delay": {
+        "name": "Minimum cycle delay"
+      },
+      "boiler_heat_pump_demand_start_delay": {
+        "name": "Demand start delay"
+      },
+      "boiler_heat_pump_demand_stop_delay": {
+        "name": "Demand stop delay"
+      },
+      "buffer_tank_start_difference": {
+        "name": "Charge start difference"
+      },
+      "buffer_tank_stop_difference": {
+        "name": "Charge stop difference"
+      },
+      "buffer_tank_charge_evaluation_delay": {
+        "name": "Charge evaluation delay"
+      },
+      "dhw_tank_temp_set": {
+        "name": "Setpoint"
+      },
+      "dhw_tank_temp_set_vacation": {
+        "name": "Vacation temperature"
+      },
+      "dhw_tank_temp_set_standby": {
+        "name": "Standby temperature"
+      },
+      "dhw_tank_temp_set_cleaning": {
+        "name": "Cleaning temperature"
+      },
+      "dhw_tank_circulation_cooldown": {
+        "name": "Circulation pause"
+      },
+      "dhw_tank_circulation_stop_difference": {
+        "name": "Circulation stop difference"
+      },
+      "dhw_tank_source_return_temp_limit": {
+        "name": "Source return limit"
+      },
+      "ventilation_unit_air_filter_lifetime": {
+        "name": "Air filter lifetime"
+      },
+      "ventilation_unit_air_filter_lifetime_used": {
+        "name": "Air filter lifetime used"
+      },
+      "ventilation_unit_exhaust_level_unoccupied": {
+        "name": "Exhaust level, unoccupied"
+      },
+      "ventilation_unit_exhaust_flow_unoccupied": {
+        "name": "Exhaust flow, unoccupied"
+      },
+      "ventilation_unit_exhaust_level_eco": {
+        "name": "Exhaust level, eco"
+      },
+      "ventilation_unit_exhaust_flow_eco": {
+        "name": "Exhaust flow, eco"
+      },
+      "ventilation_unit_exhaust_level_comfort": {
+        "name": "Exhaust level, comfort"
+      },
+      "ventilation_unit_exhaust_flow_comfort": {
+        "name": "Exhaust flow, comfort"
+      },
+      "ventilation_unit_exhaust_level_boost": {
+        "name": "Exhaust level, boost"
+      },
+      "ventilation_unit_exhaust_flow_boost": {
+        "name": "Exhaust flow, boost"
+      },
+      "ventilation_unit_supply_level_unoccupied": {
+        "name": "Supply level, unoccupied"
+      },
+      "ventilation_unit_supply_flow_unoccupied": {
+        "name": "Supply flow, unoccupied"
+      },
+      "ventilation_unit_supply_level_eco": {
+        "name": "Supply level, eco"
+      },
+      "ventilation_unit_supply_flow_eco": {
+        "name": "Supply flow, eco"
+      },
+      "ventilation_unit_supply_level_comfort": {
+        "name": "Supply level, comfort"
+      },
+      "ventilation_unit_supply_flow_comfort": {
+        "name": "Supply flow, comfort"
+      },
+      "ventilation_unit_supply_level_boost": {
+        "name": "Supply level, boost"
+      },
+      "ventilation_unit_supply_flow_boost": {
+        "name": "Supply flow, boost"
+      },
+      "dehumidifier_air_filter_lifetime": {
+        "name": "Air filter lifetime"
+      },
+      "dehumidifier_air_filter_lifetime_used": {
+        "name": "Air filter lifetime used"
+      },
+      "dehumidifier_drying_cooling_water_temp": {
+        "name": "Drying cooling water temperature"
+      },
+      "dehumidifier_thermal_integration_heating_water_temp": {
+        "name": "Thermal integration heating water temperature"
+      },
+      "dehumidifier_thermal_integration_cooling_water_temp": {
+        "name": "Thermal integration cooling water temperature"
       }
     },
     "select": {
@@ -184,6 +574,92 @@
           "eco": "Eco",
           "comfort": "Comfort",
           "extra_comfort": "Extra comfort"
+        }
+      },
+      "hcc_heat_curve_type": {
+        "name": "Heat curve",
+        "state": {
+          "manual": "Manual",
+          "calculated": "Calculated",
+          "underfloor": "Underfloor",
+          "radiators": "Radiators"
+        }
+      },
+      "itc_heat_curve_type": {
+        "name": "Heat curve",
+        "state": {
+          "manual": "Manual",
+          "calculated": "Calculated",
+          "underfloor": "Underfloor",
+          "radiators": "Radiators"
+        }
+      },
+      "itc_return_limiter_function": {
+        "name": "Return limiter",
+        "state": {
+          "off": "Off",
+          "min": "Minimum",
+          "max": "Maximum"
+        }
+      },
+      "buffer_tank_sensor_priority": {
+        "name": "Sensor priority",
+        "state": {
+          "upper_sensor": "Upper sensor",
+          "lower_sensor": "Lower sensor"
+        }
+      },
+      "buffer_tank_charge_mode": {
+        "name": "Charge mode",
+        "state": {
+          "consumer_only": "Consumers only",
+          "demand_triggered": "On demand"
+        }
+      },
+      "dhw_tank_mode": {
+        "name": "Mode",
+        "state": {
+          "schedule": "Schedule",
+          "eco": "Eco"
+        }
+      },
+      "ventilation_unit_standby_level": {
+        "name": "Standby level",
+        "state": {
+          "stopped": "Stopped",
+          "unoccupied": "Unoccupied",
+          "economy": "Economy"
+        }
+      },
+      "ventilation_unit_vacation_level": {
+        "name": "Vacation level",
+        "state": {
+          "stopped": "Stopped",
+          "unoccupied": "Unoccupied",
+          "economy": "Economy"
+        }
+      },
+      "ventilation_unit_heat_exchange_mode": {
+        "name": "Heat recovery",
+        "state": {
+          "always_on": "Always on",
+          "automatic": "Automatic"
+        }
+      },
+      "dehumidifier_drying_allowed_in": {
+        "name": "Drying allowed",
+        "state": {
+          "in_cooling_mode": "In cooling mode",
+          "in_heating_mode": "In heating mode",
+          "in_both": "In both"
+        }
+      },
+      "dehumidifier_thermal_integration_allowed_in": {
+        "name": "Thermal integration allowed",
+        "state": {
+          "in_cooling_mode": "In cooling mode",
+          "in_heating_mode": "In heating mode",
+          "in_both": "In both"
         }
       }
     },
@@ -457,6 +933,538 @@
       },
       "owner": {
         "name": "Room"
+      },
+      "drying_state": {
+        "name": "Drying state",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "drying": "Drying",
+          "blocked_drying": "Drying blocked"
+        }
+      },
+      "ventilation_state": {
+        "name": "Ventilation state",
+        "state": {
+          "none": "None",
+          "stopped": "Stopped",
+          "unoccupied": "Unoccupied",
+          "economy": "Economy",
+          "comfort": "Comfort",
+          "boost": "Boost",
+          "blocked": "Blocked"
+        }
+      },
+      "outdoor_air_temp": {
+        "name": "Air temperature"
+      },
+      "outdoor_air_temp_filtered": {
+        "name": "Air temperature, filtered"
+      },
+      "outdoor_air_temp_geometrical": {
+        "name": "Air temperature, geometric"
+      },
+      "hcc_state": {
+        "name": "State",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "hcc_blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "hcc_pump_demand": {
+        "name": "Pump demand",
+        "state": {
+          "idle": "Idle",
+          "on": "On"
+        }
+      },
+      "hcc_pump_state": {
+        "name": "Pump",
+        "state": {
+          "idle": "Idle",
+          "on": "On"
+        }
+      },
+      "hcc_temp_inlet_current": {
+        "name": "Inlet temperature"
+      },
+      "hcc_temp_inlet_target": {
+        "name": "Inlet target temperature"
+      },
+      "hcc_temp_room_target": {
+        "name": "Room target temperature by consumers"
+      },
+      "itc_state": {
+        "name": "State",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "itc_blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "itc_pump_demand": {
+        "name": "Pump demand",
+        "state": {
+          "idle": "Idle",
+          "on": "On"
+        }
+      },
+      "itc_pump_state": {
+        "name": "Pump",
+        "state": {
+          "idle": "Idle",
+          "on": "On"
+        }
+      },
+      "itc_temp_inlet_current": {
+        "name": "Inlet temperature"
+      },
+      "itc_temp_inlet_target": {
+        "name": "Inlet target temperature"
+      },
+      "itc_temp_room_target": {
+        "name": "Room target temperature by consumers"
+      },
+      "itc_temp_return_current": {
+        "name": "Return temperature"
+      },
+      "itc_temp_main_supplier": {
+        "name": "Main supplier temperature"
+      },
+      "itc_servo_position_request": {
+        "name": "Servo position"
+      },
+      "hc_source_state": {
+        "name": "State",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "boiler_heat_pump_state": {
+        "name": "State",
+        "state": {
+          "idle": "Idle",
+          "heating_prepare": "Preparing heating",
+          "heating_active": "Heating",
+          "heating_terminate": "Ending heating",
+          "cooling_prepare": "Preparing cooling",
+          "cooling_active": "Cooling",
+          "cooling_terminate": "Ending cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked",
+          "failure": "Failure"
+        }
+      },
+      "boiler_heat_pump_blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "boiler_heat_pump_temp_inlet_current": {
+        "name": "Inlet temperature"
+      },
+      "boiler_heat_pump_temp_requested": {
+        "name": "Requested temperature"
+      },
+      "buffer_tank_state": {
+        "name": "State",
+        "state": {
+          "idle": "Idle",
+          "heating_prepare": "Preparing heating",
+          "heating_active": "Heating",
+          "heating_terminate": "Ending heating",
+          "cooling_prepare": "Preparing cooling",
+          "cooling_active": "Cooling",
+          "cooling_terminate": "Ending cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked",
+          "failure": "Failure"
+        }
+      },
+      "buffer_tank_blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "buffer_tank_temp_source_inlet": {
+        "name": "Source inlet temperature"
+      },
+      "buffer_tank_temp_upper": {
+        "name": "Upper temperature"
+      },
+      "buffer_tank_temp_lower": {
+        "name": "Lower temperature"
+      },
+      "thermistor_t1_temp": {
+        "name": "T1 temperature"
+      },
+      "thermistor_t2_temp": {
+        "name": "T2 temperature"
+      },
+      "thermistor_t3_temp": {
+        "name": "T3 temperature"
+      },
+      "thermistor_t4_temp": {
+        "name": "T4 temperature"
+      },
+      "thermistor_t5_temp": {
+        "name": "T5 temperature"
+      },
+      "dhw_tank_temp_current": {
+        "name": "Temperature"
+      },
+      "dhw_tank_temp_target": {
+        "name": "Target temperature"
+      },
+      "dhw_tank_state": {
+        "name": "State",
+        "state": {
+          "off": "Off",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cleaning": "Cleaning",
+          "blocked_heating": "Heating blocked",
+          "blocked_cleaning": "Cleaning blocked",
+          "failure": "Failure"
+        }
+      },
+      "dhw_tank_blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "dhw_tank_circulation_state": {
+        "name": "Circulation",
+        "state": {
+          "none": "Disabled",
+          "idle": "Idle",
+          "on": "On"
+        }
+      },
+      "dhw_tank_temp_circulation_return": {
+        "name": "Circulation return temperature"
+      },
+      "dhw_tank_temp_source_inlet": {
+        "name": "Source inlet temperature"
+      },
+      "dhw_tank_temp_source_return": {
+        "name": "Source return temperature"
+      },
+      "ventilation_unit_state": {
+        "name": "State",
+        "state": {
+          "stopped": "Stopped",
+          "unoccupied": "Unoccupied",
+          "economy": "Economy",
+          "comfort": "Comfort",
+          "boost": "Boost",
+          "blocked_stopped": "Stopped, blocked",
+          "blocked_unoccupied": "Unoccupied, blocked",
+          "blocked_economy": "Economy, blocked",
+          "blocked_comfort": "Comfort, blocked",
+          "blocked_boost": "Boost, blocked",
+          "failure": "Failure",
+          "maintenance": "Maintenance"
+        }
+      },
+      "ventilation_unit_blocking_source": {
+        "name": "Blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "ventilation_unit_warning_code": {
+        "name": "Warning code"
+      },
+      "ventilation_unit_error_code": {
+        "name": "Error code"
+      },
+      "ventilation_unit_free_cooling": {
+        "name": "Free cooling"
+      },
+      "ventilation_unit_supply_fan_speed": {
+        "name": "Supply fan speed"
+      },
+      "ventilation_unit_exhaust_fan_speed": {
+        "name": "Exhaust fan speed"
+      },
+      "ventilation_unit_supply_fan_setpoint": {
+        "name": "Supply fan setpoint"
+      },
+      "ventilation_unit_exhaust_fan_setpoint": {
+        "name": "Exhaust fan setpoint"
+      },
+      "ventilation_unit_supply_flow_setpoint": {
+        "name": "Supply flow setpoint"
+      },
+      "ventilation_unit_exhaust_flow_setpoint": {
+        "name": "Exhaust flow setpoint"
+      },
+      "ventilation_unit_temp_intake": {
+        "name": "Intake air temperature"
+      },
+      "ventilation_unit_temp_supply": {
+        "name": "Supply air temperature"
+      },
+      "ventilation_unit_temp_extract": {
+        "name": "Extract air temperature"
+      },
+      "ventilation_unit_temp_exhaust": {
+        "name": "Exhaust air temperature"
+      },
+      "ventilation_unit_bypass_damper_position": {
+        "name": "Bypass damper"
+      },
+      "dehumidifier_drying_state": {
+        "name": "Drying",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "drying": "Drying",
+          "blocked_drying": "Drying blocked"
+        }
+      },
+      "dehumidifier_drying_blocking_source": {
+        "name": "Drying blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
+      },
+      "dehumidifier_thermal_integration_state": {
+        "name": "Thermal integration",
+        "state": {
+          "none": "None",
+          "idle": "Idle",
+          "heating": "Heating",
+          "cooling": "Cooling",
+          "blocked_heating": "Heating blocked",
+          "blocked_cooling": "Cooling blocked"
+        }
+      },
+      "dehumidifier_thermal_integration_blocking_source": {
+        "name": "Thermal integration blocking source",
+        "state": {
+          "none": "None",
+          "unknown": "Unknown",
+          "contact": "Contact",
+          "floor_temp": "Floor temperature",
+          "low_energy": "Low energy",
+          "air_temp": "Air temperature",
+          "dew_point": "Dew point",
+          "outdoor_temp": "Outdoor temperature",
+          "fault": "Fault",
+          "fault_htco": "Fault (HTCO)",
+          "periodic_activation": "Periodic activation",
+          "bms": "BMS",
+          "deadband": "Deadband",
+          "drying": "Drying",
+          "heating_cooling_mode": "Heating/cooling mode",
+          "insufficient_demand": "Insufficient demand",
+          "cooldown_period": "Cooldown period",
+          "hcw_source_not_released": "Heating/cooling source not released",
+          "room_mode": "Room mode",
+          "system_is_initializing": "System initializing",
+          "system_is_shutting_down": "System shutting down",
+          "no_output": "No output",
+          "first_open_activation": "First open activation",
+          "room_with_no_temp_source": "Room without temperature source",
+          "hcws_elements_blocked": "Heating/cooling elements blocked"
+        }
       }
     },
     "switch": {
@@ -474,6 +1482,36 @@
       },
       "adaptive_enable": {
         "name": "Adaptive mode"
+      },
+      "hcc_high_temp_cutoff_enable": {
+        "name": "High temperature cut-off"
+      },
+      "itc_high_temp_cutoff_enable": {
+        "name": "High temperature cut-off"
+      },
+      "itc_return_max_priority": {
+        "name": "Return limiter before minimum inlet"
+      },
+      "itc_boost_enable": {
+        "name": "Boost"
+      },
+      "itc_ramping_enable": {
+        "name": "Ramping"
+      },
+      "buffer_tank_flow_balancing_enable": {
+        "name": "Flow balancing"
+      },
+      "dhw_tank_exclude_from_vacation": {
+        "name": "Exclude from vacation"
+      },
+      "dhw_tank_exclude_from_standby": {
+        "name": "Exclude from standby"
+      },
+      "ventilation_unit_allow_stopped": {
+        "name": "Allow stopped"
+      },
+      "ventilation_unit_allow_unoccupied": {
+        "name": "Allow unoccupied"
       }
     }
   },

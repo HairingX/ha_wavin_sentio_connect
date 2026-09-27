@@ -12,15 +12,29 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from wavin_sentio_connect import (
+    AllowedInMode,
+    BufferSensorPriority,
+    BufferTankPointKey,
+    ChargeMode,
+    DehumidifierPointKey,
+    DhwMode,
+    DhwTankPointKey,
+    HccPointKey,
+    HeatCurveType,
+    HeatExchangeMode,
     HeatingCoolingModeOverride,
+    ItcPointKey,
     Key,
     LocationPointKey,
     PointKey,
+    ReturnLimiterFunction,
     RoomLock,
     RoomMode,
     RoomPointKey,
     TemperaturePreset,
     UpdateMode,
+    VentilationLevel,
+    VentilationPointKey,
 )
 
 from .data import SentioConfigEntry, SentioData
@@ -30,7 +44,7 @@ from .entity import (
     SentioEntityDescription,
     Target,
     all_targets,
-    point_name,
+    entity_key,
 )
 
 # The client sends writes in order and folds a queued setting into a newer one, so actions
@@ -54,8 +68,8 @@ def _select(
     config: bool = True,
 ) -> SentioSelectDescription:
     return SentioSelectDescription(
-        key=point_name(point),
-        translation_key=point_name(point),
+        key=entity_key(scope, point),
+        translation_key=entity_key(scope, point),
         scope=scope,
         point=point,
         states=states,
@@ -78,6 +92,54 @@ SELECTS: tuple[SentioSelectDescription, ...] = (
         enabled=False,
     ),
     _select(Scope.ROOM, RoomPointKey.LOCK, RoomLock),
+    _select(Scope.HCC, HccPointKey.HEAT_CURVE_TYPE, HeatCurveType, enabled=False),
+    _select(Scope.ITC, ItcPointKey.HEAT_CURVE_TYPE, HeatCurveType, enabled=False),
+    _select(
+        Scope.ITC,
+        ItcPointKey.RETURN_LIMITER_FUNCTION,
+        ReturnLimiterFunction,
+        enabled=False,
+    ),
+    _select(
+        Scope.BUFFER_TANK,
+        BufferTankPointKey.SENSOR_PRIORITY,
+        BufferSensorPriority,
+        enabled=False,
+    ),
+    _select(
+        Scope.BUFFER_TANK, BufferTankPointKey.CHARGE_MODE, ChargeMode, enabled=False
+    ),
+    _select(Scope.DHW_TANK, DhwTankPointKey.MODE, DhwMode, config=False),
+    _select(
+        Scope.VENTILATION,
+        VentilationPointKey.STANDBY_LEVEL,
+        VentilationLevel,
+        enabled=False,
+    ),
+    _select(
+        Scope.VENTILATION,
+        VentilationPointKey.VACATION_LEVEL,
+        VentilationLevel,
+        enabled=False,
+    ),
+    _select(
+        Scope.VENTILATION,
+        VentilationPointKey.HEAT_EXCHANGE_MODE,
+        HeatExchangeMode,
+        enabled=False,
+    ),
+    _select(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.DRYING_ALLOWED_IN,
+        AllowedInMode,
+        enabled=False,
+    ),
+    _select(
+        Scope.DEHUMIDIFIER,
+        DehumidifierPointKey.THERMAL_INTEGRATION_ALLOWED_IN,
+        AllowedInMode,
+        enabled=False,
+    ),
 )
 
 

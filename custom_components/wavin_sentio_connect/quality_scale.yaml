@@ -56,7 +56,7 @@ rules:
   # Gold
   devices:
     status: done
-    comment: The controller, each room as a child device of it, and each peripheral through it.
+    comment: The controller, each room and other part of it as a child device of it, and each peripheral and unit through it.
   diagnostics: done
   discovery-update-info:
     status: done
@@ -75,7 +75,7 @@ rules:
   docs-use-cases: done
   dynamic-devices:
     status: done
-    comment: A room or peripheral set up on the controller is found while polling, and the entry reloads to add it.
+    comment: A room, peripheral or other object set up on the controller is found while polling, and the entry reloads to add it.
   entity-category: done
   entity-device-class: done
   entity-disabled-by-default: done

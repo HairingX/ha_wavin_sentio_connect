@@ -129,8 +129,9 @@ def _remove_lost_entities(hass: HomeAssistant, entry: SentioConfigEntry) -> None
 def _reload_when_the_installation_changes(
     hass: HomeAssistant, entry: SentioConfigEntry
 ) -> None:
-    """Reload the entry when the controller gains or loses points - a room or peripheral set up
-    or taken away - or a slot holds another peripheral, or its peripheral moves to another room.
+    """Reload the entry when the controller gains or loses points - a room, peripheral or other
+    object set up or taken away - or a slot holds another peripheral, or its peripheral moves to
+    another room.
     """
     data = entry.runtime_data
     client = data.client

@@ -1,6 +1,9 @@
-"""The devices of an installation: the controller, its rooms, and the peripherals it reaches."""
+"""The devices of an installation: the controller, its rooms and other objects, and the
+peripherals and units it reaches."""
 
 from __future__ import annotations
+
+from enum import IntEnum
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -11,6 +14,13 @@ from wavin_sentio_connect import LocationPointKey, SentioPeripheral
 
 from .const import DOMAIN
 from .data import SentioData, controller_model, value
+from .objects import (
+    REPEATED_OBJECTS,
+    SINGLE_OBJECTS,
+    Scope,
+    object_identifier,
+    present_objects,
+)
 
 
 def controller_identifier(data: SentioData) -> tuple[str, str]:
@@ -34,6 +44,10 @@ def current_identifiers(data: SentioData) -> set[tuple[str, str]]:
             peripheral_identifier(data, peripheral.serial_number)
             for peripheral in data.peripherals
             if peripheral.serial_number is not None
+        ),
+        *(
+            object_identifier(data.serial_number, scope, number)
+            for scope, number in present_objects(data.client)
         ),
     }
 
@@ -72,7 +86,10 @@ def register_devices(hass: HomeAssistant, entry: ConfigEntry, data: SentioData) 
     room_names: dict[int, str] = {}
     for room in data.rooms:
         identifier = room_identifier(data, room.number)
-        new = registry.async_get_child_device_by_identifier(identifier, entry.entry_id) is None
+        new = (
+            registry.async_get_child_device_by_identifier(identifier, entry.entry_id)
+            is None
+        )
         numbered = new and not room.name
         # A room is a part of the controller, not a device it reaches.
         part = registry.async_get_or_create_child(
@@ -91,7 +108,9 @@ def register_devices(hass: HomeAssistant, entry: ConfigEntry, data: SentioData) 
         if peripheral.serial_number is None:
             continue
         identifier = peripheral_identifier(data, peripheral.serial_number)
-        new = registry.async_get_device_by_identifier(identifier, entry.entry_id) is None
+        new = (
+            registry.async_get_device_by_identifier(identifier, entry.entry_id) is None
+        )
         registry.async_get_or_create(
             config_entry_id=entry.entry_id,
             identifiers={identifier},
@@ -102,6 +121,9 @@ def register_devices(hass: HomeAssistant, entry: ConfigEntry, data: SentioData) 
             via_device_id=controller.id,
         )
 
+    for scope, number in present_objects(client):
+        _register_object(registry, entry, data, scope, number)
+
     current = current_identifiers(data)
     devices: list[dr.AnyDeviceEntry] = [
         *dr.async_entries_for_config_entry(registry, entry.entry_id),
@@ -110,6 +132,57 @@ def register_devices(hass: HomeAssistant, entry: ConfigEntry, data: SentioData) 
     for device in devices:
         if not device.identifiers & current:
             registry.async_remove_device(device.id)
+
+
+def _register_object(
+    registry: dr.DeviceRegistry,
+    entry: ConfigEntry,
+    data: SentioData,
+    scope: Scope,
+    number: int | None,
+) -> None:
+    """Register one of the controller's other objects: a part of it, or a unit it reaches.
+
+    An object is named by its name on the controller when its device is created, else by its
+    kind and number.
+    """
+    client = data.client
+    identifier = object_identifier(data.serial_number, scope, number)
+    repeated = REPEATED_OBJECTS.get(scope)
+    if repeated is not None:
+        assert number is not None
+        own_name = value(client, repeated.key(number, repeated.name))
+    else:
+        name_key = SINGLE_OBJECTS[scope].name
+        own_name = value(client, name_key) if name_key is not None else None
+    placeholders = {"number": str(number)} if number is not None else None
+    if repeated is None or repeated.part:
+        new = (
+            registry.async_get_child_device_by_identifier(identifier, entry.entry_id)
+            is None
+        )
+        registry.async_get_or_create_child(
+            config_entry_id=entry.entry_id,
+            identifiers={identifier},
+            parent_device_id=data.controller_device_id,
+            name=(own_name or None) if new else UNDEFINED,
+            translation_key=scope.value if new and not own_name else None,
+            translation_placeholders=placeholders if new and not own_name else None,
+        )
+        return
+    assert number is not None and repeated.model is not None
+    model = value(client, repeated.key(number, repeated.model))
+    new = registry.async_get_device_by_identifier(identifier, entry.entry_id) is None
+    registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={identifier},
+        # The model a unit reports, or the type the controller knows it as.
+        model=model.name.replace("_", "/") if isinstance(model, IntEnum) else model,
+        name=(own_name or None) if new else UNDEFINED,
+        translation_key=scope.value if new and not own_name else None,
+        translation_placeholders=placeholders if new and not own_name else None,
+        via_device_id=data.controller_device_id,
+    )
 
 
 def _peripheral_name(peripheral: SentioPeripheral, room_names: dict[int, str]) -> str:

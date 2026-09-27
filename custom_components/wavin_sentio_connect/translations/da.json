@@ -59,6 +59,36 @@
     },
     "room": {
       "name": "Rum {number}"
+    },
+    "outdoor": {
+      "name": "Ude"
+    },
+    "hc_source": {
+      "name": "Varme-/kølekilde"
+    },
+    "boiler_heat_pump": {
+      "name": "Kedel / varmepumpe"
+    },
+    "thermistor_inputs": {
+      "name": "Termistorindgange"
+    },
+    "dhw_tank": {
+      "name": "Varmtvandsbeholder"
+    },
+    "buffer_tank": {
+      "name": "Buffertank"
+    },
+    "hcc": {
+      "name": "Varme-/kølekreds {number}"
+    },
+    "itc": {
+      "name": "Fremløbsregulering {number}"
+    },
+    "ventilation_unit": {
+      "name": "Ventilationsaggregat {number}"
+    },
+    "dehumidifier": {
+      "name": "Affugter {number}"
     }
   },
   "entity": {
@@ -83,6 +113,168 @@
       },
       "lost": {
         "name": "Svarer ikke"
+      },
+      "outdoor_warning": {
+        "name": "Advarsel"
+      },
+      "outdoor_error": {
+        "name": "Fejl"
+      },
+      "outdoor_low_battery": {
+        "name": "Batteri"
+      },
+      "outdoor_peripheral_lost": {
+        "name": "Enhed svarer ikke"
+      },
+      "hcc_warning": {
+        "name": "Advarsel"
+      },
+      "hcc_error": {
+        "name": "Fejl"
+      },
+      "hcc_inlet_sensor_failure": {
+        "name": "Fejl på fremløbsføler"
+      },
+      "hcc_high_temp_cutoff_active": {
+        "name": "Overtemperaturafbryder aktiv"
+      },
+      "itc_warning": {
+        "name": "Advarsel"
+      },
+      "itc_error": {
+        "name": "Fejl"
+      },
+      "itc_inlet_sensor_failure": {
+        "name": "Fejl på fremløbsføler"
+      },
+      "itc_high_temp_cutoff_active": {
+        "name": "Overtemperaturafbryder aktiv"
+      },
+      "itc_servo_failure": {
+        "name": "Fejl på ventilmotor"
+      },
+      "itc_return_sensor_failure": {
+        "name": "Fejl på returføler"
+      },
+      "itc_outdoor_sensor_failure": {
+        "name": "Fejl på udeføler"
+      },
+      "itc_frost_protection_active": {
+        "name": "Frostbeskyttelse aktiv"
+      },
+      "hc_source_warning": {
+        "name": "Advarsel"
+      },
+      "hc_source_error": {
+        "name": "Fejl"
+      },
+      "hc_source_failure": {
+        "name": "Generel fejl"
+      },
+      "boiler_heat_pump_warning": {
+        "name": "Advarsel"
+      },
+      "boiler_heat_pump_error": {
+        "name": "Fejl"
+      },
+      "boiler_heat_pump_inlet_sensor_failure": {
+        "name": "Fejl på fremløbsføler"
+      },
+      "boiler_heat_pump_failure": {
+        "name": "Generel fejl"
+      },
+      "buffer_tank_warning": {
+        "name": "Advarsel"
+      },
+      "buffer_tank_error": {
+        "name": "Fejl"
+      },
+      "buffer_tank_inlet_sensor_failure": {
+        "name": "Fejl på fremløbsføler"
+      },
+      "buffer_tank_priority_sensor_failure": {
+        "name": "Fejl på prioriteret føler"
+      },
+      "buffer_tank_upper_sensor_failure": {
+        "name": "Fejl på øverste føler"
+      },
+      "buffer_tank_lower_sensor_failure": {
+        "name": "Fejl på nederste føler"
+      },
+      "dhw_tank_warning": {
+        "name": "Advarsel"
+      },
+      "dhw_tank_error": {
+        "name": "Fejl"
+      },
+      "dhw_tank_cleaning_failed": {
+        "name": "Rensning mislykkedes"
+      },
+      "dhw_tank_tank_sensor_failure": {
+        "name": "Fejl på beholderføler"
+      },
+      "dhw_tank_circulation_return_sensor_failure": {
+        "name": "Fejl på cirkulationens returføler"
+      },
+      "dhw_tank_source_return_sensor_failure": {
+        "name": "Fejl på kildens returføler"
+      },
+      "dhw_tank_source_inlet_sensor_failure": {
+        "name": "Fejl på kildens fremløbsføler"
+      },
+      "dhw_tank_source_inlet_temp_too_low": {
+        "name": "Kildens fremløb for koldt"
+      },
+      "dhw_tank_low_battery": {
+        "name": "Batteri"
+      },
+      "dhw_tank_peripheral_lost": {
+        "name": "Enhed svarer ikke"
+      },
+      "ventilation_unit_warning": {
+        "name": "Advarsel"
+      },
+      "ventilation_unit_error": {
+        "name": "Fejl"
+      },
+      "ventilation_unit_air_filter_expired": {
+        "name": "Luftfilter udløbet"
+      },
+      "ventilation_unit_air_filter_year_passed": {
+        "name": "Luftfilter et år gammelt"
+      },
+      "ventilation_unit_device_warning": {
+        "name": "Advarsel fra aggregatet"
+      },
+      "ventilation_unit_device_fault": {
+        "name": "Fejl i aggregatet"
+      },
+      "ventilation_unit_communication_error": {
+        "name": "Kommunikationsfejl"
+      },
+      "ventilation_unit_not_compatible": {
+        "name": "Ikke kompatibel"
+      },
+      "ventilation_unit_device_error": {
+        "name": "Fejl fra aggregatet"
+      },
+      "dehumidifier_warning": {
+        "name": "Advarsel"
+      },
+      "dehumidifier_error": {
+        "name": "Fejl"
+      },
+      "dehumidifier_air_filter_expired": {
+        "name": "Luftfilter udløbet"
+      },
+      "dehumidifier_air_filter_year_passed": {
+        "name": "Luftfilter et år gammelt"
+      },
+      "dehumidifier_hcw_supplier_not_set": {
+        "name": "Ingen varme-/kølevandsforsyning"
+      },
+      "dehumidifier_device_fault": {
+        "name": "Fejl i aggregatet"
       }
     },
     "climate": {
@@ -143,6 +335,204 @@
       },
       "humidity_high_alarm_limit": {
         "name": "Alarmgrænse for høj luftfugtighed"
+      },
+      "outdoor_air_temp_bms_override": {
+        "name": "BMS-overstyring af lufttemperatur"
+      },
+      "hcc_heat_curve_slope": {
+        "name": "Varmekurvens hældning"
+      },
+      "hcc_heat_curve_shift": {
+        "name": "Varmekurvens parallelforskydning"
+      },
+      "hcc_heat_curve_inlet_min": {
+        "name": "Laveste fremløbstemperatur"
+      },
+      "hcc_heat_curve_inlet_max": {
+        "name": "Højeste fremløbstemperatur"
+      },
+      "hcc_heat_curve_gain": {
+        "name": "Varmekurvens forstærkning"
+      },
+      "hcc_high_temp_cutoff_temp": {
+        "name": "Grænse for overtemperaturafbryder"
+      },
+      "itc_heat_curve_slope": {
+        "name": "Varmekurvens hældning"
+      },
+      "itc_heat_curve_shift": {
+        "name": "Varmekurvens parallelforskydning"
+      },
+      "itc_heat_curve_inlet_min": {
+        "name": "Laveste fremløbstemperatur"
+      },
+      "itc_heat_curve_inlet_max": {
+        "name": "Højeste fremløbstemperatur"
+      },
+      "itc_heat_curve_gain": {
+        "name": "Varmekurvens forstærkning"
+      },
+      "itc_high_temp_cutoff_temp": {
+        "name": "Grænse for overtemperaturafbryder"
+      },
+      "itc_regulator_p": {
+        "name": "Regulator P"
+      },
+      "itc_regulator_i": {
+        "name": "Regulator I"
+      },
+      "itc_regulator_hysteresis": {
+        "name": "Regulatorens hysterese"
+      },
+      "itc_return_max_gain": {
+        "name": "Forstærkning ved højeste returtemperatur"
+      },
+      "itc_return_min_gain": {
+        "name": "Forstærkning ved laveste returtemperatur"
+      },
+      "itc_boost_flow": {
+        "name": "Boostflow"
+      },
+      "itc_ramping_time": {
+        "name": "Rampetid"
+      },
+      "itc_frost_protection_mode": {
+        "name": "Frostbeskyttelse, tilstand"
+      },
+      "itc_cooling_regulator_p": {
+        "name": "Køleregulator P"
+      },
+      "itc_cooling_regulator_i": {
+        "name": "Køleregulator I"
+      },
+      "itc_cooling_regulator_hysteresis": {
+        "name": "Køleregulatorens hysterese"
+      },
+      "itc_return_max_limit": {
+        "name": "Højeste returtemperatur"
+      },
+      "itc_return_min_limit": {
+        "name": "Laveste returtemperatur"
+      },
+      "itc_frost_protection_temp": {
+        "name": "Grænse for frostbeskyttelse"
+      },
+      "itc_cooling_inlet_min": {
+        "name": "Laveste fremløbstemperatur ved køling"
+      },
+      "itc_cooling_inlet_max": {
+        "name": "Højeste fremløbstemperatur ved køling"
+      },
+      "boiler_heat_pump_min_runtime": {
+        "name": "Mindste driftstid"
+      },
+      "boiler_heat_pump_min_cycle_delay": {
+        "name": "Mindste pause mellem starter"
+      },
+      "boiler_heat_pump_demand_start_delay": {
+        "name": "Forsinkelse ved start"
+      },
+      "boiler_heat_pump_demand_stop_delay": {
+        "name": "Forsinkelse ved stop"
+      },
+      "buffer_tank_start_difference": {
+        "name": "Startdifference"
+      },
+      "buffer_tank_stop_difference": {
+        "name": "Stopdifference"
+      },
+      "buffer_tank_charge_evaluation_delay": {
+        "name": "Forsinkelse af ladevurdering"
+      },
+      "dhw_tank_temp_set": {
+        "name": "Indstillet temperatur"
+      },
+      "dhw_tank_temp_set_vacation": {
+        "name": "Ferietemperatur"
+      },
+      "dhw_tank_temp_set_standby": {
+        "name": "Standbytemperatur"
+      },
+      "dhw_tank_temp_set_cleaning": {
+        "name": "Rensetemperatur"
+      },
+      "dhw_tank_circulation_cooldown": {
+        "name": "Cirkulationspause"
+      },
+      "dhw_tank_circulation_stop_difference": {
+        "name": "Stopdifference for cirkulation"
+      },
+      "dhw_tank_source_return_temp_limit": {
+        "name": "Grænse for kildens returtemperatur"
+      },
+      "ventilation_unit_air_filter_lifetime": {
+        "name": "Luftfilterets levetid"
+      },
+      "ventilation_unit_air_filter_lifetime_used": {
+        "name": "Luftfilterets brugte levetid"
+      },
+      "ventilation_unit_exhaust_level_unoccupied": {
+        "name": "Udsugningsniveau, fraværende"
+      },
+      "ventilation_unit_exhaust_flow_unoccupied": {
+        "name": "Udsugningsmængde, fraværende"
+      },
+      "ventilation_unit_exhaust_level_eco": {
+        "name": "Udsugningsniveau, eco"
+      },
+      "ventilation_unit_exhaust_flow_eco": {
+        "name": "Udsugningsmængde, eco"
+      },
+      "ventilation_unit_exhaust_level_comfort": {
+        "name": "Udsugningsniveau, komfort"
+      },
+      "ventilation_unit_exhaust_flow_comfort": {
+        "name": "Udsugningsmængde, komfort"
+      },
+      "ventilation_unit_exhaust_level_boost": {
+        "name": "Udsugningsniveau, boost"
+      },
+      "ventilation_unit_exhaust_flow_boost": {
+        "name": "Udsugningsmængde, boost"
+      },
+      "ventilation_unit_supply_level_unoccupied": {
+        "name": "Indblæsningsniveau, fraværende"
+      },
+      "ventilation_unit_supply_flow_unoccupied": {
+        "name": "Indblæsningsmængde, fraværende"
+      },
+      "ventilation_unit_supply_level_eco": {
+        "name": "Indblæsningsniveau, eco"
+      },
+      "ventilation_unit_supply_flow_eco": {
+        "name": "Indblæsningsmængde, eco"
+      },
+      "ventilation_unit_supply_level_comfort": {
+        "name": "Indblæsningsniveau, komfort"
+      },
+      "ventilation_unit_supply_flow_comfort": {
+        "name": "Indblæsningsmængde, komfort"
+      },
+      "ventilation_unit_supply_level_boost": {
+        "name": "Indblæsningsniveau, boost"
+      },
+      "ventilation_unit_supply_flow_boost": {
+        "name": "Indblæsningsmængde, boost"
+      },
+      "dehumidifier_air_filter_lifetime": {
+        "name": "Luftfilterets levetid"
+      },
+      "dehumidifier_air_filter_lifetime_used": {
+        "name": "Luftfilterets brugte levetid"
+      },
+      "dehumidifier_drying_cooling_water_temp": {
+        "name": "Kølevandstemperatur ved affugtning"
+      },
+      "dehumidifier_thermal_integration_heating_water_temp": {
+        "name": "Varmtvandstemperatur ved termisk integration"
+      },
+      "dehumidifier_thermal_integration_cooling_water_temp": {
+        "name": "Kølevandstemperatur ved termisk integration"
       }
     },
     "select": {
@@ -184,6 +574,92 @@
           "eco": "Eco",
           "comfort": "Komfort",
           "extra_comfort": "Ekstra komfort"
+        }
+      },
+      "hcc_heat_curve_type": {
+        "name": "Varmekurve",
+        "state": {
+          "manual": "Manuel",
+          "calculated": "Beregnet",
+          "underfloor": "Gulvvarme",
+          "radiators": "Radiatorer"
+        }
+      },
+      "itc_heat_curve_type": {
+        "name": "Varmekurve",
+        "state": {
+          "manual": "Manuel",
+          "calculated": "Beregnet",
+          "underfloor": "Gulvvarme",
+          "radiators": "Radiatorer"
+        }
+      },
+      "itc_return_limiter_function": {
+        "name": "Returbegrænser",
+        "state": {
+          "off": "Fra",
+          "min": "Minimum",
+          "max": "Maksimum"
+        }
+      },
+      "buffer_tank_sensor_priority": {
+        "name": "Prioriteret føler",
+        "state": {
+          "upper_sensor": "Øverste føler",
+          "lower_sensor": "Nederste føler"
+        }
+      },
+      "buffer_tank_charge_mode": {
+        "name": "Ladetilstand",
+        "state": {
+          "consumer_only": "Kun forbrugere",
+          "demand_triggered": "Efter behov"
+        }
+      },
+      "dhw_tank_mode": {
+        "name": "Styring",
+        "state": {
+          "schedule": "Program",
+          "eco": "Eco"
+        }
+      },
+      "ventilation_unit_standby_level": {
+        "name": "Niveau ved standby",
+        "state": {
+          "stopped": "Stoppet",
+          "unoccupied": "Fraværende",
+          "economy": "Økonomi"
+        }
+      },
+      "ventilation_unit_vacation_level": {
+        "name": "Niveau ved ferie",
+        "state": {
+          "stopped": "Stoppet",
+          "unoccupied": "Fraværende",
+          "economy": "Økonomi"
+        }
+      },
+      "ventilation_unit_heat_exchange_mode": {
+        "name": "Varmegenvinding",
+        "state": {
+          "always_on": "Altid til",
+          "automatic": "Automatisk"
+        }
+      },
+      "dehumidifier_drying_allowed_in": {
+        "name": "Affugtning tilladt",
+        "state": {
+          "in_cooling_mode": "I køledrift",
+          "in_heating_mode": "I varmedrift",
+          "in_both": "I begge"
+        }
+      },
+      "dehumidifier_thermal_integration_allowed_in": {
+        "name": "Termisk integration tilladt",
+        "state": {
+          "in_cooling_mode": "I køledrift",
+          "in_heating_mode": "I varmedrift",
+          "in_both": "I begge"
         }
       }
     },
@@ -457,6 +933,538 @@
       },
       "owner": {
         "name": "Rum"
+      },
+      "drying_state": {
+        "name": "Affugtningstilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "drying": "Affugter",
+          "blocked_drying": "Affugtning blokeret"
+        }
+      },
+      "ventilation_state": {
+        "name": "Ventilationstilstand",
+        "state": {
+          "none": "Ingen",
+          "stopped": "Stoppet",
+          "unoccupied": "Fraværende",
+          "economy": "Økonomi",
+          "comfort": "Komfort",
+          "boost": "Boost",
+          "blocked": "Blokeret"
+        }
+      },
+      "outdoor_air_temp": {
+        "name": "Lufttemperatur"
+      },
+      "outdoor_air_temp_filtered": {
+        "name": "Lufttemperatur, filtreret"
+      },
+      "outdoor_air_temp_geometrical": {
+        "name": "Lufttemperatur, geometrisk"
+      },
+      "hcc_state": {
+        "name": "Tilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "hcc_blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "hcc_pump_demand": {
+        "name": "Pumpebehov",
+        "state": {
+          "idle": "Inaktiv",
+          "on": "Til"
+        }
+      },
+      "hcc_pump_state": {
+        "name": "Pumpe",
+        "state": {
+          "idle": "Inaktiv",
+          "on": "Til"
+        }
+      },
+      "hcc_temp_inlet_current": {
+        "name": "Fremløbstemperatur"
+      },
+      "hcc_temp_inlet_target": {
+        "name": "Ønsket fremløbstemperatur"
+      },
+      "hcc_temp_room_target": {
+        "name": "Rumtemperatur ønsket af forbrugere"
+      },
+      "itc_state": {
+        "name": "Tilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "itc_blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "itc_pump_demand": {
+        "name": "Pumpebehov",
+        "state": {
+          "idle": "Inaktiv",
+          "on": "Til"
+        }
+      },
+      "itc_pump_state": {
+        "name": "Pumpe",
+        "state": {
+          "idle": "Inaktiv",
+          "on": "Til"
+        }
+      },
+      "itc_temp_inlet_current": {
+        "name": "Fremløbstemperatur"
+      },
+      "itc_temp_inlet_target": {
+        "name": "Ønsket fremløbstemperatur"
+      },
+      "itc_temp_room_target": {
+        "name": "Rumtemperatur ønsket af forbrugere"
+      },
+      "itc_temp_return_current": {
+        "name": "Returtemperatur"
+      },
+      "itc_temp_main_supplier": {
+        "name": "Hovedforsyningens temperatur"
+      },
+      "itc_servo_position_request": {
+        "name": "Ventilstilling"
+      },
+      "hc_source_state": {
+        "name": "Tilstand",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "boiler_heat_pump_state": {
+        "name": "Tilstand",
+        "state": {
+          "idle": "Inaktiv",
+          "heating_prepare": "Forbereder opvarmning",
+          "heating_active": "Opvarmer",
+          "heating_terminate": "Afslutter opvarmning",
+          "cooling_prepare": "Forbereder køling",
+          "cooling_active": "Køler",
+          "cooling_terminate": "Afslutter køling",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret",
+          "failure": "Fejl"
+        }
+      },
+      "boiler_heat_pump_blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "boiler_heat_pump_temp_inlet_current": {
+        "name": "Fremløbstemperatur"
+      },
+      "boiler_heat_pump_temp_requested": {
+        "name": "Ønsket temperatur"
+      },
+      "buffer_tank_state": {
+        "name": "Tilstand",
+        "state": {
+          "idle": "Inaktiv",
+          "heating_prepare": "Forbereder opvarmning",
+          "heating_active": "Opvarmer",
+          "heating_terminate": "Afslutter opvarmning",
+          "cooling_prepare": "Forbereder køling",
+          "cooling_active": "Køler",
+          "cooling_terminate": "Afslutter køling",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret",
+          "failure": "Fejl"
+        }
+      },
+      "buffer_tank_blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "buffer_tank_temp_source_inlet": {
+        "name": "Kildens fremløbstemperatur"
+      },
+      "buffer_tank_temp_upper": {
+        "name": "Øverste temperatur"
+      },
+      "buffer_tank_temp_lower": {
+        "name": "Nederste temperatur"
+      },
+      "thermistor_t1_temp": {
+        "name": "T1-temperatur"
+      },
+      "thermistor_t2_temp": {
+        "name": "T2-temperatur"
+      },
+      "thermistor_t3_temp": {
+        "name": "T3-temperatur"
+      },
+      "thermistor_t4_temp": {
+        "name": "T4-temperatur"
+      },
+      "thermistor_t5_temp": {
+        "name": "T5-temperatur"
+      },
+      "dhw_tank_temp_current": {
+        "name": "Temperatur"
+      },
+      "dhw_tank_temp_target": {
+        "name": "Måltemperatur"
+      },
+      "dhw_tank_state": {
+        "name": "Tilstand",
+        "state": {
+          "off": "Slukket",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cleaning": "Renser",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cleaning": "Rensning blokeret",
+          "failure": "Fejl"
+        }
+      },
+      "dhw_tank_blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "dhw_tank_circulation_state": {
+        "name": "Cirkulation",
+        "state": {
+          "none": "Slået fra",
+          "idle": "Inaktiv",
+          "on": "Til"
+        }
+      },
+      "dhw_tank_temp_circulation_return": {
+        "name": "Cirkulationens returtemperatur"
+      },
+      "dhw_tank_temp_source_inlet": {
+        "name": "Kildens fremløbstemperatur"
+      },
+      "dhw_tank_temp_source_return": {
+        "name": "Kildens returtemperatur"
+      },
+      "ventilation_unit_state": {
+        "name": "Tilstand",
+        "state": {
+          "stopped": "Stoppet",
+          "unoccupied": "Fraværende",
+          "economy": "Økonomi",
+          "comfort": "Komfort",
+          "boost": "Boost",
+          "blocked_stopped": "Stoppet, blokeret",
+          "blocked_unoccupied": "Fraværende, blokeret",
+          "blocked_economy": "Økonomi, blokeret",
+          "blocked_comfort": "Komfort, blokeret",
+          "blocked_boost": "Boost, blokeret",
+          "failure": "Fejl",
+          "maintenance": "Vedligeholdelse"
+        }
+      },
+      "ventilation_unit_blocking_source": {
+        "name": "Blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "ventilation_unit_warning_code": {
+        "name": "Advarselskode"
+      },
+      "ventilation_unit_error_code": {
+        "name": "Fejlkode"
+      },
+      "ventilation_unit_free_cooling": {
+        "name": "Frikøling"
+      },
+      "ventilation_unit_supply_fan_speed": {
+        "name": "Indblæsningsventilatorens hastighed"
+      },
+      "ventilation_unit_exhaust_fan_speed": {
+        "name": "Udsugningsventilatorens hastighed"
+      },
+      "ventilation_unit_supply_fan_setpoint": {
+        "name": "Indblæsningsventilator, ønsket"
+      },
+      "ventilation_unit_exhaust_fan_setpoint": {
+        "name": "Udsugningsventilator, ønsket"
+      },
+      "ventilation_unit_supply_flow_setpoint": {
+        "name": "Ønsket indblæsningsmængde"
+      },
+      "ventilation_unit_exhaust_flow_setpoint": {
+        "name": "Ønsket udsugningsmængde"
+      },
+      "ventilation_unit_temp_intake": {
+        "name": "Udeluftens temperatur"
+      },
+      "ventilation_unit_temp_supply": {
+        "name": "Indblæsningstemperatur"
+      },
+      "ventilation_unit_temp_extract": {
+        "name": "Udsugningstemperatur"
+      },
+      "ventilation_unit_temp_exhaust": {
+        "name": "Afkastluftens temperatur"
+      },
+      "ventilation_unit_bypass_damper_position": {
+        "name": "Bypass-spjæld"
+      },
+      "dehumidifier_drying_state": {
+        "name": "Affugtning",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "drying": "Affugter",
+          "blocked_drying": "Affugtning blokeret"
+        }
+      },
+      "dehumidifier_drying_blocking_source": {
+        "name": "Affugtning, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
+      },
+      "dehumidifier_thermal_integration_state": {
+        "name": "Termisk integration",
+        "state": {
+          "none": "Ingen",
+          "idle": "Inaktiv",
+          "heating": "Opvarmer",
+          "cooling": "Køler",
+          "blocked_heating": "Opvarmning blokeret",
+          "blocked_cooling": "Køling blokeret"
+        }
+      },
+      "dehumidifier_thermal_integration_blocking_source": {
+        "name": "Termisk integration, blokeringsårsag",
+        "state": {
+          "none": "Ingen",
+          "unknown": "Ukendt",
+          "contact": "Kontakt",
+          "floor_temp": "Gulvtemperatur",
+          "low_energy": "Lav energi",
+          "air_temp": "Lufttemperatur",
+          "dew_point": "Dugpunkt",
+          "outdoor_temp": "Udetemperatur",
+          "fault": "Fejl",
+          "fault_htco": "Fejl (HTCO)",
+          "periodic_activation": "Periodisk aktivering",
+          "bms": "BMS",
+          "deadband": "Dødbånd",
+          "drying": "Affugtning",
+          "heating_cooling_mode": "Varme-/kølefunktion",
+          "insufficient_demand": "Utilstrækkeligt behov",
+          "cooldown_period": "Afkølingsperiode",
+          "hcw_source_not_released": "Varme-/kølekilde ikke frigivet",
+          "room_mode": "Rumfunktion",
+          "system_is_initializing": "Systemet starter",
+          "system_is_shutting_down": "Systemet lukker ned",
+          "no_output": "Ingen udgang",
+          "first_open_activation": "Første åbning",
+          "room_with_no_temp_source": "Rum uden temperaturkilde",
+          "hcws_elements_blocked": "Varme-/køleelementer blokeret"
+        }
       }
     },
     "switch": {
@@ -474,6 +1482,36 @@
       },
       "adaptive_enable": {
         "name": "Adaptiv funktion"
+      },
+      "hcc_high_temp_cutoff_enable": {
+        "name": "Overtemperaturafbryder"
+      },
+      "itc_high_temp_cutoff_enable": {
+        "name": "Overtemperaturafbryder"
+      },
+      "itc_return_max_priority": {
+        "name": "Returbegrænser før laveste fremløb"
+      },
+      "itc_boost_enable": {
+        "name": "Boost"
+      },
+      "itc_ramping_enable": {
+        "name": "Rampe"
+      },
+      "buffer_tank_flow_balancing_enable": {
+        "name": "Flowbalancering"
+      },
+      "dhw_tank_exclude_from_vacation": {
+        "name": "Undtag fra ferie"
+      },
+      "dhw_tank_exclude_from_standby": {
+        "name": "Undtag fra standby"
+      },
+      "ventilation_unit_allow_stopped": {
+        "name": "Tillad stop"
+      },
+      "ventilation_unit_allow_unoccupied": {
+        "name": "Tillad fraværende"
       }
     }
   },

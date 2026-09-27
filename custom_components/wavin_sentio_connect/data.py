@@ -36,6 +36,8 @@ class SentioData:
     places: dict[int, str] = field(default_factory=dict[int, str])
     """The device id of each place a peripheral can belong to: 0 the controller, 1-16 a room.
     Set when the devices are registered."""
+    unique_ids: set[str] = field(default_factory=set[str])
+    """The unique id of every entity built for the entry, disabled ones included."""
 
 
 def new_client(host: str, port: int, unit_id: int) -> Client:

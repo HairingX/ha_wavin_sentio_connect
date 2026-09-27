@@ -478,6 +478,31 @@ async def test_a_room_taken_away_loses_its_device(
     ) is None
 
 
+async def test_an_entity_of_something_the_room_lost_is_removed(
+    hass: HomeAssistant,
+    loaded: SentioData,
+    config_entry: MockConfigEntry,
+    controller: SimulatedModbusDevice,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    controller.input_registers[room_base(1) + 27] = 1
+    await _check_the_installation(hass, config_entry)
+    assert entity_registry.async_get("sensor.kitchen_air_temperature") is None
+    assert entity_registry.async_get("climate.kitchen") is not None
+
+
+async def test_a_disabled_entity_the_installation_still_has_is_kept(
+    hass: HomeAssistant,
+    loaded: SentioData,
+    config_entry: MockConfigEntry,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    assert await hass.config_entries.async_reload(config_entry.entry_id)
+    await hass.async_block_till_done()
+    kept = entity_registry.async_get("sensor.kitchen_radiators_state")
+    assert kept is not None and kept.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+
+
 async def test_another_thermostat_in_a_slot_replaces_the_one_before(
     hass: HomeAssistant,
     loaded: SentioData,

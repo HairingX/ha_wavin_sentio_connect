@@ -119,7 +119,8 @@ controller's location name when it has one:
 
 Only what the controller reports is created: a room with no thermostat or sensor (a *dummy*
 room) has no measurements, and a room not using radiators, underfloor heating or another
-function has no entities for it.
+function has no entities for it. An entity for something the controller no longer reports - a
+measurement of a room made a dummy - is removed.
 
 **Each thermostat, display and module** - a device with its model and serial number, reached
 through the controller and named after its room, such as *Bathroom 1 RT-250IR*: its signal
@@ -230,8 +231,6 @@ automation:
   added; after that, the name in Home Assistant is the one used, and renaming on the controller
   changes nothing. A thermostat moved to another room keeps its name; its Room diagnostic shows
   where it is now.
-- An entity for something a room no longer has - a measurement of a room made a dummy - stays,
-  unavailable; delete it from its settings.
 - Discovery finds a controller only on port `502` with unit ID `1`, and only where Home
   Assistant sees the network's DHCP traffic.
 

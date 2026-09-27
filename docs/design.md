@@ -89,6 +89,12 @@ peripheral - and creates one wherever the installation has that point. The clien
 exactly what this installation has: a dummy room has no measurements, a room not associated with
 a function has no state for it, and a register the controller refuses is not there.
 
+Every entity records its unique id in the entry's data when it is built. A disabled entity is
+built too; Home Assistant leaves it out only when it is added. Once the platforms are set up,
+every entity of the entry in the entity registry that was not built is removed: its point is
+gone, as the entry reloads when points are gained or lost. A device the installation no longer
+has takes its entities with it.
+
 An entity subscribes to its keys and to the client's `CONNECTED` status, and sets its `_attr_`
 values in `_show` on every change. It sets them in its constructor too: Home Assistant reads
 capability attributes such as a thermostat's `hvac_modes` when it adds the entity, before

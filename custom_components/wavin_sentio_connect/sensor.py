@@ -134,7 +134,14 @@ PLACE = SentioSensorDescription(
 SENSORS: tuple[SentioSensorDescription, ...] = (
     PLACE,
     _enum(Scope.LOCATION, LocationPointKey.HEATING_COOLING_MODE, HeatingCoolingMode),
-    _enum(Scope.LOCATION, LocationPointKey.MODBUS_MODE, ModbusMode, diagnostic=True),
+    # A CCU-208 in Modbus TCP read and write reported this as disabled.
+    _enum(
+        Scope.LOCATION,
+        LocationPointKey.MODBUS_MODE,
+        ModbusMode,
+        diagnostic=True,
+        enabled=False,
+    ),
     _measurement(RoomPointKey.TEMP_AIR_CURRENT, SensorDeviceClass.TEMPERATURE),
     # What the room regulates to now, which the thermostat also shows; as a sensor it gets
     # long-term statistics.

@@ -260,9 +260,9 @@ automation:
 - Not shown: when a ventilation unit's or dehumidifier's air filter was last changed (the manual
   does not give how the time is encoded), and a ventilation unit's feature bits.
 - The Modbus register map has no floor temperature setpoint.
-- The Modbus mode entity shows the controller's Modbus mode register. A CCU-208 whose display
-  shows Modbus TCP as read and write reported it as *disabled*, so it does not tell whether
-  Home Assistant can change anything.
+- The Modbus mode entity, disabled by default, shows the controller's Modbus mode register. A
+  CCU-208 whose display shows Modbus TCP as read and write reported it as *disabled*, so it does
+  not tell whether Home Assistant can change anything.
 - The controller's names for its rooms and peripherals only name a device when it is first
   added; after that, the name in Home Assistant is the one used, and renaming on the controller
   changes nothing. A thermostat moved to another room keeps its name; its Room diagnostic shows

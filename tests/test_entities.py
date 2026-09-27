@@ -201,6 +201,14 @@ async def test_a_number_writes_its_value_and_offers_the_encodings_range(
     assert controller.holding_registers[122] == 1450
 
 
+async def test_the_modbus_mode_is_disabled_by_default(
+    hass: HomeAssistant, loaded: SentioData, entity_registry: er.EntityRegistry
+) -> None:
+    """It does not show whether Home Assistant can change anything."""
+    found = entity_registry.async_get("sensor.wavin_sentio_controller_modbus_mode")
+    assert found is not None and found.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+
+
 @pytest.mark.parametrize("mode", [0, 1, 2, 3])
 async def test_a_write_reaches_the_controller_whatever_its_modbus_mode_register_says(
     hass: HomeAssistant,

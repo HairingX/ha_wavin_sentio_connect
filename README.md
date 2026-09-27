@@ -221,8 +221,11 @@ automation:
 - **The controller got a new address.** Reconfigure the entry (see Setup).
 - **The controller is not discovered.** Home Assistant sees a DHCP host name only when the
   controller asks for an address, as when it starts, and only if Home Assistant receives the
-  network's DHCP traffic. To see what it receives, log `homeassistant.components.dhcp` and
-  `custom_components.wavin_sentio_connect` at debug level: each DHCP packet shows as
+  network's DHCP traffic. What its DHCP discovery has seen since Home Assistant started - address,
+  host name and hardware address - is listed at `/config/dhcp` on your Home Assistant; the
+  controller's address should be there with its `wavin sentio ccu#` host name. For more, log
+  `homeassistant.components.dhcp` and `custom_components.wavin_sentio_connect` at debug level
+  (Developer tools > Actions > `logger.set_level`): each DHCP packet shows as
   `Processing updated address data`, a match with this integration as `Matched ...
   wavin_sentio_connect`, and a controller the integration then does not add as `Not adding the
   controller announced at ...`.

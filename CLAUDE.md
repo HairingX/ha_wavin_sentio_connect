@@ -87,6 +87,10 @@ HACS installs a release from the files its tag points to.
    naming a higher version starts a new series. Type a version only for a new major, or to
    override one worked out wrongly: canonical PEP 440, of the kind chosen.
 
+Release refuses a version with no pull request merged since the release before it - for a
+final release, the final release before it: a change pushed straight to `main` is nothing
+to release.
+
 Release refuses any version not higher than every version tagged. It runs the tests and the
 hassfest and HACS validation on the commit it releases, sets the manifest's version and checks
 it, and only then pushes the version commit and the tag together - a fast-forward of `main` from

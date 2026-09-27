@@ -7,6 +7,8 @@
                                             version, OVERRIDE a version to take instead, either
                                             may be empty; TAGS is a file of every tag, one per line
     release_version.py check VERSION        prints version=, tag= and prerelease= lines
+    release_version.py changes SINCE MERGED refuses a release when MERGED, a file of the pull
+                                            requests merged since the release SINCE, is empty
     release_version.py write VERSION FILE   sets the one `"version": "..."` line in FILE
 """
 import re
@@ -115,6 +117,16 @@ def previous_tag(version: Version, tags: list[str]) -> str | None:
     return max(found)[1] if found else None
 
 
+def require_changes(since: str, pull_requests: list[str]) -> None:
+    """Refuse a release when no pull request has been merged since the release `since`.
+
+    What users get comes through pull requests; a change pushed straight to main - CI, tests,
+    the release itself - gives them nothing to release.
+    """
+    if not any(line.strip() for line in pull_requests):
+        sys.exit(f"::error::no pull request has been merged since {since}; there is nothing to release")
+
+
 def _lines(path: str) -> list[str]:
     return Path(path).read_text(encoding="utf-8").splitlines()
 
@@ -144,6 +156,8 @@ if __name__ == "__main__":
             print(f"previous_tag={previous_tag(found, _lines(tags)) or ''}")
         case ["check", text]:
             _print(_canonical(text))
+        case ["changes", since, merged]:
+            require_changes(since, _lines(merged))
         case ["write", text, path]:
             write(text, Path(path))
         case _:

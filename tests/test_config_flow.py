@@ -20,13 +20,20 @@ from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 from wavin_sentio_connect import Client, Status, UnsupportedDeviceError
-from wavin_sentio_connect.testing import SimulatedModbusDevice
+from wavin_sentio_connect.testing import SimulatedModbusDevice, SimulatedModbusGateway
 
 from custom_components.wavin_sentio_connect.config_flow import SCHEMA, Controller
 from custom_components.wavin_sentio_connect.const import CONF_UNIT_ID, DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData
 
 from .conftest import HOST, SERIAL_NUMBER, entry_data, installation, text
+
+FLOW = "custom_components.wavin_sentio_connect.config_flow"
+
+
+@pytest.fixture(autouse=True)
+def no_waiting_for_an_announced_controller(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(f"{FLOW}._ANSWER_DELAYS", (0, 0, 0))
 
 
 async def _start(hass: HomeAssistant) -> str:
@@ -278,9 +285,39 @@ async def test_a_controller_discovered_at_its_configured_address_is_not_contacte
     assert simulated_link == []
 
 
-async def test_a_discovered_address_where_nothing_answers_is_dropped(
-    hass: HomeAssistant,
+async def test_a_discovered_address_where_nothing_answers_is_dropped_after_trying_again(
+    hass: HomeAssistant, simulated_link: list[Client]
 ) -> None:
     result = await _discover(hass, ip="nothing.example")
     assert result.get("type") is FlowResultType.ABORT
     assert result.get("reason") == "cannot_connect"
+    assert len(simulated_link) == 3
+
+
+async def test_a_controller_announced_before_it_answers_is_offered_once_it_does(
+    hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch, gateway: SimulatedModbusGateway
+) -> None:
+    """A controller asks for its address before it has it, and so before it answers there."""
+    gateway.link_down = True
+
+    async def starting(delay: float) -> None:
+        gateway.link_down = False
+
+    monkeypatch.setattr(f"{FLOW}.sleep", starting)
+    result = await _discover(hass)
+    assert result.get("step_id") == "discovery_confirm"
+
+
+async def test_a_discovered_device_the_library_does_not_support_is_not_tried_again(
+    hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    attempts: list[Mapping[str, Any]] = []
+
+    async def unsupported(settings: Mapping[str, Any]) -> Controller:
+        attempts.append(settings)
+        raise UnsupportedDeviceError("simulated")
+
+    monkeypatch.setattr(f"{FLOW}.identify", unsupported)
+    result = await _discover(hass)
+    assert result.get("reason") == "unsupported_device"
+    assert len(attempts) == 1

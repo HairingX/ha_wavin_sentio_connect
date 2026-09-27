@@ -1,6 +1,6 @@
 # Wavin Sentio Connect for Home Assistant
 
-A Home Assistant integration for the **Wavin Sentio** floor heating controller (CCU-208), over
+A Home Assistant integration for **Wavin Sentio** (the CCU-208 control unit), over
 Modbus TCP on your own network - no cloud. Built on
 [wavin_sentio_connect](https://github.com/HairingX/wavin_sentio_connect).
 

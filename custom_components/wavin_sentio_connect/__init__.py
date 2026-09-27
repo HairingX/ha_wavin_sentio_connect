@@ -10,6 +10,7 @@ from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 
 from wavin_sentio_connect import (
     CannotConnectError,
@@ -78,6 +79,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SentioConfigEntry) -> bo
         )
         register_devices(hass, entry, entry.runtime_data)
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+        _remove_lost_entities(hass, entry)
     except BaseException:
         await client.disconnect()
         raise
@@ -114,6 +116,16 @@ async def async_remove_config_entry_device(
 
 
 @callback
+def _remove_lost_entities(hass: HomeAssistant, entry: SentioConfigEntry) -> None:
+    """Remove the entities of points the installation no longer has, such as the measurements
+    of a room made a dummy."""
+    registry = er.async_get(hass)
+    built = entry.runtime_data.unique_ids
+    for found in er.async_entries_for_config_entry(registry, entry.entry_id):
+        if found.unique_id not in built:
+            registry.async_remove(found.entity_id)
+
+
 def _reload_when_the_installation_changes(
     hass: HomeAssistant, entry: SentioConfigEntry
 ) -> None:

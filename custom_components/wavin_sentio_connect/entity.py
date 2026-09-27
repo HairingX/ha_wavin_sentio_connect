@@ -163,6 +163,7 @@ class SentioEntity(Entity):
         self._key = target.key
         self._attr_unique_id = target.unique_id
         self._attr_device_info = target.device
+        data.unique_ids.add(target.unique_id)
         self._added = False
         self._changed()
 

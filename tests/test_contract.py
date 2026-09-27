@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import ast
 import fnmatch
+import hashlib
 import importlib.metadata
 import json
 import re
@@ -233,6 +234,20 @@ def test_the_library_is_imported_from_its_package_not_from_the_integration() -> 
     import wavin_sentio_connect
 
     assert INTEGRATION not in Path(wavin_sentio_connect.__file__).parents
+
+
+WAVIN_SENTIO_ICONS = {
+    "icon.png": "c3b04c5d68df3e433f2d9be8234843f80b2f44f14e914feec926f3c04585aa95",
+    "icon@2x.png": "76f53805a9f78400621d9ae883aa2f32259a7ba799584654a413f3e69ea9aa62",
+}
+"""The Wavin Sentio product icon, as Home Assistant's brands repository has it for Wavin Sentio
+(custom_integrations/wavinsentio): a brand icon shows the brand or the product."""
+
+
+@pytest.mark.parametrize(("name", "digest"), WAVIN_SENTIO_ICONS.items())
+def test_the_brand_icon_is_the_wavin_sentio_product_icon(name: str, digest: str) -> None:
+    found = hashlib.sha256((INTEGRATION / "brand" / name).read_bytes()).hexdigest()
+    assert found == digest
 
 
 QUALITY_SCALE_RULES = frozenset({

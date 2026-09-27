@@ -10,6 +10,11 @@ on:
 
 permissions: {}
 
+# The shell given explicitly, so GitHub runs every step with pipefail.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   cleanup:
     name: Remove the branch's test builds

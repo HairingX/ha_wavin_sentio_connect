@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from asyncio import sleep
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -23,6 +24,11 @@ from .const import CONF_UNIT_ID, DOMAIN
 from .data import entry_title, new_client, serial_number
 
 _LOGGER = logging.getLogger(__name__)
+
+_ANSWER_DELAYS: tuple[float, ...] = (2, 4, 8, 16, 32)
+"""Seconds to wait before each attempt at a controller that announced itself, until one answers.
+A device asks for its address over DHCP before it has it (RFC 2131), so it cannot answer there
+yet when the announcement is seen."""
 
 SCHEMA = vol.Schema(
     {
@@ -95,7 +101,7 @@ class WavinSentioConnectConfigFlow(ConfigFlow, domain=DOMAIN):
         # Every address change is announced; one already configured needs no connection.
         self._async_abort_entries_match({CONF_HOST: discovery_info.ip})
         errors: dict[str, str] = {}
-        controller = await self._identify(settings, errors)
+        controller = await self._identify_announced(settings, errors)
         if controller is None:
             _LOGGER.debug(
                 "Not adding the controller announced at %s: %s",
@@ -166,6 +172,20 @@ class WavinSentioConnectConfigFlow(ConfigFlow, domain=DOMAIN):
             ),
             errors=errors,
         )
+
+    async def _identify_announced(
+        self, settings: Mapping[str, Any], errors: dict[str, str]
+    ) -> Controller | None:
+        """The controller that announced itself at `settings`, tried while nothing answers there;
+        None with the reason put in `errors`."""
+        controller = None
+        for delay in _ANSWER_DELAYS:
+            await sleep(delay)
+            errors.clear()
+            controller = await self._identify(settings, errors)
+            if controller is not None or errors.get("base") != "cannot_connect":
+                break
+        return controller
 
     async def _identify(
         self, settings: Mapping[str, Any], errors: dict[str, str]

@@ -67,10 +67,17 @@ repository.
 ## Setup
 
 **Discovered:** a controller that gets its address over DHCP sends the host name
-`Wavin Sentio CCU#` followed by the last four digits of its serial number. Home Assistant's DHCP
-discovery sees it when the controller asks for an address, and offers it under Settings >
-Devices & services > Discovered; confirm it there. It is looked for on port `502` with unit ID
-`1`. A controller already added that turns up at a new address is moved there by itself.
+`Wavin Sentio CCU#` followed by the last four digits of its serial number when it asks for an
+address, which it does when it starts. To have it discovered:
+
+1. Install the integration and restart Home Assistant, which reads what to look for when it
+   starts.
+2. Restart the controller.
+
+Home Assistant's DHCP discovery sees the request and, once the controller answers, offers it
+under Settings > Devices & services > Discovered; confirm it there. Restarting Home Assistant
+alone does not make the controller ask again. It is looked for on port `502` with unit ID `1`.
+A controller already added that turns up at a new address is moved there by itself.
 
 **By its address:**
 

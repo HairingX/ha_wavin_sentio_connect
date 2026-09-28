@@ -59,10 +59,11 @@ repository.
 
 ### Manually
 
-1. Download the source code of the
-   [latest release](https://github.com/HairingX/ha_wavin_sentio_connect/releases/latest).
-2. Copy its `custom_components/wavin_sentio_connect` folder into the `custom_components` folder
-   of your Home Assistant configuration.
+1. Download `wavin_sentio_connect.zip` from the
+   [latest release](https://github.com/HairingX/ha_wavin_sentio_connect/releases/latest) - not
+   the source code, whose manifest carries no version.
+2. Unpack it into a new folder `custom_components/wavin_sentio_connect` in your Home Assistant
+   configuration.
 3. Restart Home Assistant.
 
 ## Setup

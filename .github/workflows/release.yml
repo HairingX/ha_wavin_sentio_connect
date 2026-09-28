@@ -1,13 +1,12 @@
 name: Release
 
-# Run this from the Actions tab. Never publish the draft release by hand: that creates the tag
-# at whatever main points to, before the version in the manifest has been set, and HACS installs
-# a release from the files its tag points to.
+# Run this from the Actions tab. Never publish the draft release by hand: HACS installs the zip a
+# release carries, which only this workflow builds.
 #
 # Everything runs in one direction, and nothing leaves the runner until it has been checked:
-# resolve the version -> test and validate the exact commit -> set the manifest's version and
-# check it -> push the version commit and the tag together -> GitHub release. If main moves while
-# this runs, the push is refused and nothing is published.
+# resolve the version -> test and validate the exact commit -> build the zip with the manifest's
+# version set, and check it -> tag that commit -> GitHub release with the zip. Nothing is pushed to
+# main: the repository's manifest says 0.0.0, and the version lives in the tag and the zip.
 on:
   workflow_dispatch:
     inputs:
@@ -131,15 +130,19 @@ jobs:
     with:
       ref: ${{ needs.prepare.outputs.sha }}
 
-  tag:
-    name: Set the version and push the tag
+  publish:
+    name: Tag and publish
     needs: [prepare, test, validate]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
+      GH_TOKEN: ${{ github.token }}
       VERSION: ${{ needs.prepare.outputs.version }}
       TAG: ${{ needs.prepare.outputs.tag }}
+      SHA: ${{ needs.prepare.outputs.sha }}
+      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+      PREVIOUS_TAG: ${{ needs.prepare.outputs.previous_tag }}
     steps:
       - name: Check out the tested commit
         uses: actions/checkout@v7
@@ -154,54 +157,29 @@ jobs:
       - name: Install packaging
         run: python -m pip install packaging==26.3
 
-      - name: Set the version, and commit it if it changed
+      - name: Build the zip, with the manifest's version set
         run: |
           python .github/scripts/release_version.py write "$VERSION" "$MANIFEST"
           changed=$(git status --porcelain)
-          if [[ -n "$changed" && "$changed" != " M $MANIFEST" ]]; then
-            echo "::error::Setting the version changed more than $MANIFEST:"
+          if [[ "$changed" != " M $MANIFEST" ]]; then
+            echo "::error::Setting the version changed something else, or nothing:"
             echo "$changed"
             exit 1
           fi
+          zip=$(jq -r .filename hacs.json)
+          python .github/scripts/release_zip.py "$(dirname "$MANIFEST")" "$RUNNER_TEMP/$zip" "$VERSION"
+          echo "ZIP=$RUNNER_TEMP/$zip" >> "$GITHUB_ENV"
+
+      - name: Tag the tested commit
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$changed" ]]; then
-            git commit -q -am "Release $TAG"
-          else
-            echo "$MANIFEST already says $VERSION"
-          fi
-          git tag -a "$TAG" -m "Release $TAG"
+          git tag -a "$TAG" -m "Release $TAG" "$SHA"
+          git push origin "refs/tags/$TAG"
 
-      - name: Check the manifest says this version
+      - name: Publish the GitHub release with the zip
         run: |
-          found=$(python -c "import json, os; print(json.load(open(os.environ['MANIFEST']))['version'])")
-          if [[ "$found" != "$VERSION" ]]; then
-            echo "::error::The manifest says $found, not $VERSION."
-            exit 1
-          fi
-
-      - name: Push the version commit and the tag together
-        run: |
-          # Atomic, and main only fast-forwards from the tested commit: if main moved, or either
-          # ref is refused, neither is pushed.
-          git push --atomic origin "HEAD:refs/heads/main" "refs/tags/$TAG"
-
-  github-release:
-    name: Publish the GitHub release
-    needs: [prepare, tag]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      TAG: ${{ needs.prepare.outputs.tag }}
-      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
-      PREVIOUS_TAG: ${{ needs.prepare.outputs.previous_tag }}
-    steps:
-      - name: Publish
-        run: |
-          draft=$(gh api "repos/$GITHUB_REPOSITORY/releases" \
-            --jq '[.[] | select(.draft)] | sort_by(.created_at) | reverse | .[0] // empty')
+          draft=$(gh api "repos/$GITHUB_REPOSITORY/releases"             --jq '[.[] | select(.draft)] | sort_by(.created_at) | reverse | .[0] // empty')
           flags=()
           if [[ "$PRERELEASE" == "false" && -n "$draft" ]]; then
             # A final release carries the draft's notes, as edited before running this.
@@ -217,8 +195,7 @@ jobs:
           if [[ "$PRERELEASE" == "true" ]]; then
             flags+=(--prerelease --latest=false)
           fi
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
-            --title "$TAG" "${flags[@]}"
+          gh release create "$TAG" "$ZIP" --repo "$GITHUB_REPOSITORY" --verify-tag             --title "$TAG" "${flags[@]}"
           # The draft only proposed this release; Release Drafter drafts the next one.
           if [[ -n "$draft" ]]; then
             gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$(jq -r .id <<< "$draft")"

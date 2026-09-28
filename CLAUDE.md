@@ -73,9 +73,9 @@ release. After any change to the integration or to the libraries it uses:
 
 ## Releasing
 
-**Never edit the manifest's version by hand, and never publish the draft release by hand.**
-Publishing the draft creates the tag at whatever `main` points to, before the version is set, and
-HACS installs a release from the files its tag points to.
+**The manifest in the repository always says `0.0.0`, and the draft release is never published
+by hand.** HACS installs the zip a release carries (`zip_release` and `filename` in `hacs.json`),
+and only Release builds it: the manifest in the zip says the release's version.
 
 1. Merge pull requests into `main`. Release Drafter keeps a draft release proposing the next
    version: a minor bump for the label `breaking-change` or `minor`, a patch otherwise.
@@ -92,9 +92,9 @@ final release, the final release before it: a change pushed straight to `main` i
 to release.
 
 Release refuses any version not higher than every version tagged. It runs the tests and the
-hassfest and HACS validation on the commit it releases, sets the manifest's version and checks
-it, and only then pushes the version commit and the tag together - a fast-forward of `main` from
-the tested commit, refused if `main` moved. Then the GitHub release, marked as a pre-release where it is one; HACS offers a
+hassfest and HACS validation on the commit it releases, builds the zip from that commit with the
+manifest's version set and checks it, tags that commit - nothing is pushed to `main` - and
+publishes the GitHub release with the zip, marked as a pre-release where it is one; HACS offers a
 pre-release only to those who ask for them.
 
 A release candidate's notes are written by GitHub from the pull requests merged since the
@@ -116,8 +116,8 @@ on a real Home Assistant - DHCP discovery, for one, needs a real network - run t
 workflow from the Actions tab on that branch:
 
 1. It tests and validates the branch's commit, then publishes it as a pre-release such as
-   `v0.1.0b3`: the next release's version with the first free `b<n>`. Only the tag is pushed; the
-   commit that sets the version is not on the branch.
+   `v0.1.0b3`: the next release's version with the first free `b<n>`. The branch's commit is
+   tagged; the version and the libraries are set only in the zip the pre-release carries.
 2. Where modbus_event_connect or wavin_sentio_connect has a branch of the same name, the test
    build requires that branch's current commit, from GitHub; otherwise the version the manifest
    pins. Home Assistant then checks that requirement at every start, so it must reach GitHub.

@@ -3,8 +3,8 @@ name: Test build
 # Run this from the Actions tab on a development branch, to try it on a real Home Assistant.
 #
 # It publishes the branch as a GitHub pre-release, which HACS offers only to those who switch
-# pre-releases on for this repository. The branch itself is not changed: the commit that sets the
-# version is reachable only through its tag. The libraries come from their branch of the same
+# pre-releases on for this repository. The branch itself is not changed: its commit is tagged, and
+# the version and the libraries are set only in the zip the pre-release carries. The libraries come from their branch of the same
 # name where they have one, pinned to its current commit, and otherwise from what the manifest
 # pins. A new test build of a branch replaces the previous one; the Test build cleanup workflow
 # removes them when the branch's pull request is closed.
@@ -122,10 +122,13 @@ jobs:
       - name: Install packaging
         run: python -m pip install packaging==26.3
 
-      - name: Set the version and the libraries, and tag it
+      - name: Set the version and the libraries, build the zip, and tag the commit
         run: |
           mapfile -t libraries < <(python .github/scripts/test_build.py libraries "$BRANCH")
           python .github/scripts/test_build.py manifest "$MANIFEST" "$VERSION" "${libraries[@]}"
+          zip=$(jq -r .filename hacs.json)
+          python .github/scripts/release_zip.py "$(dirname "$MANIFEST")" "$RUNNER_TEMP/$zip" "$VERSION"
+          echo "ZIP=$RUNNER_TEMP/$zip" >> "$GITHUB_ENV"
           {
             echo "Test build of branch \`$BRANCH\`, commit $SHA."
             echo
@@ -142,8 +145,7 @@ jobs:
           cat notes.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -q -am "Test build $TAG of $BRANCH"
-          git tag -a "$TAG" -m "Test build $TAG of $BRANCH"
+          git tag -a "$TAG" -m "Test build $TAG of $BRANCH" "$SHA"
           # Only the tag: the branch stays as it is.
           git push origin "refs/tags/$TAG"
 
@@ -158,6 +160,6 @@ jobs:
 
       - name: Publish the pre-release
         run: |
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
+          gh release create "$TAG" "$ZIP" --repo "$GITHUB_REPOSITORY" --verify-tag \
             --title "$TAG (test build of $BRANCH)" --notes-file notes.md \
             --prerelease --latest=false

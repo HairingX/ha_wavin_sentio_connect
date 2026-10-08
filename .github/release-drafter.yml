@@ -3,9 +3,12 @@ tag-template: 'v$RESOLVED_VERSION'
 change-template: '- #$NUMBER $TITLE @$AUTHOR'
 sort-direction: ascending
 categories:
+  # CI, tooling and documentation changes do not change what a user installs.
   - type: 'pre-exclude'
     when:
-      label: 'skip-changelog'
+      labels:
+        - 'skip-changelog'
+        - 'chore'
 
   # Each pull request is listed once, under the first of these its labels match.
   - title: '🛠 Breaking Changes'
@@ -27,11 +30,6 @@ categories:
         - 'fix'
         - 'bugfix'
         - 'bug'
-
-  - title: '🧰 Maintenance'
-    exclusive: true
-    when:
-      label: 'chore'
 
   - title: '📦 Dependencies'
     exclusive: true

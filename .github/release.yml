@@ -3,6 +3,8 @@ changelog:
   exclude:
     labels:
       - skip-changelog
+      # CI, tooling and documentation changes do not change what a user installs.
+      - chore
   categories:
     - title: 🛠 Breaking Changes
       labels:
@@ -16,9 +18,6 @@ changelog:
         - bug
         - fix
         - bugfix
-    - title: 🧰 Maintenance
-      labels:
-        - chore
     - title: 📦 Dependencies
       labels:
         - dependencies

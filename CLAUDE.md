@@ -134,7 +134,8 @@ libraries' branch of the same name, where they have one.
   to what a user gets - the integration's code or documentation - comes with its tests.
 - Name every branch by the kind of change, as the release draft's labels follow the name:
   `feature/<what>` is labelled `feature request`, `fix/<what>` is labelled `bug`, and
-  `chore/<what>` - CI, tooling, documentation - is labelled `chore`.
+  `chore/<what>` - CI, tooling, documentation - is labelled `chore`, and left out of the
+  release notes.
 - A pull request's text describes only its own change: what it does and how it was tested. Never
   releases to come, merge order, or other repositories.
 - Put `breaking-change` on a pull request that breaks the API, and `minor` on one that needs a

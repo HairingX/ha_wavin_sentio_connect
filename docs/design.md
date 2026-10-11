@@ -79,6 +79,11 @@ room, so that a move is in its history.
   (`async_track_device_registry_updated_event`, which fires for child devices too).
 - No suggested area: with a room's name as its suggested area, Home Assistant 2026.9.3 built
   entity IDs such as `sensor.kitchen_kitchen_air_temperature`.
+- A room and the controller's parts are child devices, so from Home Assistant 2026.10 a new
+  entity's ID starts with the controller's name, `climate.wavin_sentio_controller_kitchen`, while
+  its name shows only the room's, `Kitchen`. An installation keeps the IDs it has: the registry
+  holds them by unique ID, which does not change. Peripherals, ventilation units and
+  dehumidifiers are devices of their own, and keep IDs such as `sensor.ventilation_unit_1_state`.
 - A device the installation no longer has is removed whenever the entry sets up
   (`async_remove_device`; in 2026.9 a device belongs to one config entry, and removing an entry
   from it with `async_update_device` is reported as deprecated, to stop working in 2027.8.0).

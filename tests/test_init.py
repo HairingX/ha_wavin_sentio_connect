@@ -266,7 +266,7 @@ async def test_the_poller_reads_what_is_due_and_survives_a_failing_poll(
     clock.advance(60)
     shown: list[str] = []
     for _ in range(100):
-        state = hass.states.get("sensor.kitchen_air_temperature")
+        state = hass.states.get("sensor.wavin_sentio_controller_kitchen_air_temperature")
         assert state is not None
         shown.append(state.state)
         if state.state == "23.0":
@@ -366,7 +366,7 @@ async def test_with_polling_disabled_nothing_is_read_on_a_schedule(
     controller.input_registers[room_base(1) + 4] = 2300
     clock.advance(3600)
     await data.client.poll()
-    state = hass.states.get("sensor.kitchen_air_temperature")
+    state = hass.states.get("sensor.wavin_sentio_controller_kitchen_air_temperature")
     assert state is not None and state.state == "21.5"
     await hass.config_entries.async_unload(entry.entry_id)
 
@@ -394,10 +394,10 @@ async def test_update_entity_reads_that_entity_from_the_controller(
     await hass.services.async_call(
         "homeassistant",
         "update_entity",
-        {"entity_id": "sensor.kitchen_air_temperature"},
+        {"entity_id": "sensor.wavin_sentio_controller_kitchen_air_temperature"},
         blocking=True,
     )
-    state = hass.states.get("sensor.kitchen_air_temperature")
+    state = hass.states.get("sensor.wavin_sentio_controller_kitchen_air_temperature")
     assert state is not None and state.state == "23.0"
     assert {(r.address, r.count) for _, r in gateway.requests} == {(room_base(1) + 4, 1)}
     await hass.config_entries.async_unload(entry.entry_id)
@@ -437,7 +437,7 @@ async def test_a_room_set_up_later_becomes_a_device_with_its_entities(
     assert [room.number for room in data.rooms] == [1, 2, 3, 4]
     office = _room(device_registry, config_entry, 4)
     assert office.name == "Office"
-    state = hass.states.get("sensor.office_air_temperature")
+    state = hass.states.get("sensor.wavin_sentio_controller_office_air_temperature")
     assert state is not None and state.state == "20.0"
 
 
@@ -458,7 +458,7 @@ async def test_with_new_entities_disabled_a_room_set_up_later_has_them_disabled(
     await hass.async_block_till_done()
     set_up_room(controller, 4, "Office", air=2000)
     await _check_the_installation(hass, entry)
-    office = entity_registry.async_get("sensor.office_air_temperature")
+    office = entity_registry.async_get("sensor.wavin_sentio_controller_office_air_temperature")
     assert office is not None and office.disabled_by is er.RegistryEntryDisabler.INTEGRATION
     await hass.config_entries.async_unload(entry.entry_id)
 
@@ -487,8 +487,8 @@ async def test_an_entity_of_something_the_room_lost_is_removed(
 ) -> None:
     controller.input_registers[room_base(1) + 27] = 1
     await _check_the_installation(hass, config_entry)
-    assert entity_registry.async_get("sensor.kitchen_air_temperature") is None
-    assert entity_registry.async_get("climate.kitchen") is not None
+    assert entity_registry.async_get("sensor.wavin_sentio_controller_kitchen_air_temperature") is None
+    assert entity_registry.async_get("climate.wavin_sentio_controller_kitchen") is not None
 
 
 async def test_a_disabled_entity_the_installation_still_has_is_kept(
@@ -499,7 +499,7 @@ async def test_a_disabled_entity_the_installation_still_has_is_kept(
 ) -> None:
     assert await hass.config_entries.async_reload(config_entry.entry_id)
     await hass.async_block_till_done()
-    kept = entity_registry.async_get("sensor.kitchen_radiators_state")
+    kept = entity_registry.async_get("sensor.wavin_sentio_controller_kitchen_radiators_state")
     assert kept is not None and kept.disabled_by is er.RegistryEntryDisabler.INTEGRATION
 
 

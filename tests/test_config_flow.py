@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from typing import Any
 
 import pytest
-import voluptuous as vol
+import probatio
 from homeassistant.config_entries import (
     SOURCE_DHCP,
     SOURCE_USER,
@@ -54,10 +54,10 @@ async def _submit(
     return result
 
 
-def _schema(result: ConfigFlowResult) -> dict[str, vol.Marker]:
+def _schema(result: ConfigFlowResult) -> dict[str, probatio.Marker]:
     schema = result.get("data_schema")
     assert schema is not None
-    markers: dict[str, vol.Marker] = {str(key): key for key in schema.schema}
+    markers: dict[str, probatio.Marker] = {str(key): key for key in schema.schema}
     return markers
 
 

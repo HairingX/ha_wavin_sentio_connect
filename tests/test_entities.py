@@ -47,11 +47,11 @@ async def test_room_measurements_carry_their_units(
     hass: HomeAssistant, loaded: SentioData
 ) -> None:
     for entity_id, value, unit in (
-        ("sensor.kitchen_air_temperature", "21.5", "°C"),
-        ("sensor.kitchen_target_temperature", "21.0", "°C"),
-        ("sensor.kitchen_floor_temperature", "22.5", "°C"),
-        ("sensor.kitchen_humidity", "45.5", "%"),
-        ("sensor.kitchen_dew_point", "9.5", "°C"),
+        ("sensor.wavin_sentio_controller_kitchen_air_temperature", "21.5", "°C"),
+        ("sensor.wavin_sentio_controller_kitchen_target_temperature", "21.0", "°C"),
+        ("sensor.wavin_sentio_controller_kitchen_floor_temperature", "22.5", "°C"),
+        ("sensor.wavin_sentio_controller_kitchen_humidity", "45.5", "%"),
+        ("sensor.wavin_sentio_controller_kitchen_dew_point", "9.5", "°C"),
     ):
         state = hass.states.get(entity_id)
         assert state is not None, entity_id
@@ -68,12 +68,12 @@ async def test_the_target_temperature_sensor_follows_what_the_room_regulates_to(
     """Vacation changes the target the room regulates to, not the room's own setpoint."""
     controller.input_registers[101] = 1600
     await _poll(hass, loaded, clock)
-    assert _state(hass, "sensor.kitchen_target_temperature") == "16.0"
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_target_temperature") == "16.0"
     assert controller.holding_registers[119] == 2100
 
 
 async def test_a_state_shows_by_its_name(hass: HomeAssistant, loaded: SentioData) -> None:
-    assert _state(hass, "sensor.kitchen_state") == "heating"
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_state") == "heating"
     assert _state(hass, "sensor.wavin_sentio_controller_heating_cooling_mode") == "heating"
 
 
@@ -83,7 +83,7 @@ async def test_a_dummy_room_has_no_measurements(
     assert entity_registry.async_get_entity_id(
         "sensor", "wavin_sentio_connect", f"{SERIAL_NUMBER}_room_3_temp_air_current"
     ) is None
-    assert _state(hass, "climate.hall") is not None
+    assert _state(hass, "climate.wavin_sentio_controller_hall") is not None
 
 
 async def test_a_function_the_room_is_not_associated_with_has_no_entity(
@@ -106,7 +106,7 @@ async def test_no_reading_shows_as_unknown(
 ) -> None:
     controller.input_registers[104] = 0x7FFF
     await _poll(hass, loaded, clock)
-    assert _state(hass, "sensor.kitchen_air_temperature") == STATE_UNKNOWN
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_air_temperature") == STATE_UNKNOWN
 
 
 async def test_everything_is_unavailable_while_the_controller_does_not_answer(
@@ -118,13 +118,13 @@ async def test_everything_is_unavailable_while_the_controller_does_not_answer(
 ) -> None:
     gateway.link_down = True
     await _poll(hass, loaded, clock)
-    assert _state(hass, "sensor.kitchen_air_temperature") == STATE_UNAVAILABLE
-    assert _state(hass, "climate.kitchen") == STATE_UNAVAILABLE
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_air_temperature") == STATE_UNAVAILABLE
+    assert _state(hass, "climate.wavin_sentio_controller_kitchen") == STATE_UNAVAILABLE
 
     gateway.link_down = False
     controller.input_registers[104] = 2400
     await _poll(hass, loaded, clock)
-    assert _state(hass, "sensor.kitchen_air_temperature") == "24.0"
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_air_temperature") == "24.0"
 
 
 async def test_an_alarm_bit_is_a_problem_sensor(
@@ -159,7 +159,7 @@ async def test_a_select_writes_its_state(
     await hass.services.async_call(
         "select",
         SERVICE_SELECT_OPTION,
-        {ATTR_ENTITY_ID: "select.kitchen_thermostat_lock", ATTR_OPTION: "hotel"},
+        {ATTR_ENTITY_ID: "select.wavin_sentio_controller_kitchen_thermostat_lock", ATTR_OPTION: "hotel"},
         blocking=True,
     )
     assert controller.holding_registers[120] == 16
@@ -174,13 +174,13 @@ async def test_the_setpoint_is_set_apart_from_the_thermostat_even_on_a_schedule(
 ) -> None:
     controller.holding_registers[117] = 0                       # the room follows its schedule
     await _poll(hass, loaded, clock)
-    entry = entity_registry.async_get("number.kitchen_setpoint")
+    entry = entity_registry.async_get("number.wavin_sentio_controller_kitchen_setpoint")
     assert entry is not None and entry.entity_category is None
-    assert _state(hass, "number.kitchen_setpoint") == "21.0"
+    assert _state(hass, "number.wavin_sentio_controller_kitchen_setpoint") == "21.0"
     await hass.services.async_call(
         "number",
         SERVICE_SET_VALUE,
-        {ATTR_ENTITY_ID: "number.kitchen_setpoint", ATTR_VALUE: 22.5},
+        {ATTR_ENTITY_ID: "number.wavin_sentio_controller_kitchen_setpoint", ATTR_VALUE: 22.5},
         blocking=True,
     )
     assert controller.holding_registers[119] == 2250
@@ -189,13 +189,13 @@ async def test_the_setpoint_is_set_apart_from_the_thermostat_even_on_a_schedule(
 async def test_a_number_writes_its_value_and_offers_the_encodings_range(
     hass: HomeAssistant, loaded: SentioData, controller: SimulatedModbusDevice
 ) -> None:
-    state = hass.states.get("number.kitchen_vacation_temperature")
+    state = hass.states.get("number.wavin_sentio_controller_kitchen_vacation_temperature")
     assert state is not None
     assert (state.attributes["min"], state.attributes["max"]) == (-327.68, 327.66)
     await hass.services.async_call(
         "number",
         SERVICE_SET_VALUE,
-        {ATTR_ENTITY_ID: "number.kitchen_vacation_temperature", ATTR_VALUE: 14.5},
+        {ATTR_ENTITY_ID: "number.wavin_sentio_controller_kitchen_vacation_temperature", ATTR_VALUE: 14.5},
         blocking=True,
     )
     assert controller.holding_registers[122] == 1450
@@ -253,7 +253,7 @@ async def test_a_switch_turned_off_writes_its_off_value(
     await hass.services.async_call(
         "switch",
         SERVICE_TURN_OFF,
-        {ATTR_ENTITY_ID: "switch.kitchen_exclude_from_vacation"},
+        {ATTR_ENTITY_ID: "switch.wavin_sentio_controller_kitchen_exclude_from_vacation"},
         blocking=True,
     )
     assert controller.holding_registers[123] == 0
@@ -302,19 +302,19 @@ async def test_a_peripheral_without_a_serial_number_gets_no_device_or_entities(
 async def test_the_rooms_mode_and_preset_are_selects_of_their_own(
     hass: HomeAssistant, loaded: SentioData, controller: SimulatedModbusDevice
 ) -> None:
-    assert _state(hass, "select.kitchen_mode") == "manual"
-    assert _state(hass, "select.kitchen_preset") == "comfort"
+    assert _state(hass, "select.wavin_sentio_controller_kitchen_mode") == "manual"
+    assert _state(hass, "select.wavin_sentio_controller_kitchen_preset") == "comfort"
     await hass.services.async_call(
         "select",
         SERVICE_SELECT_OPTION,
-        {ATTR_ENTITY_ID: "select.kitchen_mode", ATTR_OPTION: "schedule"},
+        {ATTR_ENTITY_ID: "select.wavin_sentio_controller_kitchen_mode", ATTR_OPTION: "schedule"},
         blocking=True,
     )
     assert controller.holding_registers[117] == 0
     await hass.services.async_call(
         "select",
         SERVICE_SELECT_OPTION,
-        {ATTR_ENTITY_ID: "select.kitchen_preset", ATTR_OPTION: "eco"},
+        {ATTR_ENTITY_ID: "select.wavin_sentio_controller_kitchen_preset", ATTR_OPTION: "eco"},
         blocking=True,
     )
     assert controller.holding_registers[135] == 0

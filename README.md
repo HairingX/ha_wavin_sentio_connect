@@ -213,7 +213,7 @@ automation:
   - alias: "Heating: low battery"
     triggers:
       - trigger: state
-        entity_id: binary_sensor.kitchen_battery   # a room's Battery sensor
+        entity_id: binary_sensor.wavin_sentio_controller_kitchen_battery   # a room's Battery sensor
         to: "on"
     actions:
       - action: notify.notify

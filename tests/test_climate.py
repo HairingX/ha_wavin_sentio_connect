@@ -25,7 +25,7 @@ from wavin_sentio_connect.testing import FakeClock, FunctionCode, SimulatedModbu
 
 from custom_components.wavin_sentio_connect.data import SentioData
 
-KITCHEN = "climate.kitchen"
+KITCHEN = "climate.wavin_sentio_controller_kitchen"
 
 
 async def _poll(hass: HomeAssistant, data: SentioData, clock: FakeClock) -> None:
@@ -174,5 +174,5 @@ async def test_a_controller_that_refuses_the_preset_register_gets_no_presets(
     assert state is not None and state.state == HVACMode.HEAT
     assert ATTR_PRESET_MODES not in state.attributes
     assert ATTR_PRESET_MODE not in state.attributes
-    assert hass.states.get("select.kitchen_preset") is None
+    assert hass.states.get("select.wavin_sentio_controller_kitchen_preset") is None
     await hass.config_entries.async_unload(config_entry.entry_id)

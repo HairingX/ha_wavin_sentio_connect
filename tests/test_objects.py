@@ -178,19 +178,19 @@ async def test_the_objects_show_their_states_and_measurements(
     hass: HomeAssistant, loaded: SentioData
 ) -> None:
     for entity_id, value in (
-        ("sensor.hot_water_tank_temperature", "52.3"),
-        ("sensor.hot_water_tank_state", "heating"),
-        ("sensor.buffer_tank_upper_temperature", "45.0"),
-        ("sensor.inlet_temperature_controller_1_inlet_temperature", "35.1"),
-        ("sensor.sentio_hcc_1_state", "idle"),
-        ("sensor.sentio_hcc_1_pump", "idle"),
-        ("sensor.heat_pump_boiler_state", "idle"),
+        ("sensor.wavin_sentio_controller_hot_water_tank_temperature", "52.3"),
+        ("sensor.wavin_sentio_controller_hot_water_tank_state", "heating"),
+        ("sensor.wavin_sentio_controller_buffer_tank_upper_temperature", "45.0"),
+        ("sensor.wavin_sentio_controller_inlet_temperature_controller_1_inlet_temperature", "35.1"),
+        ("sensor.wavin_sentio_controller_sentio_hcc_1_state", "idle"),
+        ("sensor.wavin_sentio_controller_sentio_hcc_1_pump", "idle"),
+        ("sensor.wavin_sentio_controller_heat_pump_boiler_state", "idle"),
         ("sensor.ventilation_unit_1_state", "comfort"),
         ("sensor.ventilation_unit_1_supply_fan_speed", "1250"),
         ("sensor.dehumidifier_1_drying", "drying"),
     ):
         assert _state(hass, entity_id) == value, entity_id
-    state = hass.states.get("sensor.hot_water_tank_temperature")
+    state = hass.states.get("sensor.wavin_sentio_controller_hot_water_tank_temperature")
     assert state is not None and state.attributes[ATTR_UNIT_OF_MEASUREMENT] == "°C"
 
 
@@ -230,19 +230,19 @@ async def test_the_hot_water_tank_is_set_from_home_assistant(
     await hass.services.async_call(
         "number",
         SERVICE_SET_VALUE,
-        {ATTR_ENTITY_ID: "number.hot_water_tank_setpoint", ATTR_VALUE: 60},
+        {ATTR_ENTITY_ID: "number.wavin_sentio_controller_hot_water_tank_setpoint", ATTR_VALUE: 60},
         blocking=True,
     )
     await hass.services.async_call(
         "select",
         SERVICE_SELECT_OPTION,
-        {ATTR_ENTITY_ID: "select.hot_water_tank_mode", ATTR_OPTION: "eco"},
+        {ATTR_ENTITY_ID: "select.wavin_sentio_controller_hot_water_tank_mode", ATTR_OPTION: "eco"},
         blocking=True,
     )
     await hass.services.async_call(
         "switch",
         SERVICE_TURN_ON,
-        {ATTR_ENTITY_ID: "switch.hot_water_tank_exclude_from_vacation"},
+        {ATTR_ENTITY_ID: "switch.wavin_sentio_controller_hot_water_tank_exclude_from_vacation"},
         blocking=True,
     )
     assert [controller.holding_registers[a] for a in (6621, 6617, 6625)] == [6000, 2, 1]
@@ -285,11 +285,11 @@ async def test_a_rooms_drying_and_ventilation_show_their_own_states(
     base = room_base(1)
     controller.input_registers.update({base + 14: 1, base + 16: 1, base + 19: 2, base + 21: 4})
     await _check_the_installation(hass, config_entry)
-    for entity_id in ("sensor.kitchen_drying_state", "sensor.kitchen_ventilation_state"):
+    for entity_id in ("sensor.wavin_sentio_controller_kitchen_drying_state", "sensor.wavin_sentio_controller_kitchen_ventilation_state"):
         found = entity_registry.async_get(entity_id)
         assert found is not None and found.disabled_by is not None, entity_id
         entity_registry.async_update_entity(entity_id, disabled_by=None)
     await hass.config_entries.async_reload(config_entry.entry_id)
     await hass.async_block_till_done()
-    assert _state(hass, "sensor.kitchen_drying_state") == "drying"
-    assert _state(hass, "sensor.kitchen_ventilation_state") == "comfort"
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_drying_state") == "drying"
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_ventilation_state") == "comfort"

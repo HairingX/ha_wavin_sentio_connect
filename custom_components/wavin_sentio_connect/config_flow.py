@@ -8,7 +8,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
-import voluptuous as vol
+import probatio
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
@@ -30,15 +30,15 @@ _ANSWER_DELAYS: tuple[float, ...] = (2, 4, 8, 16, 32)
 A device asks for its address over DHCP before it has it (RFC 2131), so it cannot answer there
 yet when the announcement is seen."""
 
-SCHEMA = vol.Schema(
+SCHEMA = probatio.Schema(
     {
-        vol.Required(CONF_HOST): str,
-        vol.Required(CONF_PORT, default=DEFAULT_PORT): vol.All(
-            int, vol.Range(min=1, max=65535)
+        probatio.Required(CONF_HOST): str,
+        probatio.Required(CONF_PORT, default=DEFAULT_PORT): probatio.All(
+            int, probatio.Range(min=1, max=65535)
         ),
         # A Modbus TCP unit identifier is one byte.
-        vol.Required(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): vol.All(
-            int, vol.Range(min=0, max=255)
+        probatio.Required(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): probatio.All(
+            int, probatio.Range(min=0, max=255)
         ),
     }
 )

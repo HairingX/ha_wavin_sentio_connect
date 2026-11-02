@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import IntEnum
 from typing import Any
 
@@ -20,7 +20,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.event import (
     async_track_device_registry_updated_event,
-    async_track_time_interval,
+    async_track_utc_time_change,
 )
 from homeassistant.util import dt as dt_util
 
@@ -450,8 +450,10 @@ DURATIONS: tuple[SentioDurationDescription, ...] = (
 )
 """How long each room's underfloor heating heats, and is held back by the floor temperature."""
 
-COUNT_INTERVAL = timedelta(minutes=1)
-"""How often a duration being counted shows its time so far."""
+SHOW_MINUTES = tuple(range(4, 60, 5))
+SHOW_SECOND = 55
+"""When a duration being counted shows its time so far: just before every five minutes end, as
+Home Assistant's statistics take a sensor's state at the end of each five minutes."""
 
 
 def duration_targets(
@@ -566,14 +568,16 @@ class SentioDuration(SentioEntity, RestoreSensor):
         if last is not None and isinstance(last.native_value, int | float):
             self._hours += last.native_value
         self.async_on_remove(
-            async_track_time_interval(self.hass, self._tick, COUNT_INTERVAL)
+            async_track_utc_time_change(
+                self.hass, self._tick, minute=SHOW_MINUTES, second=SHOW_SECOND
+            )
         )
         await super().async_added_to_hass()
 
     @callback
     def _tick(self, now: datetime) -> None:
         # The client tells only changes; showing the time counted so far keeps the statistics
-        # in step while the value holds.
+        # in step while the value holds. A total that is not growing needs no new state.
         if self._since is not None:
             self._changed()
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import pytest
 from freezegun.api import FrozenDateTimeFactory
@@ -14,6 +14,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
+from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import (
     MockConfigEntry,
     async_fire_time_changed,
@@ -260,3 +261,31 @@ async def test_the_total_goes_on_from_where_home_assistant_stopped(
     assert _hours(hass, FLOOR_LIMITED) == 0
     await hass.config_entries.async_unload(config_entry.entry_id)
     await hass.async_block_till_done()
+
+
+def _next_mark(after: datetime) -> datetime:
+    mark = after.replace(second=55, microsecond=0)
+    while mark <= after or mark.minute % 5 != 4:
+        mark += timedelta(minutes=1)
+    return mark
+
+
+async def _at(hass: HomeAssistant, freezer: FrozenDateTimeFactory, when: datetime) -> float:
+    freezer.move_to(when)
+    async_fire_time_changed(hass, when)
+    await hass.async_block_till_done()
+    return _hours(hass, HEATING_TIME)
+
+
+async def test_the_time_so_far_shows_only_just_before_every_five_minutes_end(
+    hass: HomeAssistant,
+    loaded: SentioData,
+    clock: FakeClock,
+    freezer: FrozenDateTimeFactory,
+) -> None:
+    """The statistics take the state at the end of each five minutes; between, nothing is written."""
+    await _poll(hass, loaded, clock)
+    mark = _next_mark(dt_util.utcnow())
+    at_mark = await _at(hass, freezer, mark)
+    assert await _at(hass, freezer, mark + timedelta(minutes=3)) == at_mark
+    assert abs(await _at(hass, freezer, mark + timedelta(minutes=5)) - at_mark - 5 / 60) < 1e-6

@@ -137,8 +137,11 @@ statistics.
 
 - The time from an update that shows the counted value to the next update is added; nothing is
   added while the value is unknown or the entity is unavailable. The client tells only changes,
-  so while the value holds, the sensor shows the time so far every `COUNT_INTERVAL`, and the
-  statistics follow.
+  so while the value holds and is counted, the sensor shows the time so far just before every
+  five minutes end (`SHOW_MINUTES`, `SHOW_SECOND`): Home Assistant's statistics take a sensor's
+  state at the end of each five minutes, so they stay in step, and a total that is not growing
+  writes no states. This follows the time-based updates of Home Assistant's own integral sensor
+  (`max_sub_interval`).
 - Time is read from Home Assistant's UTC clock, which tests can freeze and move; an interval in
   which it went back adds nothing, so the total never decreases.
 - The total is restored from the sensor's last native value (`RestoreSensor`); counting starts

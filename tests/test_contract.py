@@ -44,7 +44,7 @@ from custom_components.wavin_sentio_connect.entity import (
 )
 from custom_components.wavin_sentio_connect.number import NUMBERS
 from custom_components.wavin_sentio_connect.select import SELECTS
-from custom_components.wavin_sentio_connect.sensor import SENSORS
+from custom_components.wavin_sentio_connect.sensor import DURATIONS, SENSORS
 from custom_components.wavin_sentio_connect.switch import SWITCHES
 from custom_components.wavin_sentio_connect.units import HA_UNITS
 
@@ -55,7 +55,7 @@ PLATFORMS: dict[str, tuple[SentioEntityDescription, ...]] = {
     "binary_sensor": BINARY_SENSORS,
     "number": NUMBERS,
     "select": SELECTS,
-    "sensor": SENSORS,
+    "sensor": SENSORS + DURATIONS,
     "switch": SWITCHES,
 }
 

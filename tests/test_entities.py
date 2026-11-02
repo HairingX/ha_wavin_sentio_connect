@@ -118,6 +118,7 @@ async def test_everything_is_unavailable_while_the_controller_does_not_answer(
 ) -> None:
     gateway.link_down = True
     await _poll(hass, loaded, clock)
+    await _poll(hass, loaded, clock)
     assert _state(hass, "sensor.wavin_sentio_controller_kitchen_air_temperature") == STATE_UNAVAILABLE
     assert _state(hass, "climate.wavin_sentio_controller_kitchen") == STATE_UNAVAILABLE
 
@@ -125,6 +126,17 @@ async def test_everything_is_unavailable_while_the_controller_does_not_answer(
     controller.input_registers[104] = 2400
     await _poll(hass, loaded, clock)
     assert _state(hass, "sensor.wavin_sentio_controller_kitchen_air_temperature") == "24.0"
+
+
+async def test_one_unanswered_poll_keeps_the_entities_available(
+    hass: HomeAssistant,
+    loaded: SentioData,
+    gateway: SimulatedModbusGateway,
+    clock: FakeClock,
+) -> None:
+    gateway.link_down = True
+    await _poll(hass, loaded, clock)
+    assert _state(hass, "sensor.wavin_sentio_controller_kitchen_air_temperature") == "21.5"
 
 
 async def test_an_alarm_bit_is_a_problem_sensor(

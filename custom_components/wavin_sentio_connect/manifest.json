@@ -9,7 +9,7 @@
   "integration_type": "hub",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/HairingX/ha_wavin_sentio_connect/issues",
-  "loggers": ["modbus_event_connect", "pymodbus", "wavin_sentio_connect"],
-  "requirements": ["wavin_sentio_connect==0.4.3"],
+  "loggers": ["event_connect", "modbus_event_connect", "pymodbus", "wavin_sentio_connect"],
+  "requirements": ["wavin_sentio_connect==0.5.0"],
   "version": "0.0.0"
 }

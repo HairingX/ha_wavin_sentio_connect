@@ -137,12 +137,16 @@ statistics.
 
 - The time from an update that shows the counted value to the next update is added; nothing is
   added while the value is unknown or the entity is unavailable. The client tells only changes,
-  so while the value holds, the sensor shows the time so far every `COUNT_INTERVAL`, and the
-  statistics follow.
+  so while the value holds and is counted, the sensor shows the time so far every
+  `COUNT_INTERVAL`, and the statistics follow: they add the growth between the states written,
+  so a long run is spread over the hours it took, not put in the hour it ended. A total that is
+  not growing writes no states.
 - Time is read from Home Assistant's UTC clock, which tests can freeze and move; an interval in
   which it went back adds nothing, so the total never decreases.
 - The total is restored from the sensor's last native value (`RestoreSensor`); counting starts
-  afresh after a start or reload, so the time Home Assistant did not run is not counted.
+  afresh after a start or reload, so the time Home Assistant did not run is not counted. The
+  value Home Assistant saves for that, when it stops and every quarter of an hour, is the total
+  up to that moment, so a stop between two updates loses none of the time counted.
 
 ### The thermostat
 

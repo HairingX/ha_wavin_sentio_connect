@@ -12,6 +12,7 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
+    SensorExtraStoredData,
     SensorStateClass,
 )
 from homeassistant.const import EntityCategory, UnitOfTime
@@ -577,11 +578,23 @@ class SentioDuration(SentioEntity, RestoreSensor):
         if self._since is not None:
             self._changed()
 
+    def _total(self, now: datetime) -> float:
+        """The hours counted, with those since the last update while the value is counted."""
+        if self._since is None:
+            return self._hours
+        # A clock set back adds no time.
+        return self._hours + max((now - self._since).total_seconds(), 0.0) / 3600
+
+    @property
+    def extra_restore_state_data(self) -> SensorExtraStoredData:
+        """The total up to now, so that stopping Home Assistant loses none of it."""
+        return SensorExtraStoredData(
+            self._total(dt_util.utcnow()), self.native_unit_of_measurement
+        )
+
     def _show(self) -> None:
         now = dt_util.utcnow()
-        if self._since is not None:
-            # A clock set back adds no time.
-            self._hours += max((now - self._since).total_seconds(), 0.0) / 3600
+        self._hours = self._total(now)
         counting = self._attr_available and self._current(self._key) == self._counted
         self._since = now if counting else None
         self._attr_native_value = self._hours

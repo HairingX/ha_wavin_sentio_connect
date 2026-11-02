@@ -6,6 +6,8 @@ from datetime import timedelta
 
 import pytest
 from freezegun.api import FrozenDateTimeFactory
+from homeassistant.components.sensor import DATA_COMPONENT as SENSOR_COMPONENT
+from homeassistant.components.sensor import RestoreSensor
 from homeassistant.const import (
     ATTR_DEVICE_CLASS,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -260,3 +262,32 @@ async def test_the_total_goes_on_from_where_home_assistant_stopped(
     assert _hours(hass, FLOOR_LIMITED) == 0
     await hass.config_entries.async_unload(config_entry.entry_id)
     await hass.async_block_till_done()
+
+
+
+def _stored(hass: HomeAssistant, entity_id: str) -> float:
+    entity = hass.data[SENSOR_COMPONENT].get_entity(entity_id)
+    assert isinstance(entity, RestoreSensor), entity_id
+    value = entity.extra_restore_state_data.native_value
+    assert isinstance(value, float), value
+    return value
+
+
+async def test_a_stop_keeps_the_time_counted_since_the_last_update(
+    hass: HomeAssistant,
+    loaded: SentioData,
+    controller: SimulatedModbusDevice,
+    clock: FakeClock,
+    freezer: FrozenDateTimeFactory,
+) -> None:
+    """Home Assistant saves what is restored when it stops, between two updates."""
+    await _poll(hass, loaded, clock)
+    shown = _hours(hass, HEATING_TIME)
+    freezer.tick(timedelta(seconds=40))
+    assert abs(_stored(hass, HEATING_TIME) - shown - 40 / 3600) < 1e-6
+
+    controller.input_registers[UFHC_STATE] = RoomState.IDLE
+    await _poll(hass, loaded, clock)
+    idle = _hours(hass, HEATING_TIME)
+    freezer.tick(timedelta(hours=1))
+    assert abs(_stored(hass, HEATING_TIME) - idle) < 1e-9

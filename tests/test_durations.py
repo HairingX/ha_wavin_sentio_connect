@@ -176,6 +176,7 @@ async def test_no_time_is_counted_while_the_controller_does_not_answer(
     await _wait(hass, freezer, 1)
     gateway.link_down = True
     await _poll(hass, loaded, clock)
+    await _poll(hass, loaded, clock)
     state = hass.states.get(HEATING_TIME)
     assert state is not None and state.state == STATE_UNAVAILABLE
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import IntEnum
 from typing import Any
 
@@ -12,6 +12,7 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
+    SensorExtraStoredData,
     SensorStateClass,
 )
 from homeassistant.const import EntityCategory, UnitOfTime
@@ -20,7 +21,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.event import (
     async_track_device_registry_updated_event,
-    async_track_utc_time_change,
+    async_track_time_interval,
 )
 from homeassistant.util import dt as dt_util
 
@@ -450,10 +451,8 @@ DURATIONS: tuple[SentioDurationDescription, ...] = (
 )
 """How long each room's underfloor heating heats, and is held back by the floor temperature."""
 
-SHOW_MINUTES = tuple(range(4, 60, 5))
-SHOW_SECOND = 55
-"""When a duration being counted shows its time so far: just before every five minutes end, as
-Home Assistant's statistics take a sensor's state at the end of each five minutes."""
+COUNT_INTERVAL = timedelta(minutes=1)
+"""How often a duration being counted shows its time so far."""
 
 
 def duration_targets(
@@ -568,24 +567,34 @@ class SentioDuration(SentioEntity, RestoreSensor):
         if last is not None and isinstance(last.native_value, int | float):
             self._hours += last.native_value
         self.async_on_remove(
-            async_track_utc_time_change(
-                self.hass, self._tick, minute=SHOW_MINUTES, second=SHOW_SECOND
-            )
+            async_track_time_interval(self.hass, self._tick, COUNT_INTERVAL)
         )
         await super().async_added_to_hass()
 
     @callback
     def _tick(self, now: datetime) -> None:
         # The client tells only changes; showing the time counted so far keeps the statistics
-        # in step while the value holds. A total that is not growing needs no new state.
+        # in step while the value holds.
         if self._since is not None:
             self._changed()
 
+    def _total(self, now: datetime) -> float:
+        """The hours counted, with those since the last update while the value is counted."""
+        if self._since is None:
+            return self._hours
+        # A clock set back adds no time.
+        return self._hours + max((now - self._since).total_seconds(), 0.0) / 3600
+
+    @property
+    def extra_restore_state_data(self) -> SensorExtraStoredData:
+        """The total up to now, so that stopping Home Assistant loses none of it."""
+        return SensorExtraStoredData(
+            self._total(dt_util.utcnow()), self.native_unit_of_measurement
+        )
+
     def _show(self) -> None:
         now = dt_util.utcnow()
-        if self._since is not None:
-            # A clock set back adds no time.
-            self._hours += max((now - self._since).total_seconds(), 0.0) / 3600
+        self._hours = self._total(now)
         counting = self._attr_available and self._current(self._key) == self._counted
         self._since = now if counting else None
         self._attr_native_value = self._hours

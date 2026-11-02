@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import pytest
 from freezegun.api import FrozenDateTimeFactory
+from homeassistant.components.sensor import DATA_COMPONENT as SENSOR_COMPONENT
+from homeassistant.components.sensor import RestoreSensor
 from homeassistant.const import (
     ATTR_DEVICE_CLASS,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -14,7 +16,6 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
-from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import (
     MockConfigEntry,
     async_fire_time_changed,
@@ -263,29 +264,30 @@ async def test_the_total_goes_on_from_where_home_assistant_stopped(
     await hass.async_block_till_done()
 
 
-def _next_mark(after: datetime) -> datetime:
-    mark = after.replace(second=55, microsecond=0)
-    while mark <= after or mark.minute % 5 != 4:
-        mark += timedelta(minutes=1)
-    return mark
+
+def _stored(hass: HomeAssistant, entity_id: str) -> float:
+    entity = hass.data[SENSOR_COMPONENT].get_entity(entity_id)
+    assert isinstance(entity, RestoreSensor), entity_id
+    value = entity.extra_restore_state_data.native_value
+    assert isinstance(value, float), value
+    return value
 
 
-async def _at(hass: HomeAssistant, freezer: FrozenDateTimeFactory, when: datetime) -> float:
-    freezer.move_to(when)
-    async_fire_time_changed(hass, when)
-    await hass.async_block_till_done()
-    return _hours(hass, HEATING_TIME)
-
-
-async def test_the_time_so_far_shows_only_just_before_every_five_minutes_end(
+async def test_a_stop_keeps_the_time_counted_since_the_last_update(
     hass: HomeAssistant,
     loaded: SentioData,
+    controller: SimulatedModbusDevice,
     clock: FakeClock,
     freezer: FrozenDateTimeFactory,
 ) -> None:
-    """The statistics take the state at the end of each five minutes; between, nothing is written."""
+    """Home Assistant saves what is restored when it stops, between two updates."""
     await _poll(hass, loaded, clock)
-    mark = _next_mark(dt_util.utcnow())
-    at_mark = await _at(hass, freezer, mark)
-    assert await _at(hass, freezer, mark + timedelta(minutes=3)) == at_mark
-    assert abs(await _at(hass, freezer, mark + timedelta(minutes=5)) - at_mark - 5 / 60) < 1e-6
+    shown = _hours(hass, HEATING_TIME)
+    freezer.tick(timedelta(seconds=40))
+    assert abs(_stored(hass, HEATING_TIME) - shown - 40 / 3600) < 1e-6
+
+    controller.input_registers[UFHC_STATE] = RoomState.IDLE
+    await _poll(hass, loaded, clock)
+    idle = _hours(hass, HEATING_TIME)
+    freezer.tick(timedelta(hours=1))
+    assert abs(_stored(hass, HEATING_TIME) - idle) < 1e-9

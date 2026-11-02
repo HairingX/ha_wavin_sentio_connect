@@ -82,10 +82,11 @@ async def test_a_room_with_underfloor_heating_has_both_durations_on_its_thermost
     device_registry: dr.DeviceRegistry,
 ) -> None:
     await _poll(hass, loaded, clock)
-    room = device_registry.async_get_device({(DOMAIN, f"{SERIAL_NUMBER}_room_1")})
-    assert room is not None
     thermostat = entity_registry.async_get(KITCHEN)
-    assert thermostat is not None and thermostat.device_id == room.id
+    assert thermostat is not None and thermostat.device_id is not None
+    room = device_registry.async_get(thermostat.device_id)
+    assert room is not None
+    assert (DOMAIN, f"{SERIAL_NUMBER}_room_1") in room.identifiers
     for entity_id, key in (
         (HEATING_TIME, "ufhc_heating_time"),
         (FLOOR_LIMITED, "ufhc_floor_limited_time"),

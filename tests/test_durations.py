@@ -70,6 +70,10 @@ def _hours(hass: HomeAssistant, entity_id: str) -> float:
     return float(state.state)
 
 
+def _counted(hass: HomeAssistant, entity_id: str, hours: float) -> bool:
+    return abs(_hours(hass, entity_id) - hours) <= TOLERANCE
+
+
 async def test_a_room_with_underfloor_heating_has_both_durations_on_its_thermostats_device(
     hass: HomeAssistant,
     loaded: SentioData,
@@ -116,22 +120,22 @@ async def test_the_time_the_underfloor_heating_heats_is_counted(
     freezer: FrozenDateTimeFactory,
 ) -> None:
     await _poll(hass, loaded, clock)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(0, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 0)
     await _wait(hass, freezer, 1)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1)
 
     freezer.tick(timedelta(minutes=30))
     controller.input_registers[UFHC_STATE] = RoomState.IDLE
     await _poll(hass, loaded, clock)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1.5, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1.5)
 
     await _wait(hass, freezer, 2)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1.5, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1.5)
 
     controller.input_registers[UFHC_STATE] = RoomState.HEATING
     await _poll(hass, loaded, clock)
     await _wait(hass, freezer, 0.25)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1.75, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1.75)
 
 
 async def test_the_time_the_floor_temperature_holds_the_underfloor_heating_back_is_counted(
@@ -149,13 +153,13 @@ async def test_the_time_the_floor_temperature_holds_the_underfloor_heating_back_
     controller.input_registers[UFHC_BLOCKING_SOURCE] = BlockingSource.FLOOR_TEMP
     await _poll(hass, loaded, clock)
     await _wait(hass, freezer, 2)
-    assert _hours(hass, FLOOR_LIMITED) == pytest.approx(2, abs=TOLERANCE)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1, abs=TOLERANCE)
+    assert _counted(hass, FLOOR_LIMITED, 2)
+    assert _counted(hass, HEATING_TIME, 1)
 
     controller.input_registers[UFHC_BLOCKING_SOURCE] = BlockingSource.AIR_TEMP
     await _poll(hass, loaded, clock)
     await _wait(hass, freezer, 1)
-    assert _hours(hass, FLOOR_LIMITED) == pytest.approx(2, abs=TOLERANCE)
+    assert _counted(hass, FLOOR_LIMITED, 2)
 
 
 async def test_no_time_is_counted_while_the_controller_does_not_answer(
@@ -175,9 +179,9 @@ async def test_no_time_is_counted_while_the_controller_does_not_answer(
     await _wait(hass, freezer, 3)
     gateway.link_down = False
     await _poll(hass, loaded, clock)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1)
     await _wait(hass, freezer, 1)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(2, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 2)
 
 
 async def test_no_time_is_counted_while_the_state_has_no_value(
@@ -192,7 +196,7 @@ async def test_no_time_is_counted_while_the_state_has_no_value(
     controller.input_registers[UFHC_STATE] = NO_VALUE
     await _poll(hass, loaded, clock)
     await _wait(hass, freezer, 3)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1)
 
 
 async def test_a_clock_set_back_adds_no_time(
@@ -207,7 +211,7 @@ async def test_a_clock_set_back_adds_no_time(
     freezer.tick(timedelta(hours=-3))
     controller.input_registers[UFHC_STATE] = RoomState.IDLE
     await _poll(hass, loaded, clock)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(1, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 1)
 
 
 async def test_the_total_is_kept_over_a_reload_without_the_time_between(
@@ -226,9 +230,9 @@ async def test_the_total_is_kept_over_a_reload_without_the_time_between(
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
     await _poll(hass, config_entry.runtime_data, clock)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(2, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 2)
     await _wait(hass, freezer, 1)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(3, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 3)
 
 
 async def test_the_total_goes_on_from_where_home_assistant_stopped(
@@ -251,7 +255,7 @@ async def test_the_total_goes_on_from_where_home_assistant_stopped(
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
     await _poll(hass, config_entry.runtime_data, clock)
-    assert _hours(hass, HEATING_TIME) == pytest.approx(12.5, abs=TOLERANCE)
+    assert _counted(hass, HEATING_TIME, 12.5)
     assert _hours(hass, FLOOR_LIMITED) == 0
     await hass.config_entries.async_unload(config_entry.entry_id)
     await hass.async_block_till_done()

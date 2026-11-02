@@ -919,6 +919,12 @@
           "hcws_elements_blocked": "Varme-/køleelementer blokeret"
         }
       },
+      "ufhc_heating_time": {
+        "name": "Gulvvarmetid"
+      },
+      "ufhc_floor_limited_time": {
+        "name": "Tid begrænset af gulvtemperatur"
+      },
       "mode_override": {
         "name": "Tilsidesat funktion",
         "state": {

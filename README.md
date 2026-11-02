@@ -126,6 +126,11 @@ controller's location name when it has one:
   which can be set even while the room follows its schedule and is used once it no longer does;
   the **mode** (schedule or manual) and the **preset**, where the controller offers presets.
 - Sensors for floor temperature and dew point, the room's state and what blocks it.
+- Where the room has underfloor heating: **Underfloor heating time**, the hours it has heated,
+  and **Floor-limited time**, the hours the floor temperature limit has held it back. Both only
+  grow, keep their total over restarts, and have long-term statistics, so the hours per day,
+  week or year can be shown. Time is counted while Home Assistant runs and the controller
+  answers.
 - The thermostat lock, and the standby and vacation temperatures.
 - Warning, error, low battery and peripheral-lost alarms.
 - Disabled by default: the state and blocking source of each function - radiators, underfloor

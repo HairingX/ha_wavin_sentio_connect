@@ -127,6 +127,23 @@ States are enum sensors and selects, with the enum member's lower-case name as t
 translation for each. Units come from the library's points, mapped to Home Assistant's spelling;
 every unit a Sentio point has is mapped (`UNITS`).
 
+### Durations
+
+A room with underfloor heating has two sensors that only count: the hours its underfloor state
+is `HEATING`, and the hours its underfloor blocking source is `FLOOR_TEMP`. They are built for
+each room that has the point they count, as the point's own sensor is, and are part of the
+room's device. As `TOTAL_INCREASING` sensors in hours, Home Assistant keeps their long-term
+statistics.
+
+- The time from an update that shows the counted value to the next update is added; nothing is
+  added while the value is unknown or the entity is unavailable. The client tells only changes,
+  so while the value holds, the sensor shows the time so far every `COUNT_INTERVAL`, and the
+  statistics follow.
+- Time is read from Home Assistant's UTC clock, which tests can freeze and move; an interval in
+  which it went back adds nothing, so the total never decreases.
+- The total is restored from the sensor's last native value (`RestoreSensor`); counting starts
+  afresh after a start or reload, so the time Home Assistant did not run is not counted.
+
 ### The thermostat
 
 - The target shown is `temp_air_target_active`, the one the controller regulates to. Setting it

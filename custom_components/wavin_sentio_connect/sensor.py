@@ -2,21 +2,27 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from datetime import datetime, timedelta
 from enum import IntEnum
 from typing import Any
 
 from homeassistant.components.sensor import (
+    RestoreSensor,
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import EntityCategory
+from homeassistant.const import EntityCategory, UnitOfTime
 from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.event import async_track_device_registry_updated_event
+from homeassistant.helpers.event import (
+    async_track_device_registry_updated_event,
+    async_track_time_interval,
+)
+from homeassistant.util import dt as dt_util
 
 from wavin_sentio_connect import (
     BlockingSource,
@@ -46,6 +52,7 @@ from wavin_sentio_connect import (
     VentilationPointKey,
     VentilationState,
     VentilationUnitState,
+    room_key,
 )
 
 from .data import SentioConfigEntry, SentioData
@@ -56,6 +63,7 @@ from .entity import (
     Target,
     all_targets,
     entity_key,
+    room_target,
 )
 from .units import ha_unit
 
@@ -406,16 +414,78 @@ SENSORS: tuple[SentioSensorDescription, ...] = (
 )
 
 
+
+
+@dataclass(frozen=True, kw_only=True)
+class SentioDurationDescription(SentioSensorDescription):
+    """The hours a room's state point has held one value."""
+
+    counted: IntEnum
+    """The value whose time is counted."""
+
+
+def _duration(
+    name: str, point: PointKey[Any], counted: IntEnum
+) -> SentioDurationDescription:
+    return SentioDurationDescription(
+        key=name,
+        translation_key=name,
+        scope=Scope.ROOM,
+        point=point,
+        counted=counted,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        suggested_display_precision=2,
+    )
+
+
+DURATIONS: tuple[SentioDurationDescription, ...] = (
+    _duration("ufhc_heating_time", RoomPointKey.UFHC_STATE, RoomState.HEATING),
+    _duration(
+        "ufhc_floor_limited_time",
+        RoomPointKey.BLOCKING_SOURCE_UFHC,
+        BlockingSource.FLOOR_TEMP,
+    ),
+)
+"""How long each room's underfloor heating heats, and is held back by the floor temperature."""
+
+COUNT_INTERVAL = timedelta(minutes=1)
+"""How often a duration being counted shows its time so far."""
+
+
+def duration_targets(
+    data: SentioData, description: SentioDurationDescription
+) -> list[Target]:
+    """One target for each room that has the described point, with a unique id of its own."""
+    point = description.point
+    assert isinstance(point, PointKey)
+    return [
+        replace(
+            room_target(data, room.number, key),
+            unique_id=f"{data.serial_number}_room_{room.number}_{description.key}",
+        )
+        for room in data.rooms
+        if data.client.has(key := room_key(room.number, point))
+    ]
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: SentioConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Add a sensor for every described point the installation has."""
+    """Add a sensor for every described point the installation has, and the durations of each
+    room's underfloor heating."""
     data = entry.runtime_data
     async_add_entities(
         (SentioPlace if description is PLACE else SentioSensor)(data, target, description)
         for target, description in all_targets(data, SENSORS)
+    )
+    async_add_entities(
+        SentioDuration(data, target, description)
+        for description in DURATIONS
+        for target in duration_targets(data, description)
     )
 
 
@@ -473,3 +543,45 @@ class SentioPlace(SentioSensor):
             else None
         )
         self._attr_native_value = (place.name_by_user or place.name) if place else None
+
+
+class SentioDuration(SentioEntity, RestoreSensor):
+    """The hours a room's point has held one value, kept over restarts.
+
+    The time from an update that shows the value to the next update is counted while the
+    room is available; the time Home Assistant does not run is not.
+    """
+
+    def __init__(
+        self, data: SentioData, target: Target, description: SentioDurationDescription
+    ) -> None:
+        self.entity_description = description
+        self._counted = description.counted
+        self._hours = 0.0
+        self._since: datetime | None = None
+        super().__init__(data, target)
+
+    async def async_added_to_hass(self) -> None:
+        last = await self.async_get_last_sensor_data()
+        if last is not None and isinstance(last.native_value, int | float):
+            self._hours += last.native_value
+        self.async_on_remove(
+            async_track_time_interval(self.hass, self._tick, COUNT_INTERVAL)
+        )
+        await super().async_added_to_hass()
+
+    @callback
+    def _tick(self, now: datetime) -> None:
+        # The client tells only changes; showing the time counted so far keeps the statistics
+        # in step while the value holds.
+        if self._since is not None:
+            self._changed()
+
+    def _show(self) -> None:
+        now = dt_util.utcnow()
+        if self._since is not None:
+            # A clock set back adds no time.
+            self._hours += max((now - self._since).total_seconds(), 0.0) / 3600
+        counting = self._attr_available and self._current(self._key) == self._counted
+        self._since = now if counting else None
+        self._attr_native_value = self._hours

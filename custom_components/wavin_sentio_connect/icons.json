@@ -97,6 +97,12 @@
           "none": "mdi:check-circle-outline"
         }
       },
+      "ufhc_heating_time": {
+        "default": "mdi:heating-coil"
+      },
+      "ufhc_floor_limited_time": {
+        "default": "mdi:thermometer-alert"
+      },
       "mode_override": {
         "default": "mdi:hand-back-right",
         "state": {

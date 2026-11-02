@@ -919,6 +919,12 @@
           "hcws_elements_blocked": "Heating/cooling elements blocked"
         }
       },
+      "ufhc_heating_time": {
+        "name": "Underfloor heating time"
+      },
+      "ufhc_floor_limited_time": {
+        "name": "Floor-limited time"
+      },
       "mode_override": {
         "name": "Mode override",
         "state": {

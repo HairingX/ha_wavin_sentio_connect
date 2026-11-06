@@ -18,7 +18,7 @@ from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 from wavin_sentio_connect import Client, Status, UnsupportedDeviceError
 from wavin_sentio_connect.testing import SimulatedModbusDevice, SimulatedModbusGateway
 

@@ -60,8 +60,12 @@ def real_link(monkeypatch: pytest.MonkeyPatch) -> Iterator[list[Client]]:
     pytest_socket.socket_allow_hosts([HOST, "127.0.0.1"])
     made: list[Client] = []
 
-    def read_only(host: str, *, port: int, unit_id: int, **_: Any) -> Client:
-        client = create_client(host, port=port, unit_id=unit_id, read_only=True)
+    def read_only(
+        host: str, *, reconnect: bool, port: int, unit_id: int, **_: Any
+    ) -> Client:
+        client = create_client(
+            host, reconnect=reconnect, port=port, unit_id=unit_id, read_only=True
+        )
         made.append(client)
         return client
 

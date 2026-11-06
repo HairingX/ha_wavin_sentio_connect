@@ -79,7 +79,7 @@ class SentioClimate(SentioEntity, ClimateEntity):
 
     _attr_name = None
     _attr_translation_key = "room"
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
 
     def __init__(self, data: SentioData, target: Target, room: int) -> None:
         self._air = room_key(room, RoomPointKey.TEMP_AIR_CURRENT)
@@ -113,9 +113,9 @@ class SentioClimate(SentioEntity, ClimateEntity):
         return tuple(key for key in keys if self._client.has(key))
 
     def _show(self) -> None:
-        self._attr_current_temperature = self._current(self._air)
+        self._attr_native_current_temperature = self._current(self._air)
         self._attr_current_humidity = self._current(self._humidity)
-        self._attr_target_temperature = self._current(self._key)
+        self._attr_native_target_temperature = self._current(self._key)
         manual = self._manual_mode()
         # The location's heating or cooling, and AUTO when the room can follow its schedule.
         self._attr_hvac_modes = [manual] if manual is not None else []

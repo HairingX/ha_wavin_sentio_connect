@@ -190,7 +190,9 @@ What an entity shows:
 
 - A value the controller reports as "no reading" - a missing sensor, an unset limit - shows as
   *unknown*.
-- While the controller does not answer, every entity is *unavailable*.
+- While the controller does not answer, every entity is *unavailable* - after 30 s without an
+  answer, so a short network outage goes unnoticed. It is asked again after 2, 4 and 8 s, then
+  every 10 s, which opens its link again: the entities are back within 10 s of it answering.
 - A read that fails while the controller still answers keeps the last value.
 
 ## Examples

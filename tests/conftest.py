@@ -176,9 +176,7 @@ def simulated_link(
     """
     made: list[Client] = []
 
-    def create_client(
-        host: str, *, reconnect: bool, port: int, unit_id: int, **_: Any
-    ) -> Client:
+    def create_client(host: str, *, port: int, unit_id: int, **_: Any) -> Client:
         link = gateway
         if host != HOST:
             link = SimulatedModbusGateway({})

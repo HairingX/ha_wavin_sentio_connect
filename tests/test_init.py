@@ -21,7 +21,6 @@ from wavin_sentio_connect import (
     PollRate,
     Status,
     UnsupportedDeviceError,
-    create_client_on,
 )
 from wavin_sentio_connect.testing import (
     FakeClock,
@@ -30,10 +29,9 @@ from wavin_sentio_connect.testing import (
 )
 
 from custom_components.wavin_sentio_connect.const import DOMAIN
-from custom_components.wavin_sentio_connect.data import SentioData, new_client
+from custom_components.wavin_sentio_connect.data import SentioData
 
 from .conftest import (
-    HOST,
     SERIAL_NUMBER,
     entry_data,
     installation,
@@ -533,19 +531,3 @@ async def test_a_thermostat_moved_to_another_room_shows_its_new_room(
     assert state is not None and state.state == "Room 2"
     thermostat = _device(device_registry, config_entry, f"{SERIAL_NUMBER}_peripheral_222")
     assert thermostat.name == "Kitchen RT", "a name is only given when the device is created"
-
-
-def test_a_client_opens_a_lost_link_again_by_itself(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    told: dict[str, Any] = {}
-
-    def create_client(host: str, **kwargs: Any) -> Client:
-        told.update(kwargs)
-        return create_client_on(SimulatedModbusGateway({}))
-
-    monkeypatch.setattr(
-        "custom_components.wavin_sentio_connect.data.create_client", create_client
-    )
-    new_client(HOST, 502, 1)
-    assert told["reconnect"] is True

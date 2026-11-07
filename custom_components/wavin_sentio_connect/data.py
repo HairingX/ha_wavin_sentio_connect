@@ -41,9 +41,8 @@ class SentioData:
 
 
 def new_client(host: str, port: int, unit_id: int) -> Client:
-    """A client for the controller at `host`, not yet connected, that opens a lost link again
-    by itself."""
-    return create_client(host, reconnect=True, port=port, unit_id=unit_id)
+    """A client for the controller at `host`, not yet connected."""
+    return create_client(host, port=port, unit_id=unit_id)
 
 
 def value[T](client: Client, key: Key[T]) -> T | None:

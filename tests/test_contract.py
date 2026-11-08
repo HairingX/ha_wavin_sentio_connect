@@ -9,6 +9,7 @@ import hashlib
 import importlib.metadata
 import json
 import re
+import tomllib
 from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, cast
@@ -229,6 +230,33 @@ def test_the_manifest_pins_the_library_version_the_tests_run() -> None:
     assert _manifest()["requirements"] == [f"wavin_sentio_connect=={installed}"]
 
 
+def test_the_test_requirements_pin_what_the_manifest_requires() -> None:
+    lines = (REPOSITORY / "requirements-test.txt").read_text(encoding="utf-8").splitlines()
+    pins = [line for line in lines if line.startswith("wavin_sentio_connect==")]
+    assert pins == _manifest()["requirements"]
+
+
+def test_the_libraries_developed_alongside_are_listed_in_the_order_they_are_installed() -> None:
+    """Each library requires the one before it, so a development branch is tested with all."""
+    settings = tomllib.loads((REPOSITORY / "pyproject.toml").read_text(encoding="utf-8"))
+    libraries = settings["tool"]["ha-integration-workflows"]["libraries"]
+    assert libraries == ["event_connect", "modbus_event_connect", "wavin_sentio_connect"]
+    for needed, library in zip(libraries, libraries[1:]):
+        requires = importlib.metadata.requires(library) or []
+        assert any(line.startswith(needed) for line in requires), (library, needed)
+
+
+def test_the_conventions_name_the_libraries_developed_alongside() -> None:
+    settings = tomllib.loads((REPOSITORY / "pyproject.toml").read_text(encoding="utf-8"))
+    conventions = (REPOSITORY / "CLAUDE.md").read_text(encoding="utf-8")
+    found = re.search(
+        r"libraries developed alongside it are (.+?), in that order", conventions, re.S
+    )
+    assert found is not None
+    named = re.findall(r"`(\w+)`", found.group(1))
+    assert named == settings["tool"]["ha-integration-workflows"]["libraries"]
+
+
 def test_the_tests_run_the_pymodbus_home_assistant_installs() -> None:
     """Home Assistant installs requirements under its package constraints, pymodbus among them."""
     constraints = Path(homeassistant.__file__).parent / "package_constraints.txt"
@@ -243,6 +271,19 @@ def test_the_tests_run_the_pymodbus_home_assistant_installs() -> None:
 def test_hacs_requires_no_newer_home_assistant_than_the_tests_run() -> None:
     hacs = json.loads((REPOSITORY / "hacs.json").read_text(encoding="utf-8"))
     assert Version(hacs["homeassistant"]) <= Version(HA_VERSION)
+
+
+def test_the_readme_requires_the_home_assistant_hacs_does() -> None:
+    hacs = json.loads((REPOSITORY / "hacs.json").read_text(encoding="utf-8"))
+    readme = (REPOSITORY / "README.md").read_text(encoding="utf-8")
+    assert re.findall(r"Home Assistant (\S+) or newer", readme) == [hacs["homeassistant"]]
+
+
+def test_the_design_takes_its_facts_from_the_home_assistant_hacs_requires() -> None:
+    hacs = json.loads((REPOSITORY / "hacs.json").read_text(encoding="utf-8"))
+    design = (REPOSITORY / "docs" / "design.md").read_text(encoding="utf-8")
+    found = re.search(r"Home Assistant facts are from\s+its (\S+) source", design)
+    assert found is not None and found.group(1) == hacs["homeassistant"]
 
 
 def test_the_library_is_imported_from_its_package_not_from_the_integration() -> None:

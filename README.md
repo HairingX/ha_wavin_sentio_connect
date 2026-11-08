@@ -34,7 +34,7 @@ the room it belongs to.
 
 ## Requirements
 
-- Home Assistant 2026.9.3 or newer.
+- Home Assistant 2026.11.0 or newer.
 - Modbus TCP enabled on the controller. It is **disabled by default**; enable it from a Sentio
   display: `System | Installer settings | Modbus configuration | Modbus TCP`. The controller
   restarts afterwards.
@@ -256,8 +256,9 @@ automation:
 ## Diagnostics and debug logging
 
 - **Download diagnostics** from the integration's menu: every value the controller reports, with
-  its quality, and what it does not have. The address, serial number and location name are left
-  out.
+  its quality, what it does not have, and how the link answers - its requests, their outcomes and
+  whether it is pausing after unanswered ones. The address, serial number and location name are
+  left out.
 - **Enable debug logging** from the same menu to log the integration and the libraries it uses.
 
 ## Known limits

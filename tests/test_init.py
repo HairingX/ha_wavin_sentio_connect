@@ -131,6 +131,21 @@ async def test_every_room_and_peripheral_is_a_device_under_the_controller(
     assert display.via_device_id == controller.id
 
 
+async def test_a_controller_that_reports_no_type_is_a_device_without_a_model(
+    hass: HomeAssistant,
+    controller: SimulatedModbusDevice,
+    config_entry: MockConfigEntry,
+    device_registry: dr.DeviceRegistry,
+) -> None:
+    controller.input_registers[10] = 0
+    config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+    device = _device(device_registry, config_entry, str(SERIAL_NUMBER))
+    assert (device.manufacturer, device.model) == ("Wavin", None)
+    assert await hass.config_entries.async_unload(config_entry.entry_id)
+
+
 async def test_a_room_registered_as_a_device_before_becomes_a_part_of_the_controller(
     hass: HomeAssistant, config_entry: MockConfigEntry, device_registry: dr.DeviceRegistry
 ) -> None:

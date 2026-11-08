@@ -22,7 +22,7 @@ from wavin_sentio_connect.testing import SimulatedModbusDevice
 from custom_components.wavin_sentio_connect.const import DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData
 from custom_components.wavin_sentio_connect.entity import all_targets
-from custom_components.wavin_sentio_connect.number import NUMBERS, value_range
+from custom_components.wavin_sentio_connect.number import NUMBERS
 
 from .conftest import SERIAL_NUMBER, installation, room_base, take_away, text
 
@@ -219,9 +219,8 @@ async def test_every_number_has_a_range_also_where_it_is_disabled_by_default(
     hass: HomeAssistant, loaded: SentioData
 ) -> None:
     for target, _ in all_targets(loaded, NUMBERS):
-        (point,) = loaded.client.select([target.key])
-        lowest, highest, _ = value_range(point)
-        assert lowest < highest, target.key
+        span = loaded.client.points[target.key].write_range()
+        assert span is not None and span.min < span.max, target.key
 
 
 async def test_the_hot_water_tank_is_set_from_home_assistant(

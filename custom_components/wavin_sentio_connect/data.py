@@ -57,12 +57,6 @@ def serial_number(client: Client) -> str | None:
     return str(found) if found is not None else None
 
 
-def controller_model(client: Client) -> str | None:
-    """The controller's type as it reports it, such as "CCU-208"; None if it reports none."""
-    found = value(client, LocationPointKey.DEVICE_TYPE)
-    return found.name.replace("_", "-") if found is not None else None
-
-
 def entry_title(client: Client) -> str:
     """What the entry is called: the product, then the location's name if the controller has
     one, such as "Wavin Sentio Home"."""

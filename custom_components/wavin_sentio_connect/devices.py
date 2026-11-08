@@ -10,10 +10,10 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.typing import UNDEFINED
 
-from wavin_sentio_connect import LocationPointKey, SentioPeripheral
+from wavin_sentio_connect import LocationPointKey, SentioPeripheral, controller_model
 
 from .const import DOMAIN
-from .data import SentioData, controller_model, value
+from .data import SentioData, value
 from .objects import (
     REPEATED_OBJECTS,
     SINGLE_OBJECTS,

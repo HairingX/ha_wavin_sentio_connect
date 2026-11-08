@@ -256,8 +256,9 @@ automation:
 ## Diagnostics and debug logging
 
 - **Download diagnostics** from the integration's menu: every value the controller reports, with
-  its quality, and what it does not have. The address, serial number and location name are left
-  out.
+  its quality, what it does not have, and how the link answers - its requests, their outcomes and
+  whether it is pausing after unanswered ones. The address, serial number and location name are
+  left out.
 - **Enable debug logging** from the same menu to log the integration and the libraries it uses.
 
 ## Known limits

@@ -7,14 +7,14 @@ it into Home Assistant devices and entities. How and why it is built as it is: `
 ## This integration
 
 - The tests run the real client and the real Sentio model against the library's simulated
-  controller (`modbus_event_connect.testing`); only the Modbus link is simulated. They never
+  controller (`wavin_sentio_connect.testing`); only the Modbus link is simulated. They never
   reach a real controller.
 - pymodbus is the version Home Assistant's package constraints install; a test checks it.
 - Every point the library has is an entity, or is listed with the reason it is not; a test
   fails for a new point that is neither.
 - DHCP discovery needs a real network: try it with a test build.
-- The libraries developed alongside it are `modbus_event_connect` and `wavin_sentio_connect`, in
-  that order, listed in `pyproject.toml` for test builds and CI.
+- The libraries developed alongside it are `event_connect`, `modbus_event_connect` and
+  `wavin_sentio_connect`, in that order, listed in `pyproject.toml` for test builds and CI.
 
 <!-- BEGIN HairingX/workflows: shared; edit it there -->
 ## Shared by every integration

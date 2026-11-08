@@ -1,8 +1,8 @@
 # Design
 
 How the integration is built, and the facts each choice rests on. Home Assistant facts are from
-its 2026.9.3 source, the release the tests run; the Sentio's from its Modbus manual, as modelled
-by `wavin_sentio_connect`.
+its 2026.11.0 source, the oldest release the integration supports, which the tests run; the
+Sentio's from its Modbus manual, as modelled by `wavin_sentio_connect`.
 
 ## A client, not a coordinator
 

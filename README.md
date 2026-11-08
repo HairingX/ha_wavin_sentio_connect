@@ -34,7 +34,7 @@ the room it belongs to.
 
 ## Requirements
 
-- Home Assistant 2026.9.3 or newer.
+- Home Assistant 2026.11.0 or newer.
 - Modbus TCP enabled on the controller. It is **disabled by default**; enable it from a Sentio
   display: `System | Installer settings | Modbus configuration | Modbus TCP`. The controller
   restarts afterwards.

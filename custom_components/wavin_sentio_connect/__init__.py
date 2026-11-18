@@ -14,7 +14,6 @@ from homeassistant.helpers import entity_registry as er
 
 from wavin_sentio_connect import (
     CannotConnectError,
-    Client,
     DataValue,
     InstanceKey,
     Key,
@@ -25,7 +24,7 @@ from wavin_sentio_connect import (
     rooms,
 )
 
-from .const import CONF_UNIT_ID, DOMAIN, POLL_TICK
+from .const import CONF_UNIT_ID, DOMAIN
 from .data import SentioConfigEntry, SentioData, new_client, serial_number
 from .devices import current_identifiers, register_devices
 
@@ -90,7 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SentioConfigEntry) -> bo
     client.set_scheduled_polling(not entry.pref_disable_polling)
     # Polling starts once the entities have subscribed: the client reads what is wanted.
     entry.runtime_data.poller = entry.async_create_background_task(
-        hass, _poll(client), f"{DOMAIN} poll {entry.title}"
+        hass, client.run(), f"{DOMAIN} poll {entry.title}"
     )
     return True
 
@@ -167,15 +166,3 @@ def _reload_when_the_installation_changes(
         watch(peripheral.slot, PeripheralPointKey.SERIAL_NUMBER)
         watch(peripheral.slot, PeripheralPointKey.OWNER)
 
-
-async def _poll(client: Client) -> None:
-    """Read whatever the client has due, for as long as the entry is loaded."""
-    while True:
-        try:
-            await client.poll()
-        except Exception:
-            _LOGGER.exception("Reading the controller failed")
-            delay = POLL_TICK
-        else:
-            delay = client.seconds_until_next_poll()
-        await asyncio.sleep(POLL_TICK if delay is None else min(delay, POLL_TICK))

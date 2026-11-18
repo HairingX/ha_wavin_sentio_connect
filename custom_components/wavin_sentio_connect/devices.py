@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.typing import UNDEFINED
 
-from wavin_sentio_connect import LocationPointKey, SentioPeripheral, controller_model
+from wavin_sentio_connect import PointKey, SentioPeripheral, controller_model
 
 from .const import DOMAIN
 from .data import SentioData, value
@@ -66,10 +66,10 @@ def register_devices(hass: HomeAssistant, entry: ConfigEntry, data: SentioData) 
     client = data.client
     manufacturer = client.model.manufacturer
     software = (
-        value(client, LocationPointKey.SOFTWARE_MAJOR),
-        value(client, LocationPointKey.SOFTWARE_MINOR),
+        value(client, PointKey.SOFTWARE_MAJOR),
+        value(client, PointKey.SOFTWARE_MINOR),
     )
-    hardware = value(client, LocationPointKey.HARDWARE_MAJOR)
+    hardware = value(client, PointKey.HARDWARE_MAJOR)
     controller = registry.async_get_or_create(
         config_entry_id=entry.entry_id,
         identifiers={controller_identifier(data)},

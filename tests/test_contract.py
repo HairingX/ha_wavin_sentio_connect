@@ -28,9 +28,9 @@ from wavin_sentio_connect import (
     HccPointKey,
     HeatingCoolingSourcePointKey,
     ItcPointKey,
-    LocationPointKey,
     OutdoorPointKey,
     PeripheralPointKey,
+    PointKey,
     RoomPointKey,
     ThermistorPointKey,
     VentilationPointKey,
@@ -119,7 +119,7 @@ NOT_AN_ENTITY: dict[Scope, dict[str, str]] = {
 
 def _library_points() -> dict[Scope, set[str]]:
     return {
-        Scope.LOCATION: {str(key) for key in LocationPointKey.all()},
+        Scope.LOCATION: {str(key) for key in PointKey.all()},
         Scope.ROOM: {point.name for point in RoomPointKey.all()},
         Scope.PERIPHERAL: {point.name for point in PeripheralPointKey.all()},
         Scope.OUTDOOR: {str(key) for key in OutdoorPointKey.all()},

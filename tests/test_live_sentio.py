@@ -27,7 +27,7 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
-from wavin_sentio_connect import Client, Status, create_client
+from wavin_sentio_connect import DEFAULT_PORT, Client, Clock, Status, create_client
 
 from custom_components.wavin_sentio_connect.const import CONF_UNIT_ID, DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData
@@ -60,8 +60,15 @@ def real_link(monkeypatch: pytest.MonkeyPatch) -> Iterator[list[Client]]:
     pytest_socket.socket_allow_hosts([HOST, "127.0.0.1"])
     made: list[Client] = []
 
-    def read_only(host: str, *, port: int, unit_id: int, **_: Any) -> Client:
-        client = create_client(host, port=port, unit_id=unit_id, read_only=True)
+    def read_only(
+        *,
+        host: str,
+        unit_id: int,
+        port: int = DEFAULT_PORT,
+        read_only: bool = False,
+        clock: Clock | None = None,
+    ) -> Client:
+        client = create_client(host=host, port=port, unit_id=unit_id, read_only=True)
         made.append(client)
         return client
 

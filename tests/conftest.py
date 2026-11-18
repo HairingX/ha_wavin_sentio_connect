@@ -13,7 +13,13 @@ import pytest
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant.common import MockConfigEntry
-from wavin_sentio_connect import Client, PeripheralType, create_client_on
+from wavin_sentio_connect import (
+    DEFAULT_PORT,
+    Client,
+    Clock,
+    PeripheralType,
+    create_client_on,
+)
 from wavin_sentio_connect.testing import (
     FakeClock,
     SimulatedModbusDevice,
@@ -172,16 +178,27 @@ def simulated_link(
 ) -> list[Client]:
     """Every client the integration makes reaches the simulated controller at HOST.
 
-    Returns the clients made, in order.
+    Returns the clients made, in order. Each runs on the test's clock, whatever clock it is
+    asked for.
     """
     made: list[Client] = []
+    test_clock = clock
 
-    def create_client(host: str, *, port: int, unit_id: int, **_: Any) -> Client:
+    def create_client(
+        *,
+        host: str,
+        unit_id: int,
+        port: int = DEFAULT_PORT,
+        read_only: bool = False,
+        clock: Clock | None = None,
+    ) -> Client:
         link = gateway
         if host != HOST:
             link = SimulatedModbusGateway({})
             link.link_down = True
-        client = create_client_on(link, unit_id=unit_id, clock=clock)
+        client = create_client_on(
+            link, unit_id=unit_id, read_only=read_only, clock=test_clock
+        )
         made.append(client)
         return client
 

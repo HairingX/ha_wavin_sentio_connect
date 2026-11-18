@@ -26,11 +26,11 @@ from wavin_sentio_connect import (
     DehumidifierPointKey,
     DhwTankPointKey,
     HccPointKey,
+    InstanceKey,
     ItcPointKey,
     Key,
     Labels,
     OutdoorPointKey,
-    PointKey,
     VentilationPointKey,
     dehumidifier_key,
     hcc_key,
@@ -76,11 +76,11 @@ class RepeatedObject:
 
     label: str
     """The library's instance label."""
-    key: Callable[[int, PointKey[Any]], Key[Any]]
-    name: PointKey[str]
+    key: Callable[[int, InstanceKey[Any]], Key[Any]]
+    name: InstanceKey[str]
     part: bool
     """A part of the controller, or a device of its own that the controller reaches."""
-    model: PointKey[Any] | None = None
+    model: InstanceKey[Any] | None = None
     """The point that gives a device of its own its model."""
 
 

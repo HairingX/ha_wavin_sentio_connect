@@ -21,9 +21,9 @@ from wavin_sentio_connect import (
     DhwTankPointKey,
     HccPointKey,
     HeatingCoolingSourcePointKey,
+    InstanceKey,
     ItcPointKey,
     Key,
-    LocationPointKey,
     OutdoorPointKey,
     PeripheralPointKey,
     PointKey,
@@ -53,7 +53,7 @@ class SentioBinarySensorDescription(
 
 def _alarm(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     device_class: BinarySensorDeviceClass,
 ) -> SentioBinarySensorDescription:
     return SentioBinarySensorDescription(
@@ -70,8 +70,8 @@ _PROBLEM = BinarySensorDeviceClass.PROBLEM
 _BATTERY = BinarySensorDeviceClass.BATTERY
 
 BINARY_SENSORS: tuple[SentioBinarySensorDescription, ...] = (
-    _alarm(Scope.LOCATION, LocationPointKey.SYSTEM_WARNING, _PROBLEM),
-    _alarm(Scope.LOCATION, LocationPointKey.SYSTEM_ERROR, _PROBLEM),
+    _alarm(Scope.LOCATION, PointKey.SYSTEM_WARNING, _PROBLEM),
+    _alarm(Scope.LOCATION, PointKey.SYSTEM_ERROR, _PROBLEM),
     _alarm(Scope.ROOM, RoomPointKey.WARNING, _PROBLEM),
     _alarm(Scope.ROOM, RoomPointKey.ERROR, _PROBLEM),
     _alarm(Scope.ROOM, RoomPointKey.LOW_BATTERY, _BATTERY),

@@ -29,7 +29,7 @@ read-back can make a point due while it sleeps.
 | What answers is no Sentio (`UnsupportedDeviceError`) | `ConfigEntryError` | not retried |
 | Another controller's serial number | `ConfigEntryError` | not retried; reconfigure it |
 
-The config entry is keyed by the controller's serial number (`LocationPointKey.SERIAL_NUMBER`),
+The config entry is keyed by the controller's serial number (`PointKey.SERIAL_NUMBER`),
 so its address can change without losing anything: the reconfigure step changes host, port and
 unit ID, refusing a controller with another serial number (`_abort_if_unique_id_mismatch`), and
 adding the same controller again moves the entry to the new address

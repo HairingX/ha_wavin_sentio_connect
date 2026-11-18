@@ -16,9 +16,9 @@ from wavin_sentio_connect import (
     CannotConnectError,
     Client,
     DataValue,
+    InstanceKey,
     Key,
     PeripheralPointKey,
-    PointKey,
     UnsupportedDeviceError,
     peripheral_key,
     peripherals,
@@ -156,7 +156,7 @@ def _reload_when_the_installation_changes(
         if peripherals(client) != data.peripherals:
             reload()
 
-    def watch[T](slot: int, point: PointKey[T]) -> None:
+    def watch[T](slot: int, point: InstanceKey[T]) -> None:
         # Only a change matters here, so nothing asks for the point to be polled.
         key = peripheral_key(slot, point)
         entry.async_on_unload(client.subscribe(key, peripheral_changed, poll=False))

@@ -424,7 +424,7 @@ async def test_update_entity_reads_that_entity_from_the_controller(
 async def _check_the_installation(hass: HomeAssistant, config_entry: MockConfigEntry) -> SentioData:
     """Check the controller for changes, as polling does, and let a reload finish."""
     data: SentioData = config_entry.runtime_data
-    await data.client.refresh(PollRate.SCAN)
+    await data.client.refresh(PollRate.RARE)
     await hass.async_block_till_done()
     assert config_entry.state is ConfigEntryState.LOADED
     return config_entry.runtime_data

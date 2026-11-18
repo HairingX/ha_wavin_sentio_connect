@@ -14,9 +14,9 @@ from wavin_sentio_connect import (
     BufferTankPointKey,
     DhwTankPointKey,
     HccPointKey,
+    InstanceKey,
     ItcPointKey,
     Key,
-    LocationPointKey,
     PointKey,
     RoomPointKey,
     VentilationPointKey,
@@ -47,7 +47,7 @@ class SentioSwitchDescription(SentioEntityDescription, SwitchEntityDescription):
 
 def _switch(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     *,
     on: Any,
     off: Any,
@@ -67,11 +67,11 @@ def _switch(
 
 
 SWITCHES: tuple[SentioSwitchDescription, ...] = (
-    _switch(Scope.LOCATION, LocationPointKey.STANDBY_ENABLE, on=True, off=False),
-    _switch(Scope.LOCATION, LocationPointKey.VACATION_ENABLE, on=True, off=False),
+    _switch(Scope.LOCATION, PointKey.STANDBY_ENABLE, on=True, off=False),
+    _switch(Scope.LOCATION, PointKey.VACATION_ENABLE, on=True, off=False),
     _switch(
         Scope.LOCATION,
-        LocationPointKey.DAYLIGHT_SAVING_ENABLE,
+        PointKey.DAYLIGHT_SAVING_ENABLE,
         on=True,
         off=False,
         config=True,

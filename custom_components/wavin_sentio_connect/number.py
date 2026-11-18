@@ -21,9 +21,9 @@ from wavin_sentio_connect import (
     DehumidifierPointKey,
     DhwTankPointKey,
     HccPointKey,
+    InstanceKey,
     ItcPointKey,
     Key,
-    LocationPointKey,
     OutdoorPointKey,
     PointKey,
     RoomPointKey,
@@ -53,7 +53,7 @@ class SentioNumberDescription(SentioEntityDescription, NumberEntityDescription):
 
 def _number(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     device_class: NumberDeviceClass | None,
     *,
     enabled: bool = True,
@@ -80,13 +80,13 @@ _ROOM = Scope.ROOM
 NUMBERS: tuple[SentioNumberDescription, ...] = (
     _number(
         Scope.LOCATION,
-        LocationPointKey.TEMP_OUTDOOR_COOLING_MIN,
+        PointKey.TEMP_OUTDOOR_COOLING_MIN,
         _TEMPERATURE,
         enabled=False,
     ),
     _number(
         Scope.LOCATION,
-        LocationPointKey.TEMP_OUTDOOR_HEATING_MAX,
+        PointKey.TEMP_OUTDOOR_HEATING_MAX,
         _TEMPERATURE,
         enabled=False,
     ),

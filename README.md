@@ -34,7 +34,7 @@ the room it belongs to.
 
 ## Requirements
 
-- Home Assistant 2026.9.3 or newer.
+- Home Assistant 2026.11.0 or newer.
 - Modbus TCP enabled on the controller. It is **disabled by default**; enable it from a Sentio
   display: `System | Installer settings | Modbus configuration | Modbus TCP`. The controller
   restarts afterwards.
@@ -190,9 +190,10 @@ What an entity shows:
 
 - A value the controller reports as "no reading" - a missing sensor, an unset limit - shows as
   *unknown*.
-- While the controller does not answer, every entity is *unavailable* - after 30 s without an
-  answer, so a short network outage goes unnoticed. It is asked again after 2, 4 and 8 s, then
-  every 10 s, which opens its link again: the entities are back within 10 s of it answering.
+- While the controller does not answer, every entity is *unavailable* - only once it has missed
+  several readings in a row, so a short network outage goes unnoticed. Meanwhile it is asked
+  again, less often the longer it stays silent, which opens its link again: the entities are back
+  soon after it answers.
 - A read that fails while the controller still answers keeps the last value.
 
 ## Examples
@@ -256,8 +257,9 @@ automation:
 ## Diagnostics and debug logging
 
 - **Download diagnostics** from the integration's menu: every value the controller reports, with
-  its quality, and what it does not have. The address, serial number and location name are left
-  out.
+  its quality, what it does not have, and how the link answers - its requests, their outcomes and
+  whether it is pausing after unanswered ones. The address, serial number and location name are
+  left out.
 - **Enable debug logging** from the same menu to log the integration and the libraries it uses.
 
 ## Known limits

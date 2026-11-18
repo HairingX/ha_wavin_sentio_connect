@@ -1,4 +1,5 @@
-"""What a bug report needs: the installation, every value with its quality, and what is missing."""
+"""What a bug report needs: the installation, every value with its quality, what is missing, and
+how the link answers."""
 
 from __future__ import annotations
 
@@ -38,6 +39,7 @@ async def async_get_config_entry_diagnostics(
         },
         "model": client.model.name,
         "status": {status.name: client.status(status).value for status in Status},
+        "link": dict(client.diagnostics()),
         "rooms": [
             {"number": room.number, "is_dummy": room.is_dummy} for room in data.rooms
         ],

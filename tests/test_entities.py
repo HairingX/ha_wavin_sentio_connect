@@ -17,8 +17,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
+from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry
-from wavin_sentio_connect import InvalidValueError
+from wavin_sentio_connect import DataValue, InvalidValueError, Quality
 from wavin_sentio_connect.testing import (
     FakeClock,
     SimulatedModbusDevice,
@@ -27,6 +28,7 @@ from wavin_sentio_connect.testing import (
 
 from custom_components.wavin_sentio_connect.const import DOMAIN
 from custom_components.wavin_sentio_connect.data import SentioData
+from custom_components.wavin_sentio_connect.entity import usable
 
 from .conftest import PERIPHERAL_BASE, SERIAL_NUMBER
 
@@ -35,6 +37,20 @@ def _state(hass: HomeAssistant, entity_id: str) -> str:
     state = hass.states.get(entity_id)
     assert state is not None, entity_id
     return state.state
+
+
+
+def test_a_value_is_shown_when_the_library_says_its_quality_has_something_to_show(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def only_missing(self: Quality) -> bool:
+        return self is Quality.MISSING
+
+    monkeypatch.setattr(Quality, "shows_a_value", property(only_missing))
+    now = dt_util.utcnow()
+    assert usable(DataValue(None, Quality.MISSING, now))
+    assert not usable(DataValue(21.5, Quality.GOOD, now))
+    assert not usable(None)
 
 
 async def _poll(hass: HomeAssistant, data: SentioData, clock: FakeClock) -> None:

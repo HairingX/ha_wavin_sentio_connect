@@ -29,3 +29,14 @@ async def test_diagnostics_hold_every_value_but_not_the_address_or_identity(
     assert isinstance(values, dict)
     assert values["room_1_state"] == {"value": "HEATING", "quality": "GOOD", "raw": [2]}
     assert diagnostics["status"] == {"CONNECTED": True, "WRITE_PENDING": False}
+
+
+async def test_diagnostics_say_how_the_link_answers(
+    hass: HomeAssistant, loaded: SentioData, config_entry: MockConfigEntry
+) -> None:
+    link = (await async_get_config_entry_diagnostics(hass, config_entry))["link"]
+    assert link["requests"] > 0
+    assert (link["open"], link["open_for"], link["openings"], link["gave_up"]) == (
+        False, 0.0, 0, False,
+    )
+    assert link["refused_while_open"] == 0

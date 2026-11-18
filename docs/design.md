@@ -1,23 +1,26 @@
 # Design
 
 How the integration is built, and the facts each choice rests on. Home Assistant facts are from
-its 2026.9.3 source, the release the tests run; the Sentio's from its Modbus manual, as modelled
-by `wavin_sentio_connect`.
+its 2026.11.0 source, the oldest release the integration supports, which the tests run; the
+Sentio's from its Modbus manual, as modelled by `wavin_sentio_connect`.
 
 ## A client, not a coordinator
 
 The library's client plans every read itself: each point has a poll rate, only what is subscribed
 to is read, and a poll with nothing due sends nothing. The integration therefore owns no update
-interval. It runs one background task per config entry that calls `client.poll()` and sleeps
-until the client has something due, at most `POLL_TICK`, as a new subscription or a write's
-read-back can make a point due while it sleeps.
+interval and no loop. It runs the client's `run()` as one background task per config entry,
+which polls whenever the client has something due; a new subscription or a write's read-back
+wakes it at once.
 
 - The task is made with `ConfigEntry.async_create_background_task`, which Home Assistant cancels
   when the entry unloads (`config_entries.py`, `_async_process_on_unload`). That cancellation
   runs after `async_unload_entry` returns, so unloading cancels the task itself and awaits it
   before disconnecting: no read runs against a closing connection.
-- A poll that raises is logged and the loop goes on; the client reports an unanswering
-  controller through its status, not by raising.
+- A poll that raises is logged by the client, and polling goes on; the client reports an
+  unanswering controller through its status, not by raising.
+- A disconnect turns the client's status to not connected. Only the entities follow that status,
+  and they are removed with the platforms before the client disconnects, so an unload or reload
+  logs nothing about the controller not answering.
 - `DataUpdateCoordinator` is not used: it refreshes on its own interval, which would duplicate the
   client's plan.
 
@@ -29,7 +32,7 @@ read-back can make a point due while it sleeps.
 | What answers is no Sentio (`UnsupportedDeviceError`) | `ConfigEntryError` | not retried |
 | Another controller's serial number | `ConfigEntryError` | not retried; reconfigure it |
 
-The config entry is keyed by the controller's serial number (`LocationPointKey.SERIAL_NUMBER`),
+The config entry is keyed by the controller's serial number (`PointKey.SERIAL_NUMBER`),
 so its address can change without losing anything: the reconfigure step changes host, port and
 unit ID, refusing a controller with another serial number (`_abort_if_unique_id_mismatch`), and
 adding the same controller again moves the entry to the new address

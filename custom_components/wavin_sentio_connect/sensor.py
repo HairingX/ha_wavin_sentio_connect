@@ -38,9 +38,9 @@ from wavin_sentio_connect import (
     HeatSourceState,
     HeatingCoolingMode,
     HeatingCoolingSourcePointKey,
+    InstanceKey,
     ItcPointKey,
     Key,
-    LocationPointKey,
     ModbusMode,
     OutdoorPointKey,
     PeripheralPointKey,
@@ -78,7 +78,7 @@ class SentioSensorDescription(SentioEntityDescription, SensorEntityDescription):
 
 def _enum(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     states: type[IntEnum],
     *,
     diagnostic: bool = False,
@@ -98,7 +98,7 @@ def _enum(
 
 def _reading(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     device_class: SensorDeviceClass | None,
     *,
     enabled: bool = True,
@@ -119,7 +119,7 @@ def _reading(
 
 
 def _measurement(
-    point: PointKey[float], device_class: SensorDeviceClass
+    point: InstanceKey[float], device_class: SensorDeviceClass
 ) -> SentioSensorDescription:
     return SentioSensorDescription(
         key=point.name,
@@ -142,11 +142,11 @@ PLACE = SentioSensorDescription(
 
 SENSORS: tuple[SentioSensorDescription, ...] = (
     PLACE,
-    _enum(Scope.LOCATION, LocationPointKey.HEATING_COOLING_MODE, HeatingCoolingMode),
+    _enum(Scope.LOCATION, PointKey.HEATING_COOLING_MODE, HeatingCoolingMode),
     # A CCU-208 in Modbus TCP read and write reported this as disabled.
     _enum(
         Scope.LOCATION,
-        LocationPointKey.MODBUS_MODE,
+        PointKey.MODBUS_MODE,
         ModbusMode,
         diagnostic=True,
         enabled=False,
@@ -426,7 +426,7 @@ class SentioDurationDescription(SentioSensorDescription):
 
 
 def _duration(
-    name: str, point: PointKey[Any], counted: IntEnum
+    name: str, point: InstanceKey[Any], counted: IntEnum
 ) -> SentioDurationDescription:
     return SentioDurationDescription(
         key=name,
@@ -460,7 +460,7 @@ def duration_targets(
 ) -> list[Target]:
     """One target for each room that has the described point, with a unique id of its own."""
     point = description.point
-    assert isinstance(point, PointKey)
+    assert isinstance(point, InstanceKey)
     return [
         replace(
             room_target(data, room.number, key),

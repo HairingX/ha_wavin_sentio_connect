@@ -23,9 +23,9 @@ from wavin_sentio_connect import (
     HeatCurveType,
     HeatExchangeMode,
     HeatingCoolingModeOverride,
+    InstanceKey,
     ItcPointKey,
     Key,
-    LocationPointKey,
     PointKey,
     ReturnLimiterFunction,
     RoomLock,
@@ -61,7 +61,7 @@ class SentioSelectDescription(SentioEntityDescription, SelectEntityDescription):
 
 def _select(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     states: type[IntEnum],
     *,
     enabled: bool = True,
@@ -83,11 +83,11 @@ SELECTS: tuple[SentioSelectDescription, ...] = (
     # What the thermostat shows as its mode and preset, each with its own history.
     _select(Scope.ROOM, RoomPointKey.MODE, RoomMode, config=False),
     _select(Scope.ROOM, RoomPointKey.TEMP_PRESET, TemperaturePreset, config=False),
-    _select(Scope.LOCATION, LocationPointKey.UPDATE_MODE, UpdateMode, enabled=False),
+    _select(Scope.LOCATION, PointKey.UPDATE_MODE, UpdateMode, enabled=False),
     # The manual: only hardware profiles with a manual change-over offer the override.
     _select(
         Scope.LOCATION,
-        LocationPointKey.HEATING_COOLING_MODE_BMS_OVERRIDE,
+        PointKey.HEATING_COOLING_MODE_BMS_OVERRIDE,
         HeatingCoolingModeOverride,
         enabled=False,
     ),

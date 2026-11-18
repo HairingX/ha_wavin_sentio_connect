@@ -10,7 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from wavin_sentio_connect import (
     Client,
     Key,
-    LocationPointKey,
+    PointKey,
     SentioPeripheral,
     SentioRoom,
     create_client,
@@ -42,7 +42,7 @@ class SentioData:
 
 def new_client(host: str, port: int, unit_id: int) -> Client:
     """A client for the controller at `host`, not yet connected."""
-    return create_client(host, port=port, unit_id=unit_id)
+    return create_client(host=host, port=port, unit_id=unit_id)
 
 
 def value[T](client: Client, key: Key[T]) -> T | None:
@@ -53,19 +53,13 @@ def value[T](client: Client, key: Key[T]) -> T | None:
 
 def serial_number(client: Client) -> str | None:
     """The controller's serial number as read during connect, or None if it gave none."""
-    found = value(client, LocationPointKey.SERIAL_NUMBER)
+    found = value(client, PointKey.SERIAL_NUMBER)
     return str(found) if found is not None else None
-
-
-def controller_model(client: Client) -> str | None:
-    """The controller's type as it reports it, such as "CCU-208"; None if it reports none."""
-    found = value(client, LocationPointKey.DEVICE_TYPE)
-    return found.name.replace("_", "-") if found is not None else None
 
 
 def entry_title(client: Client) -> str:
     """What the entry is called: the product, then the location's name if the controller has
     one, such as "Wavin Sentio Home"."""
     product = f"{client.model.manufacturer} {client.model.name}"
-    location = value(client, LocationPointKey.LOCATION_NAME)
+    location = value(client, PointKey.LOCATION_NAME)
     return f"{product} {location}" if location else product

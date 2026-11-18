@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -131,6 +132,21 @@ async def test_every_room_and_peripheral_is_a_device_under_the_controller(
     assert display.via_device_id == controller.id
 
 
+async def test_a_controller_that_reports_no_type_is_a_device_without_a_model(
+    hass: HomeAssistant,
+    controller: SimulatedModbusDevice,
+    config_entry: MockConfigEntry,
+    device_registry: dr.DeviceRegistry,
+) -> None:
+    controller.input_registers[10] = 0
+    config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+    device = _device(device_registry, config_entry, str(SERIAL_NUMBER))
+    assert (device.manufacturer, device.model) == ("Wavin", None)
+    assert await hass.config_entries.async_unload(config_entry.entry_id)
+
+
 async def test_a_room_registered_as_a_device_before_becomes_a_part_of_the_controller(
     hass: HomeAssistant, config_entry: MockConfigEntry, device_registry: dr.DeviceRegistry
 ) -> None:
@@ -239,42 +255,70 @@ async def test_only_a_device_the_installation_no_longer_has_can_be_removed(
         assert response["success"] is removable
 
 
-async def test_the_poller_reads_what_is_due_and_survives_a_failing_poll(
+async def test_the_poller_reads_what_is_due_when_its_time_comes(
     hass: HomeAssistant,
-    config_entry: MockConfigEntry,
+    loaded: SentioData,
     controller: SimulatedModbusDevice,
     clock: FakeClock,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr("custom_components.wavin_sentio_connect.POLL_TICK", 0.001)
+    controller.input_registers[room_base(1) + 4] = 2300
+    clock.advance(3600)
+    state = None
+    for _ in range(100):
+        await asyncio.sleep(0)
+        state = hass.states.get("sensor.wavin_sentio_controller_kitchen_air_temperature")
+        if state is not None and state.state == "23.0":
+            break
+    assert state is not None and state.state == "23.0"
+
+
+async def test_unloading_logs_nothing_and_leaves_no_status_followed(
+    hass: HomeAssistant,
+    config_entry: MockConfigEntry,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """A disconnect turns the client's status, which nothing may still follow by then."""
+    following: set[object] = set()
+    followed_at_disconnect: list[int] = []
+    subscribe_status = Client.subscribe_status
+    disconnect = Client.disconnect
+
+    def tracked(client: Client, *args: Any, **kwargs: Any) -> Callable[[], None]:
+        unsubscribe = subscribe_status(client, *args, **kwargs)
+        token = object()
+        following.add(token)
+
+        def ending() -> None:
+            following.discard(token)
+            unsubscribe()
+
+        return ending
+
+    async def disconnecting(client: Client) -> None:
+        followed_at_disconnect.append(len(following))
+        await disconnect(client)
+
+    monkeypatch.setattr(Client, "subscribe_status", tracked)
+    monkeypatch.setattr(Client, "disconnect", disconnecting)
     config_entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
-    data: SentioData = config_entry.runtime_data
-    real_poll = data.client.poll
-    failures = 0
-
-    async def poll_failing_once() -> None:
-        nonlocal failures
-        if failures == 0:
-            failures += 1
-            raise RuntimeError("simulated")
-        await real_poll()
-
-    monkeypatch.setattr(data.client, "poll", poll_failing_once)
-    controller.input_registers[104] = 2300
-    clock.advance(60)
-    shown: list[str] = []
-    for _ in range(100):
-        state = hass.states.get("sensor.wavin_sentio_controller_kitchen_air_temperature")
-        assert state is not None
-        shown.append(state.state)
-        if state.state == "23.0":
-            break
-        await asyncio.sleep(0.01)
-    assert shown[-1] == "23.0"
-    assert failures == 1
-    await hass.config_entries.async_unload(config_entry.entry_id)
+    assert following
+    caplog.clear()
+    caplog.set_level(logging.INFO)
+    assert await hass.config_entries.async_reload(config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert await hass.config_entries.async_unload(config_entry.entry_id)
+    await hass.async_block_till_done()
+    assert followed_at_disconnect == [0, 0]
+    logged = [
+        record.getMessage()
+        for record in caplog.records
+        if record.name.startswith(("custom_components.wavin_sentio_connect", "modbus_event_connect"))
+        and record.levelno >= logging.INFO
+    ]
+    assert logged == []
 
 
 async def test_a_device_the_library_does_not_support_is_not_retried(
@@ -409,7 +453,7 @@ async def test_update_entity_reads_that_entity_from_the_controller(
 async def _check_the_installation(hass: HomeAssistant, config_entry: MockConfigEntry) -> SentioData:
     """Check the controller for changes, as polling does, and let a reload finish."""
     data: SentioData = config_entry.runtime_data
-    await data.client.refresh(PollRate.SCAN)
+    await data.client.refresh(PollRate.RARE)
     await hass.async_block_till_done()
     assert config_entry.state is ConfigEntryState.LOADED
     return config_entry.runtime_data

@@ -13,10 +13,9 @@ from homeassistant.helpers.entity import Entity, EntityDescription
 
 from wavin_sentio_connect import (
     DataValue,
+    InstanceKey,
     InvalidValueError,
     Key,
-    PointKey,
-    Quality,
     Status,
     peripheral_key,
     room_key,
@@ -27,25 +26,18 @@ from .data import SentioData, value
 from .devices import controller_identifier, peripheral_identifier, room_identifier
 from .objects import REPEATED_OBJECTS, SINGLE_OBJECTS, Scope, object_identifier
 
-_USABLE = frozenset({Quality.GOOD, Quality.NO_DATA, Quality.STALE})
-"""Qualities an entity shows: a value, "unknown" for no reading, or the last good value.
-
-OFFLINE and MISSING leave the entity unavailable, as does a controller that stopped answering.
-"""
-
-
 @dataclass(frozen=True, kw_only=True)
 class SentioEntityDescription(EntityDescription):
     """Describes an entity of one point, in every room or peripheral that has it."""
 
     scope: Scope
-    point: Key[Any] | PointKey[Any]
+    point: Key[Any] | InstanceKey[Any]
     """A location point's key, or a room's or peripheral's point key."""
 
 
-def point_name(point: Key[Any] | PointKey[Any]) -> str:
+def point_name(point: Key[Any] | InstanceKey[Any]) -> str:
     """The name of a point: a location point's whole key, or a room's or peripheral's."""
-    return point.name if isinstance(point, PointKey) else str(point)
+    return point.name if isinstance(point, InstanceKey) else str(point)
 
 
 @dataclass(frozen=True)
@@ -57,7 +49,7 @@ class Target:
     unique_id: str
 
 
-def entity_key(scope: Scope, point: Key[Any] | PointKey[Any]) -> str:
+def entity_key(scope: Scope, point: Key[Any] | InstanceKey[Any]) -> str:
     """The name of the entity of `point` in `scope`, which its translation is found by.
 
     A point of the objects there are several of is named after its object too: a circuit's
@@ -99,13 +91,13 @@ def targets(data: SentioData, description: SentioEntityDescription) -> list[Targ
                 )
             )
         case Scope.ROOM:
-            assert isinstance(point, PointKey)
+            assert isinstance(point, InstanceKey)
             found.extend(
                 room_target(data, room.number, room_key(room.number, point))
                 for room in data.rooms
             )
         case Scope.PERIPHERAL:
-            assert isinstance(point, PointKey)
+            assert isinstance(point, InstanceKey)
             found.extend(
                 Target(
                     peripheral_key(peripheral.slot, point),
@@ -132,7 +124,7 @@ def targets(data: SentioData, description: SentioEntityDescription) -> list[Targ
                 )
             )
         case scope:
-            assert isinstance(point, PointKey)
+            assert isinstance(point, InstanceKey)
             repeated = REPEATED_OBJECTS[scope]
             for number in data.client.instances(repeated.label):
                 identifiers = {object_identifier(data.serial_number, scope, number)}
@@ -161,8 +153,9 @@ def all_targets[D: SentioEntityDescription](
 
 
 def usable(current: DataValue[Any] | None) -> bool:
-    """Whether a value may be shown: a reading, no reading, or the last good one."""
-    return current is not None and current.quality in _USABLE
+    """Whether a value was read and its quality has something to show: a reading, that there is
+    none, or the last good one."""
+    return current is not None and current.quality.shows_a_value
 
 
 class SentioEntity(Entity):

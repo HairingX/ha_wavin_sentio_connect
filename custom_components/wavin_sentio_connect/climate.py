@@ -20,7 +20,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from wavin_sentio_connect import (
     HeatingCoolingMode,
     Key,
-    LocationPointKey,
+    PointKey,
     RoomMode,
     RoomPointKey,
     RoomState,
@@ -102,7 +102,7 @@ class SentioClimate(SentioEntity, ClimateEntity):
     def _watched(self) -> tuple[Key[Any], ...]:
         keys: tuple[Key[Any], ...] = (
             self._key,
-            LocationPointKey.HEATING_COOLING_MODE,
+            PointKey.HEATING_COOLING_MODE,
             self._air,
             self._humidity,
             self._setpoint,
@@ -150,7 +150,7 @@ class SentioClimate(SentioEntity, ClimateEntity):
 
     def _manual_mode(self) -> HVACMode | None:
         """HEAT or COOL, as the location is heating or cooling; None when it did not say."""
-        location = self._current(LocationPointKey.HEATING_COOLING_MODE)
+        location = self._current(PointKey.HEATING_COOLING_MODE)
         if location is HeatingCoolingMode.HEATING:
             return HVACMode.HEAT
         if location is HeatingCoolingMode.COOLING:

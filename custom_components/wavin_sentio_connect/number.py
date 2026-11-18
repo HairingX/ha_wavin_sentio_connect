@@ -21,11 +21,10 @@ from wavin_sentio_connect import (
     DehumidifierPointKey,
     DhwTankPointKey,
     HccPointKey,
+    InstanceKey,
     ItcPointKey,
     Key,
-    LocationPointKey,
     OutdoorPointKey,
-    Point,
     PointKey,
     RoomPointKey,
     VentilationPointKey,
@@ -54,7 +53,7 @@ class SentioNumberDescription(SentioEntityDescription, NumberEntityDescription):
 
 def _number(
     scope: Scope,
-    point: Key[Any] | PointKey[Any],
+    point: Key[Any] | InstanceKey[Any],
     device_class: NumberDeviceClass | None,
     *,
     enabled: bool = True,
@@ -81,13 +80,13 @@ _ROOM = Scope.ROOM
 NUMBERS: tuple[SentioNumberDescription, ...] = (
     _number(
         Scope.LOCATION,
-        LocationPointKey.TEMP_OUTDOOR_COOLING_MIN,
+        PointKey.TEMP_OUTDOOR_COOLING_MIN,
         _TEMPERATURE,
         enabled=False,
     ),
     _number(
         Scope.LOCATION,
-        LocationPointKey.TEMP_OUTDOOR_HEATING_MAX,
+        PointKey.TEMP_OUTDOOR_HEATING_MAX,
         _TEMPERATURE,
         enabled=False,
     ),
@@ -401,44 +400,27 @@ async def async_setup_entry(
     )
 
 
-def value_range(point: Point[Any]) -> tuple[float, float, float]:
-    """The lowest and highest value `point` can be written with, and its step.
-
-    The point's own limits where it has them; otherwise every value its encoding can carry,
-    as the manual gives these settings no range.
-    """
-    if point.transform is not None:
-        raise ValueError(f"{point.key} is transformed; its range cannot be derived")
-    step = point.scale
-    if point.limits is not None and point.limits.step is not None:
-        step = point.limits.step
-    if (
-        point.limits is not None
-        and point.limits.min is not None
-        and point.limits.max is not None
-    ):
-        return point.limits.min, point.limits.max, step
-    raw = point.valid_raw
-    if not isinstance(raw, range) or raw.step != 1 or not raw:
-        raise ValueError(f"{point.key} has neither limits nor a range of valid values")
-    lowest = raw.start * point.scale + point.offset
-    highest = (raw.stop - 1) * point.scale + point.offset
-    return round(lowest, 10), round(highest, 10), step
-
-
 class SentioNumber(SentioEntity, NumberEntity):
-    """One number setting, written to the controller."""
+    """One number setting, written to the controller within the range its point can be
+    written with."""
 
     def __init__(
         self, data: SentioData, target: Target, description: SentioNumberDescription
     ) -> None:
+        """Offer the values the point can be written with.
+
+        Raises:
+            ValueError: the point cannot be written within a range.
+        """
+        span = data.client.points[target.key].write_range()
+        if span is None:
+            raise ValueError(f"{target.key} has no range to be written within")
+        self._attr_native_min_value = span.min
+        self._attr_native_max_value = span.max
+        if span.step is not None:
+            self._attr_native_step = span.step
         super().__init__(data, target)
         self.entity_description = description
-        (point,) = data.client.select([target.key])
-        lowest, highest, step = value_range(point)
-        self._attr_native_min_value = lowest
-        self._attr_native_max_value = highest
-        self._attr_native_step = step
         self._attr_native_unit_of_measurement = ha_unit(data.client, target.key)
 
     def _show(self) -> None:

@@ -174,7 +174,11 @@ the user reads.
 
 ## Dependencies
 
-- `manifest.json` pins the library with `==`, as the manifest documentation asks.
+- `manifest.json` pins the library with `==`, as the manifest documentation asks, and
+  `modbus_event_connect` too, though the library requires it: Home Assistant installs a
+  requirement only while the version installed does not meet it, so an installation that already
+  has `wavin_sentio_connect` keeps the `modbus_event_connect` it has unless the manifest names the
+  one the integration needs - for the diagnostics' `writes`, 0.10.1.
 - Home Assistant installs requirements under its package constraints
   (`homeassistant/package_constraints.txt`), which pin `pymodbus`; the tests run that version.
 - The brand icon ships in `brand/`, which Home Assistant serves for custom integrations since

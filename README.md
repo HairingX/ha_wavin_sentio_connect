@@ -256,10 +256,13 @@ automation:
 
 ## Diagnostics and debug logging
 
-- **Download diagnostics** from the integration's menu: every value the controller reports, with
-  its quality, what it does not have, and how the link answers - its requests, their outcomes and
-  whether it is pausing after unanswered ones. The address, serial number and location name are
-  left out.
+- **Download diagnostics** from the integration's menu: the integration's and its libraries'
+  versions; every value the controller reports, with its quality, its raw registers, how certain
+  it is, when it was read and how many reads of it have failed in a row; what it does not have;
+  under `writes`, the latest five writes of each setting - the value and registers sent, when, how
+  many times, how it ended, and the value the controller answered the next read with; and how the
+  link answers - its requests, their outcomes and whether it is pausing after unanswered ones. The
+  address, serial numbers, location name and Modbus password are left out.
 - **Enable debug logging** from the same menu to log the integration and the libraries it uses.
 
 ## Known limits

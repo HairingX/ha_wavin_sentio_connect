@@ -141,7 +141,7 @@ async def test_diagnostics_of_every_point_and_writes_hold_nothing_that_locates_o
     assert (name["outcome"], name["value"], name["raw"]) == ("taken", REDACTED, REDACTED)
     assert (name["read_back"]["value"], name["read_back"]["raw"]) == (REDACTED, REDACTED)
     (password,) = diagnostics["writes"]["modbus_password"]
-    assert (password["outcome"], password["value"], password["raw"]) == ("taken", REDACTED, REDACTED)
+    assert (password["outcome"], password["value"], password["raw"]) == ("taken", None, [])
     registers = [
         ", ".join(str(register) for register in text(name)[:2])
         for name in (LOCATION, LOCATION.upper())
